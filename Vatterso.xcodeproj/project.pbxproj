@@ -16,6 +16,10 @@
 		C97EA7082A28896D0082001B /* VattersoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7072A28896D0082001B /* VattersoTests.swift */; };
 		C97EA7122A28896D0082001B /* VattersoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7112A28896D0082001B /* VattersoUITests.swift */; };
 		C97EA7142A28896D0082001B /* VattersoUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7132A28896D0082001B /* VattersoUITestsLaunchTests.swift */; };
+		C97EA7212A288A1E0082001B /* VATabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7202A288A1E0082001B /* VATabBarView.swift */; };
+		C97EA7232A28A1540082001B /* MainTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7222A28A1540082001B /* MainTabBarView.swift */; };
+		C97EA7252A28F0620082001B /* VATabBarContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7242A28F0620082001B /* VATabBarContainerView.swift */; };
+		C97EA7272A2B5F450082001B /* TabBarItemsPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7262A2B5F450082001B /* TabBarItemsPreferenceKey.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +52,10 @@
 		C97EA70D2A28896D0082001B /* VattersoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VattersoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C97EA7112A28896D0082001B /* VattersoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VattersoUITests.swift; sourceTree = "<group>"; };
 		C97EA7132A28896D0082001B /* VattersoUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VattersoUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		C97EA7202A288A1E0082001B /* VATabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VATabBarView.swift; sourceTree = "<group>"; };
+		C97EA7222A28A1540082001B /* MainTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarView.swift; sourceTree = "<group>"; };
+		C97EA7242A28F0620082001B /* VATabBarContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VATabBarContainerView.swift; sourceTree = "<group>"; };
+		C97EA7262A2B5F450082001B /* TabBarItemsPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItemsPreferenceKey.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,11 +107,15 @@
 			isa = PBXGroup;
 			children = (
 				C97EA6F12A2889670082001B /* VattersoApp.swift */,
+				C97EA7222A28A1540082001B /* MainTabBarView.swift */,
 				C97EA6F32A2889670082001B /* ContentView.swift */,
 				C97EA6F52A28896C0082001B /* Assets.xcassets */,
 				C97EA6FA2A28896C0082001B /* Persistence.swift */,
 				C97EA6FC2A28896C0082001B /* Vatterso.xcdatamodeld */,
 				C97EA6F72A28896C0082001B /* Preview Content */,
+				C97EA7202A288A1E0082001B /* VATabBarView.swift */,
+				C97EA7242A28F0620082001B /* VATabBarContainerView.swift */,
+				C97EA7262A2B5F450082001B /* TabBarItemsPreferenceKey.swift */,
 			);
 			path = Vatterso;
 			sourceTree = "<group>";
@@ -263,10 +275,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C97EA7252A28F0620082001B /* VATabBarContainerView.swift in Sources */,
 				C97EA6FB2A28896C0082001B /* Persistence.swift in Sources */,
+				C97EA7232A28A1540082001B /* MainTabBarView.swift in Sources */,
 				C97EA6FE2A28896C0082001B /* Vatterso.xcdatamodeld in Sources */,
 				C97EA6F42A2889670082001B /* ContentView.swift in Sources */,
+				C97EA7212A288A1E0082001B /* VATabBarView.swift in Sources */,
 				C97EA6F22A2889670082001B /* VattersoApp.swift in Sources */,
+				C97EA7272A2B5F450082001B /* TabBarItemsPreferenceKey.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
