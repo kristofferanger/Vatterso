@@ -20,6 +20,7 @@
 		C97EA7232A28A1540082001B /* MainTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7222A28A1540082001B /* MainTabBarView.swift */; };
 		C97EA7252A28F0620082001B /* VATabBarContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7242A28F0620082001B /* VATabBarContainerView.swift */; };
 		C97EA7272A2B5F450082001B /* TabBarItemsPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7262A2B5F450082001B /* TabBarItemsPreferenceKey.swift */; };
+		C97EA7322A2CFF4C0082001B /* Start.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7312A2CFF4C0082001B /* Start.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		C97EA7222A28A1540082001B /* MainTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarView.swift; sourceTree = "<group>"; };
 		C97EA7242A28F0620082001B /* VATabBarContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VATabBarContainerView.swift; sourceTree = "<group>"; };
 		C97EA7262A2B5F450082001B /* TabBarItemsPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItemsPreferenceKey.swift; sourceTree = "<group>"; };
+		C97EA7312A2CFF4C0082001B /* Start.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Start.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,16 +108,18 @@
 		C97EA6F02A2889670082001B /* Vatterso */ = {
 			isa = PBXGroup;
 			children = (
+				C97EA72D2A2CF8A10082001B /* Core */,
+				C97EA72C2A2CF8860082001B /* Extensions */,
 				C97EA6F12A2889670082001B /* VattersoApp.swift */,
 				C97EA7222A28A1540082001B /* MainTabBarView.swift */,
 				C97EA6F32A2889670082001B /* ContentView.swift */,
-				C97EA6F52A28896C0082001B /* Assets.xcassets */,
 				C97EA6FA2A28896C0082001B /* Persistence.swift */,
-				C97EA6FC2A28896C0082001B /* Vatterso.xcdatamodeld */,
-				C97EA6F72A28896C0082001B /* Preview Content */,
 				C97EA7202A288A1E0082001B /* VATabBarView.swift */,
 				C97EA7242A28F0620082001B /* VATabBarContainerView.swift */,
 				C97EA7262A2B5F450082001B /* TabBarItemsPreferenceKey.swift */,
+				C97EA6F52A28896C0082001B /* Assets.xcassets */,
+				C97EA6FC2A28896C0082001B /* Vatterso.xcdatamodeld */,
+				C97EA6F72A28896C0082001B /* Preview Content */,
 			);
 			path = Vatterso;
 			sourceTree = "<group>";
@@ -143,6 +147,45 @@
 				C97EA7132A28896D0082001B /* VattersoUITestsLaunchTests.swift */,
 			);
 			path = VattersoUITests;
+			sourceTree = "<group>";
+		};
+		C97EA72C2A2CF8860082001B /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		C97EA72D2A2CF8A10082001B /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				C97EA7302A2CF9770082001B /* Start */,
+				C97EA72E2A2CF8B50082001B /* Components */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		C97EA72E2A2CF8B50082001B /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				C97EA72F2A2CF8D90082001B /* Buttons */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		C97EA72F2A2CF8D90082001B /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Buttons;
+			sourceTree = "<group>";
+		};
+		C97EA7302A2CF9770082001B /* Start */ = {
+			isa = PBXGroup;
+			children = (
+				C97EA7312A2CFF4C0082001B /* Start.swift */,
+			);
+			path = Start;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -282,6 +325,7 @@
 				C97EA6F42A2889670082001B /* ContentView.swift in Sources */,
 				C97EA7212A288A1E0082001B /* VATabBarView.swift in Sources */,
 				C97EA6F22A2889670082001B /* VattersoApp.swift in Sources */,
+				C97EA7322A2CFF4C0082001B /* Start.swift in Sources */,
 				C97EA7272A2B5F450082001B /* TabBarItemsPreferenceKey.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -444,11 +488,13 @@
 				DEVELOPMENT_TEAM = LT68BJ94W7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Vättersö";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -473,11 +519,13 @@
 				DEVELOPMENT_TEAM = LT68BJ94W7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Vättersö";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
