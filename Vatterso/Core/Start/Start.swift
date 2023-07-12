@@ -9,10 +9,33 @@ import SwiftUI
 
 struct Start: View {
     var body: some View {
-        VStack(spacing: 0){
-            header
-            Spacer()
-            
+        NavigationView {
+            ScrollView {
+                ScrolledContent()
+            }
+            .safeAreaInset(edge: .leading, spacing: 10) {
+                SideBarContent()
+            }
+            .navigationTitle("test")
+        }
+    }
+    
+    struct SideBarContent: View {
+        var body: some View {
+            Text("Test")
+        }
+    }
+    
+    struct ScrolledContent: View {
+        
+        let items = [String](repeating: "Hep", count: 100)
+        
+        var body: some View {
+            VStack {
+                ForEach(items, id: \.self) { letter in
+                    Text(letter)
+                }
+            }
         }
     }
     
@@ -46,7 +69,7 @@ struct Start: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(maxWidth: .infinity)
-                LinearGradient(gradient: Gradient(colors: [.clear, .black.opacity(0.8)]), startPoint: .top, endPoint: .bottom)
+                LinearGradient(gradient: Gradient(colors: [.black.opacity(0.2), .black.opacity(0.6)]), startPoint: .top, endPoint: .bottom)
             }
         )
     }

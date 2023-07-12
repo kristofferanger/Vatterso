@@ -11,16 +11,16 @@ import SwiftUI
 struct VATabBarContainerView<Content: View>: View {
     
     @Binding var selection: VATabBarItem
-    var content: Content
+    private var content: () -> Content
     
     @State private var tabs: [VATabBarItem] = []
     
     var body: some View {
         VStack(spacing: 0) {
             ZStack {
-                content
+                content()
             }
-            VATabBarView(tabs: tabs, selection: $selection, localSelection: selection)
+            VATabBarView(tabs: tabs, selection: $selection)
         }
         .onPreferenceChange(TabBarItemsPreferenceKey.self) { value in
             self.tabs = value
@@ -30,9 +30,9 @@ struct VATabBarContainerView<Content: View>: View {
     
     /// Creates an instance that selects from content associated with
     /// `Selection` values.
-    init(selection: Binding<VATabBarItem>, @ViewBuilder content: () -> Content) {
+    init(selection: Binding<VATabBarItem>, @ViewBuilder content: @escaping () -> Content) {
         self._selection = selection
-        self.content = content()
+        self.content = content
     }
 
 }
