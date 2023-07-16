@@ -8,15 +8,29 @@
 import SwiftUI
 
 struct Start: View {
+    
+    @StateObject var viewModel = StartPageViewModel()
+        
     var body: some View {
         NavigationView {
             ScrollView {
-                ScrolledContent()
+                switch viewModel.pageLoading {
+                case .finished(let pages):
+                    LazyVStack {
+                        ForEach(pages) { page in
+                            Text(page.title.text)
+                        }
+                    }
+                case .loading:
+                    ProgressView()
+                case .error:
+                    Text("Something went wrong!")
+                }
             }
-            .safeAreaInset(edge: .leading, spacing: 10) {
-                SideBarContent()
-            }
-            .navigationTitle("test")
+            .navigationTitle("Test")
+        }
+        .onAppear {
+            viewModel.loadPages()
         }
     }
     
@@ -72,6 +86,44 @@ struct Start: View {
                 LinearGradient(gradient: Gradient(colors: [.black.opacity(0.2), .black.opacity(0.6)]), startPoint: .top, endPoint: .bottom)
             }
         )
+    }
+}
+
+struct ItemRow: View {
+    let category: Bool
+    let text: String
+    
+    init(_ text: String, isCategory: Bool = false) {
+        self.category = isCategory
+        self.text = text
+    }
+    
+    var body: some View {
+        HStack {
+            Circle().stroke() // this can be custom control
+                .frame(width: 20, height: 20)
+                .onTapGesture {
+                    // handle tap here
+                }
+            if category {
+                Text(self.text).bold()
+            } else {
+                Text(self.text)
+            }
+        }
+    }
+}
+
+struct TestNestedLists: View {
+    var body: some View {
+        List { // next pattern easily wrapped with ForEach
+            ItemRow("Category", isCategory: true) // this can be section's header
+            Section {
+                ItemRow("Item 1")
+                ItemRow("Item 2")
+                ItemRow("Item 3")
+            }.padding(.leading, 20)
+        }
     }
 }
 

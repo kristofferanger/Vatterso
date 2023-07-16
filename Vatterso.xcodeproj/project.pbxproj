@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C9040BB22A5FD43C004E965D /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BB12A5FD43C004E965D /* Post.swift */; };
+		C9040BB42A5FD448004E965D /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BB32A5FD448004E965D /* Page.swift */; };
+		C9040BB62A5FDDBE004E965D /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BB52A5FDDBE004E965D /* NetworkManager.swift */; };
+		C9040BB82A5FE2CF004E965D /* PagesDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BB72A5FE2CF004E965D /* PagesDataService.swift */; };
+		C9040BBC2A5FFBBC004E965D /* UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BBB2A5FFBBC004E965D /* UIKit.swift */; };
+		C9040BBE2A5FFBDF004E965D /* Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BBD2A5FFBDF004E965D /* Foundation.swift */; };
+		C9040BC12A6059BD004E965D /* StartPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BC02A6059BD004E965D /* StartPageViewModel.swift */; };
 		C97EA6F22A2889670082001B /* VattersoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA6F12A2889670082001B /* VattersoApp.swift */; };
 		C97EA6F42A2889670082001B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA6F32A2889670082001B /* ContentView.swift */; };
 		C97EA6F62A28896C0082001B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C97EA6F52A28896C0082001B /* Assets.xcassets */; };
@@ -21,7 +28,6 @@
 		C97EA7252A28F0620082001B /* VATabBarContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7242A28F0620082001B /* VATabBarContainerView.swift */; };
 		C97EA7272A2B5F450082001B /* TabBarItemsPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7262A2B5F450082001B /* TabBarItemsPreferenceKey.swift */; };
 		C97EA7322A2CFF4C0082001B /* Start.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7312A2CFF4C0082001B /* Start.swift */; };
-		C9B56F542A2E4BC100E56C57 /* UIScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B56F532A2E4BC100E56C57 /* UIScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +48,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C9040BB12A5FD43C004E965D /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		C9040BB32A5FD448004E965D /* Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
+		C9040BB52A5FDDBE004E965D /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		C9040BB72A5FE2CF004E965D /* PagesDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagesDataService.swift; sourceTree = "<group>"; };
+		C9040BBB2A5FFBBC004E965D /* UIKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKit.swift; sourceTree = "<group>"; };
+		C9040BBD2A5FFBDF004E965D /* Foundation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Foundation.swift; sourceTree = "<group>"; };
+		C9040BC02A6059BD004E965D /* StartPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPageViewModel.swift; sourceTree = "<group>"; };
+		C93F18792A62D62E00CA661C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C97EA6EE2A2889670082001B /* Vatterso.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vatterso.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C97EA6F12A2889670082001B /* VattersoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VattersoApp.swift; sourceTree = "<group>"; };
 		C97EA6F32A2889670082001B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -59,7 +73,6 @@
 		C97EA7242A28F0620082001B /* VATabBarContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VATabBarContainerView.swift; sourceTree = "<group>"; };
 		C97EA7262A2B5F450082001B /* TabBarItemsPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItemsPreferenceKey.swift; sourceTree = "<group>"; };
 		C97EA7312A2CFF4C0082001B /* Start.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Start.swift; sourceTree = "<group>"; };
-		C9B56F532A2E4BC100E56C57 /* UIScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +100,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C9040BAF2A5FD2E5004E965D /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				C9040BB52A5FDDBE004E965D /* NetworkManager.swift */,
+				C9040BB72A5FE2CF004E965D /* PagesDataService.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		C9040BB02A5FD41E004E965D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C9040BB12A5FD43C004E965D /* Post.swift */,
+				C9040BB32A5FD448004E965D /* Page.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C9040BBF2A60597C004E965D /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				C9040BC02A6059BD004E965D /* StartPageViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		C97EA6E52A2889660082001B = {
 			isa = PBXGroup;
 			children = (
@@ -110,6 +149,10 @@
 		C97EA6F02A2889670082001B /* Vatterso */ = {
 			isa = PBXGroup;
 			children = (
+				C93F18792A62D62E00CA661C /* Info.plist */,
+				C9040BBF2A60597C004E965D /* ViewModels */,
+				C9040BB02A5FD41E004E965D /* Model */,
+				C9040BAF2A5FD2E5004E965D /* Networking */,
 				C97EA72D2A2CF8A10082001B /* Core */,
 				C97EA72C2A2CF8860082001B /* Extensions */,
 				C97EA6F12A2889670082001B /* VattersoApp.swift */,
@@ -154,7 +197,8 @@
 		C97EA72C2A2CF8860082001B /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				C9B56F532A2E4BC100E56C57 /* UIScreen.swift */,
+				C9040BBB2A5FFBBC004E965D /* UIKit.swift */,
+				C9040BBD2A5FFBDF004E965D /* Foundation.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -322,15 +366,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				C97EA7252A28F0620082001B /* VATabBarContainerView.swift in Sources */,
+				C9040BB22A5FD43C004E965D /* Post.swift in Sources */,
+				C9040BB42A5FD448004E965D /* Page.swift in Sources */,
+				C9040BBE2A5FFBDF004E965D /* Foundation.swift in Sources */,
+				C9040BB62A5FDDBE004E965D /* NetworkManager.swift in Sources */,
+				C9040BB82A5FE2CF004E965D /* PagesDataService.swift in Sources */,
 				C97EA6FB2A28896C0082001B /* Persistence.swift in Sources */,
 				C97EA7232A28A1540082001B /* MainTabBarView.swift in Sources */,
 				C97EA6FE2A28896C0082001B /* Vatterso.xcdatamodeld in Sources */,
 				C97EA6F42A2889670082001B /* ContentView.swift in Sources */,
+				C9040BC12A6059BD004E965D /* StartPageViewModel.swift in Sources */,
 				C97EA7212A288A1E0082001B /* VATabBarView.swift in Sources */,
 				C97EA6F22A2889670082001B /* VattersoApp.swift in Sources */,
+				C9040BBC2A5FFBBC004E965D /* UIKit.swift in Sources */,
 				C97EA7322A2CFF4C0082001B /* Start.swift in Sources */,
 				C97EA7272A2B5F450082001B /* TabBarItemsPreferenceKey.swift in Sources */,
-				C9B56F542A2E4BC100E56C57 /* UIScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,6 +542,7 @@
 				DEVELOPMENT_TEAM = LT68BJ94W7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Vatterso/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Vättersö";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -523,6 +574,7 @@
 				DEVELOPMENT_TEAM = LT68BJ94W7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Vatterso/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Vättersö";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
