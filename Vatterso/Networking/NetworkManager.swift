@@ -10,18 +10,6 @@ import Combine
 
 
 class NetworkingManager {
-
-    enum NetworkingError: LocalizedError {
-        case badURLResponse(url: URL, statusCode: Int)
-        case unknown
-        
-        var errorDescription: String? {
-            switch self {
-            case .badURLResponse(let url, let statusCode): return "[🔥] Status code: \(statusCode). Bad response from URL: \(url)"
-            case .unknown: return "[⚠️] Unknown error occured"
-            }
-        }
-    }
     
     static func url(endpoint: String) -> URL? {
         switch api {
@@ -76,4 +64,27 @@ extension NetworkingManager {
     
     private static let api: API = .production
     private static let baseUrl = "https://wetterso.se/wp-json/wp/v2"
+}
+
+// MARK: Helpers
+
+enum ListData<Data> where Data: Sequence, Data.Element: Identifiable  {
+    case loading
+    case finished(Result<Data, NetworkingError>)
+    
+    init() {
+        self = .loading
+    }
+}
+
+enum NetworkingError: LocalizedError {
+    case badURLResponse(url: URL, statusCode: Int)
+    case unknown
+    
+    var errorDescription: String? {
+        switch self {
+        case .badURLResponse(let url, let statusCode): return "[🔥] Status code: \(statusCode). Bad response from URL: \(url)"
+        case .unknown: return "[⚠️] Unknown error occured"
+        }
+    }
 }

@@ -10,16 +10,16 @@ import Combine
 
 protocol PagesDataServiceProtocol {
     // subscribe vars
-    var pagesPublisher: Published<[Page]>.Publisher { get }
+    var pagesPublisher: Published<ListData<[Page]>>.Publisher { get }
     // method to ask for updates
     func loadPages()
 }
 
 class PagesDataService: PagesDataServiceProtocol {
     
-    @Published var allPages: [Page] = []
-
-    var pagesPublisher: Published<[Page]>.Publisher { $allPages }
+    var pagesPublisher: Published<ListData<[Page]>>.Publisher { $allPages }
+    
+    @Published var allPages = ListData<[Page]>()
     
     private var pagesSubscription: AnyCancellable?
 
@@ -31,10 +31,8 @@ class PagesDataService: PagesDataServiceProtocol {
             .decode(type: [Page].self, decoder: NetworkingManager.defaultDecoder())
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] receivedData in
-                guard let self else {
-                    return
-                }
-                self.allPages = receivedData
+                guard let self else { return }
+                self.allPages = .finished(.success(receivedData))
                 self.pagesSubscription?.cancel()
             })
     }

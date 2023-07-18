@@ -14,17 +14,20 @@ struct Start: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                switch viewModel.pageLoading {
+                switch viewModel.pages {
                 case .finished(let pages):
-                    LazyVStack {
-                        ForEach(pages) { page in
-                            Text(page.title.text)
+                    switch pages {
+                    case .failure(let error):
+                        Text("Something went wrong: \(error.localizedDescription)")
+                    case .success(let pages):
+                        LazyVStack {
+                            ForEach(pages) { page in
+                                Text(page.title.text)
+                            }
                         }
                     }
                 case .loading:
                     ProgressView()
-                case .error:
-                    Text("Something went wrong!")
                 }
             }
             .navigationTitle("Test")

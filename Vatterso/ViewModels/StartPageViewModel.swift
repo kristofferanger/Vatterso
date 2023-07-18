@@ -8,36 +8,30 @@
 import Foundation
 import Combine
 
-enum LoadingStatus {
-    case loading
-    case error
-    case finished([Page])
-}
 
 class StartPageViewModel: ObservableObject {
     
-    @Published var pageLoading = LoadingStatus.finished([])
-
+    @Published var pages = ListData<[Page]>()
     
-    private let dataService: PagesDataServiceProtocol
+    private let pagesDataService: PagesDataServiceProtocol
+    //private let postsDataService: PostsDataServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     
     init() {
-        self.dataService = PagesDataService()
+        self.pagesDataService = PagesDataService()
         addSubscribers()
     }
     
     func loadPages() {
-        pageLoading = .loading
-        dataService.loadPages()
+        pagesDataService.loadPages()
     }
 
     private func addSubscribers() {
-        dataService.pagesPublisher
-            .sink { _ in
-                print("hep")
+        pagesDataService.pagesPublisher
+            .sink { completion in
+                print("Completion \(completion)")
             } receiveValue: { [weak self] pages in
-                self?.pageLoading = .finished(pages)
+                self?.pages = pages
             }
             .store(in: &cancellables)
     }
