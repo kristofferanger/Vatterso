@@ -7,28 +7,70 @@
 
 import SwiftUI
 
+//
+enum LoadingData<Data> {
+    case loading
+    case finished(Result<Data, NetworkingError>)
+    
+    init() {
+        self = .loading
+    }
+}
+
+struct SpinnerWhileLoadingView<Data, Content>: View where Content: View {
+    
+    private var loadingData: LoadingData<Data>
+    private var errorAlert: (NetworkingError) -> Alert
+    @ViewBuilder private var content: (Data) -> Content
+    
+    @State private var error: NetworkingError?
+    
+    init(_ data: LoadingData<Data>, @ViewBuilder content: @escaping (Data) -> Content, errorAlert: @escaping (NetworkingError) -> Alert) {
+        self.loadingData = data
+        self.content = content
+        self.errorAlert = errorAlert
+    }
+    
+    var body: some View {
+        Group {
+            switch loadingData {
+            case .finished(let loadingResult):
+                switch loadingResult {
+                case .success(let data):
+                    content(data)
+                case .failure(let error):
+                    Color.clear
+                        .onAppear {
+                            self.error = error
+                        }
+                }
+            case .loading:
+                ProgressView()
+            }
+        }
+        .alert(item: $error) { error in
+            return errorAlert(error)
+        }
+    }
+}
+
+
 struct Start: View {
     
     @StateObject var viewModel = StartPageViewModel()
         
     var body: some View {
         NavigationView {
-            ScrollView {
-                switch viewModel.pages {
-                case .finished(let pages):
-                    switch pages {
-                    case .failure(let error):
-                        Text("Something went wrong: \(error.localizedDescription)")
-                    case .success(let pages):
-                        LazyVStack {
-                            ForEach(pages) { page in
-                                Text(page.title.text)
-                            }
+            SpinnerWhileLoadingView(viewModel.pages) { pages in
+                ScrollView {
+                    LazyVStack {
+                        ForEach(pages) { page in
+                            Text(page.title.text)
                         }
                     }
-                case .loading:
-                    ProgressView()
                 }
+            } errorAlert: { error in
+                Alert(title: Text("Error"), message: Text(error.localizedDescription))
             }
             .navigationTitle("Test")
         }

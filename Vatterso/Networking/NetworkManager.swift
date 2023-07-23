@@ -10,15 +10,6 @@ import Combine
 
 
 class NetworkingManager {
-    
-    static func url(endpoint: String) -> URL? {
-        switch api {
-        case .production:
-            return URL(string: baseUrl + endpoint)
-        case .mock:
-            fatalError("[🛑] Mock data service should not be using the network!")
-        }
-    }
 
     static func download(url: URL) -> AnyPublisher<Data, Error> {
         var request = URLRequest(url: url)
@@ -64,20 +55,23 @@ extension NetworkingManager {
     
     private static let api: API = .production
     private static let baseUrl = "https://wetterso.se/wp-json/wp/v2"
+    
+    static func url(endpoint: String, parameters: [String: String] = [:]) -> URL? {
+        var urlString: String
+        switch api {
+        case .production:
+            urlString = baseUrl + endpoint
+        case .mock:
+            fatalError("[🛑] Mock data service should not use the network!")
+        }
+        
+        return URL(string: urlString)?.appending(queryItems: parameters.map { URLQueryItem(name: $0, value: $1) })
+    }
 }
 
 // MARK: Helpers
 
-enum ListData<Data> where Data: Sequence, Data.Element: Identifiable  {
-    case loading
-    case finished(Result<Data, NetworkingError>)
-    
-    init() {
-        self = .loading
-    }
-}
-
-enum NetworkingError: LocalizedError {
+enum NetworkingError: LocalizedError, Identifiable {
     case badURLResponse(url: URL, statusCode: Int)
     case unknown
     
@@ -86,5 +80,9 @@ enum NetworkingError: LocalizedError {
         case .badURLResponse(let url, let statusCode): return "[🔥] Status code: \(statusCode). Bad response from URL: \(url)"
         case .unknown: return "[⚠️] Unknown error occured"
         }
+    }
+    
+    var id: String {
+        return UUID().uuidString
     }
 }

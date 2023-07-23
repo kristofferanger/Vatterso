@@ -8,31 +8,39 @@
 import Foundation
 import Combine
 
-protocol PagesDataServiceProtocol {
+protocol DataServiceProtocol {
+    associatedtype T: Decodable
     // subscribe vars
-    var pagesPublisher: Published<ListData<[Page]>>.Publisher { get }
+    var dataPublisher: Published<LoadingData<T>>.Publisher { get }
     // method to ask for updates
-    func loadPages()
+    func loadData()
 }
 
-class PagesDataService: PagesDataServiceProtocol {
+class DataService<T: Decodable>: DataServiceProtocol {
     
-    var pagesPublisher: Published<ListData<[Page]>>.Publisher { $allPages }
-    
-    @Published var allPages = ListData<[Page]>()
+    var url: URL?
+    @Published var data = LoadingData<T>()
+    var dataPublisher: Published<LoadingData<T>>.Publisher { $data }
     
     private var pagesSubscription: AnyCancellable?
 
-    func loadPages() {
-        guard let url = NetworkingManager.url(endpoint: "/pages?context=view&orderby=parent&per_page=100") else {
-            return
-        }
+    func loadData() {
+        guard let url else { return }
         pagesSubscription = NetworkingManager.download(url: url)
-            .decode(type: [Page].self, decoder: NetworkingManager.defaultDecoder())
+            .decode(type: T.self, decoder: NetworkingManager.defaultDecoder())
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] receivedData in
+            .sink(receiveCompletion: { [weak self] completion in
                 guard let self else { return }
-                self.allPages = .finished(.success(receivedData))
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    let networkingError = error as? NetworkingError ?? NetworkingError.unknown
+                    self.data = .finished(.failure(networkingError))
+                }
+            }, receiveValue:{ [weak self] receivedData in
+                guard let self else { return }
+                self.data = .finished(.success(receivedData))
                 self.pagesSubscription?.cancel()
             })
     }

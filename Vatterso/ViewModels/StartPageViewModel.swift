@@ -11,29 +11,36 @@ import Combine
 
 class StartPageViewModel: ObservableObject {
     
-    @Published var pages = ListData<[Page]>()
+    @Published var pages = LoadingData<[Page]>()
     
-    private let pagesDataService: PagesDataServiceProtocol
-    //private let postsDataService: PostsDataServiceProtocol
+    private let pagesDataService: DataService<[Page]>
+    private let postsDataService: DataService<[Post]>
     private var cancellables = Set<AnyCancellable>()
     
     init() {
-        self.pagesDataService = PagesDataService()
+        self.pagesDataService = DataService<[Page]>()
+        pagesDataService.url = NetworkingManager.url(endpoint: "/pages", parameters: ["context": "view", "orderby": "parent", "per_page": "100"])
+        
+        self.postsDataService = DataService<[Post]>()
+        postsDataService.url = NetworkingManager.url(endpoint: "/posts", parameters: ["per_page": "100"])
+        
         addSubscribers()
     }
     
     func loadPages() {
-        pagesDataService.loadPages()
+        pagesDataService.loadData()
     }
 
     private func addSubscribers() {
-        pagesDataService.pagesPublisher
+        
+        pagesDataService.dataPublisher
             .sink { completion in
                 print("Completion \(completion)")
             } receiveValue: { [weak self] pages in
                 self?.pages = pages
             }
             .store(in: &cancellables)
+        
     }
     
 }
