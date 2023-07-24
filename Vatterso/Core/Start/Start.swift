@@ -8,9 +8,9 @@
 import SwiftUI
 
 //
-enum LoadingData<Data> {
+enum LoadingData<T> {
     case loading
-    case finished(Result<Data, NetworkingError>)
+    case finished(Result<T, NetworkingError>)
     
     init() {
         self = .loading
@@ -70,7 +70,7 @@ struct Start: View {
                     }
                 }
             } errorAlert: { error in
-                Alert(title: Text("Error"), message: Text(error.localizedDescription))
+                Alert(title: Text("Something went wrong"), message: Text(error.localizedDescription))
             }
             .navigationTitle("Test")
         }

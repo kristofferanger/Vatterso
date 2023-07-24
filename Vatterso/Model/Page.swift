@@ -12,7 +12,8 @@ struct Page: Codable, Identifiable {
     let id: Int
     let date, dateGmt, modified, modifiedGmt: String
     let title, guid, content, excerpt: Paragraph
-    let author, featuredMedia, parent, menuOrder: Int
+    let author, featuredMedia: Int
+    let parent, menuOrder: Int?
     let slug, status, type, link, commentStatus, pingStatus, template: String
     let links: Links
     

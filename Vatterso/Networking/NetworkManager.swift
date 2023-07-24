@@ -10,22 +10,27 @@ import Combine
 
 
 class NetworkingManager {
-
+    
     static func download(url: URL) -> AnyPublisher<Data, Error> {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        return download(request: request)
+    }
+    
+    static func download(request: URLRequest) -> AnyPublisher<Data, Error> {
         return URLSession.shared.dataTaskPublisher(for: request)
-            .tryMap { try handleURLResponse(output: $0, url: url) }
+            .tryMap { try handleURLResponse(output: $0, url: request.url) }
             .retry(3)
             .eraseToAnyPublisher()
     }
     
-    static func handleURLResponse(output: URLSession.DataTaskPublisher.Output, url: URL) throws -> Data {
+    static func handleURLResponse(output: URLSession.DataTaskPublisher.Output, url: URL?) throws -> Data {
         guard let response = output.response as? HTTPURLResponse else {
             throw NetworkingError.unknown
         }
-        guard response.statusCode >= 200 && response.statusCode < 300 else {
-            throw NetworkingError.badURLResponse(url: response.url ?? url, statusCode: response.statusCode)
+        guard (200..<300).contains(response.statusCode) else {
+            let urlString = response.url?.absoluteString ?? url?.absoluteString ?? "URL is missing!"
+            throw NetworkingError.badURLResponse(urlString: urlString, statusCode: response.statusCode)
         }
         return output.data
     }
@@ -38,11 +43,8 @@ class NetworkingManager {
     }
     
     static func handleCompletion(completion: Subscribers.Completion<Error>) {
-        switch completion {
-        case .finished:
-            break
-        case .failure(let error):
-            print(error.localizedDescription)
+        if case .failure(let error) = completion {
+            print("Sone other unclear error \(error.localizedDescription)")
         }
     }
 }
@@ -72,7 +74,7 @@ extension NetworkingManager {
 // MARK: Helpers
 
 enum NetworkingError: LocalizedError, Identifiable {
-    case badURLResponse(url: URL, statusCode: Int)
+    case badURLResponse(urlString: String, statusCode: Int)
     case unknown
     
     var errorDescription: String? {
