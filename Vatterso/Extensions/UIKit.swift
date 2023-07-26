@@ -20,3 +20,32 @@ extension UIScreen {
         return keyWindow?.safeAreaInsets ?? .zero
     }
 }
+
+extension UINavigationController {
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+              
+        let compactAppearance = UINavigationBarAppearance()
+        compactAppearance.backgroundColor = .green
+        navigationBar.compactAppearance = compactAppearance
+
+        navigationBar.standardAppearance = {
+            let standardAppearance = UINavigationBarAppearance()
+            standardAppearance.backgroundColor = .black
+            standardAppearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+            return standardAppearance
+        }()
+        navigationBar.scrollEdgeAppearance = {
+            let appearance = UINavigationBarAppearance()
+            appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+            return appearance
+        }()
+        
+    }
+}
+
+extension UINavigationBar {
+    open override func draw(_ rect: CGRect) {
+        super.draw(rect)
+    }
+}

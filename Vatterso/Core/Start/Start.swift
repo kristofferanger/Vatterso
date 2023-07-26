@@ -62,17 +62,22 @@ struct Start: View {
     var body: some View {
         NavigationView {
             SpinnerWhileLoadingView(viewModel.pages) { pages in
-                ScrollView {
-                    LazyVStack {
-                        ForEach(pages) { page in
-                            Text(page.title.text)
+                List(viewModel.pageList, children: \.items) { row in
+                    HStack {
+                        if let icon = row.icon {
+                            Image(systemName: icon)
                         }
+                        Text(row.name)
                     }
-                }
+                    .overlay(
+                        NavigationLink("", destination: WPPage(page: row.page))
+                            .opacity(0)
+                    )
+                }.listStyle(.plain)
             } errorAlert: { error in
                 Alert(title: Text("Something went wrong"), message: Text(error.localizedDescription))
             }
-            .navigationTitle("Test")
+            .navigationTitle("Hem")
         }
         .onAppear {
             viewModel.loadPages()
@@ -177,3 +182,6 @@ struct Start_Previews: PreviewProvider {
         Start()
     }
 }
+
+
+

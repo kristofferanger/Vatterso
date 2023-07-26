@@ -14,6 +14,9 @@
 		C9040BBC2A5FFBBC004E965D /* UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BBB2A5FFBBC004E965D /* UIKit.swift */; };
 		C9040BBE2A5FFBDF004E965D /* Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BBD2A5FFBDF004E965D /* Foundation.swift */; };
 		C9040BC12A6059BD004E965D /* StartPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BC02A6059BD004E965D /* StartPageViewModel.swift */; };
+		C93AE2E02A700FAC00BCF683 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93AE2DF2A700FAC00BCF683 /* DataService.swift */; };
+		C93AE2E22A702EA000BCF683 /* WPPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93AE2E12A702EA000BCF683 /* WPPage.swift */; };
+		C93AE2E62A7133DE00BCF683 /* VASideBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93AE2E52A7133DE00BCF683 /* VASideBarItem.swift */; };
 		C940C7952A6526AB00831244 /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C940C7942A6526AB00831244 /* ViewModifiers.swift */; };
 		C97EA6F22A2889670082001B /* VattersoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA6F12A2889670082001B /* VattersoApp.swift */; };
 		C97EA6F42A2889670082001B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA6F32A2889670082001B /* ContentView.swift */; };
@@ -56,6 +59,9 @@
 		C9040BBB2A5FFBBC004E965D /* UIKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKit.swift; sourceTree = "<group>"; };
 		C9040BBD2A5FFBDF004E965D /* Foundation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Foundation.swift; sourceTree = "<group>"; };
 		C9040BC02A6059BD004E965D /* StartPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPageViewModel.swift; sourceTree = "<group>"; };
+		C93AE2DF2A700FAC00BCF683 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
+		C93AE2E12A702EA000BCF683 /* WPPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WPPage.swift; sourceTree = "<group>"; };
+		C93AE2E52A7133DE00BCF683 /* VASideBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VASideBarItem.swift; sourceTree = "<group>"; };
 		C93F18792A62D62E00CA661C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C940C7942A6526AB00831244 /* ViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifiers.swift; sourceTree = "<group>"; };
 		C97EA6EE2A2889670082001B /* Vatterso.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vatterso.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,6 +113,7 @@
 			children = (
 				C9040BB52A5FDDBE004E965D /* NetworkManager.swift */,
 				C9040BB72A5FE2CF004E965D /* PagesDataService.swift */,
+				C93AE2DF2A700FAC00BCF683 /* DataService.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -126,6 +133,22 @@
 				C9040BC02A6059BD004E965D /* StartPageViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		C93AE2E32A7130C000BCF683 /* WPPage */ = {
+			isa = PBXGroup;
+			children = (
+				C93AE2E12A702EA000BCF683 /* WPPage.swift */,
+			);
+			path = WPPage;
+			sourceTree = "<group>";
+		};
+		C93AE2E42A7130E800BCF683 /* SideMenu */ = {
+			isa = PBXGroup;
+			children = (
+				C93AE2E52A7133DE00BCF683 /* VASideBarItem.swift */,
+			);
+			path = SideMenu;
 			sourceTree = "<group>";
 		};
 		C97EA6E52A2889660082001B = {
@@ -151,12 +174,12 @@
 		C97EA6F02A2889670082001B /* Vatterso */ = {
 			isa = PBXGroup;
 			children = (
+				C97EA6F12A2889670082001B /* VattersoApp.swift */,
 				C97EA72D2A2CF8A10082001B /* Core */,
 				C9040BBF2A60597C004E965D /* ViewModels */,
 				C9040BB02A5FD41E004E965D /* Model */,
 				C9040BAF2A5FD2E5004E965D /* Networking */,
 				C97EA72C2A2CF8860082001B /* Extensions */,
-				C97EA6F12A2889670082001B /* VattersoApp.swift */,
 				C97EA7222A28A1540082001B /* MainTabBarView.swift */,
 				C97EA6F32A2889670082001B /* ContentView.swift */,
 				C97EA6FA2A28896C0082001B /* Persistence.swift */,
@@ -208,7 +231,9 @@
 		C97EA72D2A2CF8A10082001B /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				C93AE2E42A7130E800BCF683 /* SideMenu */,
 				C97EA7302A2CF9770082001B /* Start */,
+				C93AE2E32A7130C000BCF683 /* WPPage */,
 				C97EA72E2A2CF8B50082001B /* Components */,
 			);
 			path = Core;
@@ -377,9 +402,12 @@
 				C9040BB82A5FE2CF004E965D /* PagesDataService.swift in Sources */,
 				C97EA6FB2A28896C0082001B /* Persistence.swift in Sources */,
 				C97EA7232A28A1540082001B /* MainTabBarView.swift in Sources */,
+				C93AE2E02A700FAC00BCF683 /* DataService.swift in Sources */,
 				C97EA6FE2A28896C0082001B /* Vatterso.xcdatamodeld in Sources */,
 				C97EA6F42A2889670082001B /* ContentView.swift in Sources */,
 				C9040BC12A6059BD004E965D /* StartPageViewModel.swift in Sources */,
+				C93AE2E22A702EA000BCF683 /* WPPage.swift in Sources */,
+				C93AE2E62A7133DE00BCF683 /* VASideBarItem.swift in Sources */,
 				C97EA7212A288A1E0082001B /* VATabBarView.swift in Sources */,
 				C97EA6F22A2889670082001B /* VattersoApp.swift in Sources */,
 				C9040BBC2A5FFBBC004E965D /* UIKit.swift in Sources */,

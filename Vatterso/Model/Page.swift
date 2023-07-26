@@ -44,7 +44,7 @@ struct Page: Codable, Identifiable {
     }
 }
 
-extension Page.Paragraph {
+extension Post.Paragraph {
     // easy access of html stripped string
     var text: String {
         return self.rendered.htmlStripped()

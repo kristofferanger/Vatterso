@@ -22,23 +22,27 @@ class DataService<DataType: Codable>: DataServiceProtocol {
 
     var dataPublisher: Published<[DataType]>.Publisher { $data }
     
-    init(url: URL? = nil) {
-        self.url = url
+    init(url: URL?) {
+        guard let url else { return }
+        self.request = URLRequest(url: url)
+        self.request?.httpMethod = "GET"
     }
     
-    private var url: URL?
+    init(request: URLRequest? = nil) {
+        self.request = request
+    }
+    
+    private var request: URLRequest?
     private var pagesSubscription: AnyCancellable?
 
     func loadData() {
-        guard let url else { return }
-        pagesSubscription = NetworkingManager.download(url: url)
+        guard let request else { return }
+        pagesSubscription = NetworkingManager.download(request: request)
             .decode(type: [DataType].self, decoder: NetworkingManager.defaultDecoder())
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: NetworkingManager.handleCompletion(completion:))
-            { [weak self] receivedData in
-                guard let self else { return }
-                self.data = receivedData
-                self.pagesSubscription?.cancel()
+            .sink(receiveCompletion: NetworkingManager.handleCompletion(completion:)) { [weak self] receivedData in
+                self?.data = receivedData
+                self?.pagesSubscription?.cancel()
             }
     }
 }
