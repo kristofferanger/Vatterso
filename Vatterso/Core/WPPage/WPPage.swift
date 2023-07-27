@@ -14,8 +14,8 @@ struct WPPage: View {
     var body: some View {
         ScrollView {
             VStack {
-                Text(page.excerpt.text)
-                Text(page.content.text)
+                Text(page.excerpt.rendered)
+                Text(page.content.rendered)
             }
             .padding()
         }

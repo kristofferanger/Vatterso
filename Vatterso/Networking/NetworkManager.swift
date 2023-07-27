@@ -44,7 +44,7 @@ class NetworkingManager {
     
     static func handleCompletion(completion: Subscribers.Completion<Error>) {
         if case .failure(let error) = completion {
-            print("Sone other unclear error \(error.localizedDescription)")
+            print("Some other error: \(error.localizedDescription)")
         }
     }
 }

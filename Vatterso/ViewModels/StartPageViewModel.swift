@@ -53,11 +53,9 @@ struct Bookmark: Identifiable {
 
 class StartPageViewModel: StandardViewModel {
     
-    @Published var pages = LoadingData<[Page]>()
-    @Published var posts = LoadingData<[Page]>()
     @Published var pageList = [Bookmark]()
 
-    private let pagesDataService = DataService<Page>(url: NetworkingManager.url(endpoint: "/pages", parameters: ["context": "view", "per_page": "100"]))
+    private let pagesDataService = DataService<Page>(url: NetworkingManager.url(endpoint: "/pages", parameters: ["context": "view", "per_page": "1000"]))
     private let postsDataService = DataService<Page>(url: NetworkingManager.url(endpoint: "/posts", parameters: ["orderby": "date", "per_page": "100"]))
     private var cancellables = Set<AnyCancellable>()
     
@@ -74,13 +72,13 @@ class StartPageViewModel: StandardViewModel {
 
     private func addSubscribers() {
         pagesDataService.dataPublisher
-            .sink { completion in
+            .sink { [weak self] completion in
                 if case .failure(let error) = completion {
                     let networkingError = error as! NetworkingError
-                    self.pages = .finished(.failure(networkingError))
+                    self?.status = .error(networkingError)
                 }
             } receiveValue: { [weak self] pages in
-                self?.pages = .finished( .success(pages))
+                self?.status = .finnished
                 self?.pageList = pages.compactMap{ page in
                     guard let parent = page.parent, parent == 0 else { return nil }
                     let children = pages.filter{ page.id == $0.parent }.map{ Bookmark(page: $0) }
@@ -89,14 +87,13 @@ class StartPageViewModel: StandardViewModel {
             }
             .store(in: &cancellables)
         
-        postsDataService.dataPublisher
-            .sink { completion in
-                print("Completion \(completion)")
-            } receiveValue: { [weak self] posts in
-                self?.posts = .finished( .success(posts))
-            }
-            .store(in: &cancellables)
+//        postsDataService.dataPublisher
+//            .sink { completion in
+//                print("Completion \(completion)")
+//            } receiveValue: { [weak self] posts in
+//                self?.posts = .finished( .success(posts))
+//            }
+//            .store(in: &cancellables)
         
     }
-    
 }

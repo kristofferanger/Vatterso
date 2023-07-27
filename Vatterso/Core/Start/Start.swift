@@ -17,35 +17,34 @@ enum LoadingData<T> {
     }
 }
 
-struct SpinnerWhileLoadingView<Data, Content>: View where Content: View {
+struct SpinnerWhileLoadingView<Content>: View where Content: View {
     
-    private var loadingData: LoadingData<Data>
+    private var status: LoadingStatus
     private var errorAlert: (NetworkingError) -> Alert
-    @ViewBuilder private var content: (Data) -> Content
+    @ViewBuilder private var content: () -> Content
     
     @State private var error: NetworkingError?
     
-    init(_ data: LoadingData<Data>, @ViewBuilder content: @escaping (Data) -> Content, errorAlert: @escaping (NetworkingError) -> Alert) {
-        self.loadingData = data
+    init(_ status: LoadingStatus, @ViewBuilder content: @escaping () -> Content, errorAlert: @escaping (NetworkingError) -> Alert) {
+        self.status = status
         self.content = content
         self.errorAlert = errorAlert
     }
     
     var body: some View {
         Group {
-            switch loadingData {
-            case .finished(let loadingResult):
-                switch loadingResult {
-                case .success(let data):
-                    content(data)
-                case .failure(let error):
-                    Color.clear
-                        .onAppear {
-                            self.error = error
-                        }
-                }
+            switch status {
+            case .error(let error):
+                Color.clear
+                    .onAppear {
+                        self.error = error
+                    }
             case .loading:
                 ProgressView()
+            case .finnished:
+                content()
+            case .unknown:
+                Color.clear
             }
         }
         .alert(item: $error) { error in
@@ -61,7 +60,7 @@ struct Start: View {
         
     var body: some View {
         NavigationView {
-            SpinnerWhileLoadingView(viewModel.pages) { pages in
+            SpinnerWhileLoadingView(viewModel.status) {
                 List(viewModel.pageList, children: \.items) { row in
                     HStack {
                         if let icon = row.icon {

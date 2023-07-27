@@ -243,16 +243,8 @@
 			isa = PBXGroup;
 			children = (
 				C940C7942A6526AB00831244 /* ViewModifiers.swift */,
-				C97EA72F2A2CF8D90082001B /* Buttons */,
 			);
 			path = Components;
-			sourceTree = "<group>";
-		};
-		C97EA72F2A2CF8D90082001B /* Buttons */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Buttons;
 			sourceTree = "<group>";
 		};
 		C97EA7302A2CF9770082001B /* Start */ = {

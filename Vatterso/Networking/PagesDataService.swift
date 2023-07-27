@@ -40,9 +40,14 @@ class DataService<DataType: Codable>: DataServiceProtocol {
         pagesSubscription = NetworkingManager.download(request: request)
             .decode(type: [DataType].self, decoder: NetworkingManager.defaultDecoder())
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: NetworkingManager.handleCompletion(completion:)) { [weak self] receivedData in
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    print("Some other error: \(error.localizedDescription)")
+                    
+                }
+            }, receiveValue: { [weak self] receivedData in
                 self?.data = receivedData
                 self?.pagesSubscription?.cancel()
-            }
+            })
     }
 }
