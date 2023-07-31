@@ -41,7 +41,7 @@ struct SpinnerWhileLoadingView<Content>: View where Content: View {
                     }
             case .loading:
                 ProgressView()
-            case .finnished:
+            case .finished:
                 content()
             case .unknown:
                 Color.clear
@@ -60,8 +60,8 @@ struct Start: View {
         
     var body: some View {
         NavigationView {
-            SpinnerWhileLoadingView(viewModel.status) {
-                List(viewModel.pageList, children: \.items) { row in
+            SpinnerWhileLoadingView(viewModel.loadingStatus) {
+                List(viewModel.sideBarItems, children: \.items) { row in
                     HStack {
                         if let icon = row.icon {
                             Image(systemName: icon)
@@ -69,7 +69,7 @@ struct Start: View {
                         Text(row.name)
                     }
                     .overlay(
-                        NavigationLink("", destination: WPPage(page: row.page))
+                        NavigationLink("", destination: WPPage(page: row.page!))
                             .opacity(0)
                     )
                 }.listStyle(.plain)

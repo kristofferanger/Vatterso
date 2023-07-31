@@ -42,9 +42,17 @@ class NetworkingManager {
         return decoder
     }
     
-    static func handleCompletion(completion: Subscribers.Completion<Error>) {
+    static func handleCompletion(completion: Subscribers.Completion<Error>, networkingError:((NetworkingError) -> Void)) {
         if case .failure(let error) = completion {
-            print("Some other error: \(error.localizedDescription)")
+            if let error = error as? NetworkingError {
+                networkingError(error)
+            }
+            else if let urlError = error as? URLError, urlError.code == URLError.Code.notConnectedToInternet {
+                networkingError(NetworkingError.noNetwork)
+            }
+            else {
+                networkingError(NetworkingError.unknown)
+            }
         }
     }
 }
@@ -76,11 +84,16 @@ extension NetworkingManager {
 enum NetworkingError: LocalizedError, Identifiable {
     case badURLResponse(urlString: String, statusCode: Int)
     case unknown
+    case noNetwork
     
     var errorDescription: String? {
         switch self {
-        case .badURLResponse(let url, let statusCode): return "[🔥] Status code: \(statusCode). Bad response from URL: \(url)"
-        case .unknown: return "[⚠️] Unknown error occured"
+        case .badURLResponse(let url, let statusCode):
+            return "[🔥] Status code: \(statusCode). Bad response from URL: \(url)"
+        case .unknown:
+            return "[⚡️] Unknown error occured"
+        case .noNetwork:
+            return "[⚠️] No network found"
         }
     }
     

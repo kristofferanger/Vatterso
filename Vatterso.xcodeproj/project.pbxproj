@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C9040BB22A5FD43C004E965D /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BB12A5FD43C004E965D /* Post.swift */; };
-		C9040BB42A5FD448004E965D /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BB32A5FD448004E965D /* Page.swift */; };
 		C9040BB62A5FDDBE004E965D /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BB52A5FDDBE004E965D /* NetworkManager.swift */; };
 		C9040BB82A5FE2CF004E965D /* PagesDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BB72A5FE2CF004E965D /* PagesDataService.swift */; };
 		C9040BBC2A5FFBBC004E965D /* UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BBB2A5FFBBC004E965D /* UIKit.swift */; };
@@ -17,6 +15,7 @@
 		C93AE2E02A700FAC00BCF683 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93AE2DF2A700FAC00BCF683 /* DataService.swift */; };
 		C93AE2E22A702EA000BCF683 /* WPPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93AE2E12A702EA000BCF683 /* WPPage.swift */; };
 		C93AE2E62A7133DE00BCF683 /* VASideBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93AE2E52A7133DE00BCF683 /* VASideBarItem.swift */; };
+		C93AE2E82A731D1800BCF683 /* WPPostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93AE2E72A731D1800BCF683 /* WPPostModel.swift */; };
 		C940C7952A6526AB00831244 /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C940C7942A6526AB00831244 /* ViewModifiers.swift */; };
 		C97EA6F22A2889670082001B /* VattersoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA6F12A2889670082001B /* VattersoApp.swift */; };
 		C97EA6F42A2889670082001B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA6F32A2889670082001B /* ContentView.swift */; };
@@ -52,8 +51,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C9040BB12A5FD43C004E965D /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
-		C9040BB32A5FD448004E965D /* Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
 		C9040BB52A5FDDBE004E965D /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		C9040BB72A5FE2CF004E965D /* PagesDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagesDataService.swift; sourceTree = "<group>"; };
 		C9040BBB2A5FFBBC004E965D /* UIKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKit.swift; sourceTree = "<group>"; };
@@ -62,6 +59,7 @@
 		C93AE2DF2A700FAC00BCF683 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		C93AE2E12A702EA000BCF683 /* WPPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WPPage.swift; sourceTree = "<group>"; };
 		C93AE2E52A7133DE00BCF683 /* VASideBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VASideBarItem.swift; sourceTree = "<group>"; };
+		C93AE2E72A731D1800BCF683 /* WPPostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WPPostModel.swift; sourceTree = "<group>"; };
 		C93F18792A62D62E00CA661C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C940C7942A6526AB00831244 /* ViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifiers.swift; sourceTree = "<group>"; };
 		C97EA6EE2A2889670082001B /* Vatterso.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vatterso.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -121,8 +119,7 @@
 		C9040BB02A5FD41E004E965D /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				C9040BB12A5FD43C004E965D /* Post.swift */,
-				C9040BB32A5FD448004E965D /* Page.swift */,
+				C93AE2E72A731D1800BCF683 /* WPPostModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -386,8 +383,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C97EA7252A28F0620082001B /* VATabBarContainerView.swift in Sources */,
-				C9040BB22A5FD43C004E965D /* Post.swift in Sources */,
-				C9040BB42A5FD448004E965D /* Page.swift in Sources */,
 				C9040BBE2A5FFBDF004E965D /* Foundation.swift in Sources */,
 				C9040BB62A5FDDBE004E965D /* NetworkManager.swift in Sources */,
 				C940C7952A6526AB00831244 /* ViewModifiers.swift in Sources */,
@@ -401,6 +396,7 @@
 				C93AE2E22A702EA000BCF683 /* WPPage.swift in Sources */,
 				C93AE2E62A7133DE00BCF683 /* VASideBarItem.swift in Sources */,
 				C97EA7212A288A1E0082001B /* VATabBarView.swift in Sources */,
+				C93AE2E82A731D1800BCF683 /* WPPostModel.swift in Sources */,
 				C97EA6F22A2889670082001B /* VattersoApp.swift in Sources */,
 				C9040BBC2A5FFBBC004E965D /* UIKit.swift in Sources */,
 				C97EA7322A2CFF4C0082001B /* Start.swift in Sources */,

@@ -1,17 +1,18 @@
 //
-//  Page.swift
+//  WPPostModel.swift
 //  Vatterso
 //
-//  Created by Kristoffer Anger on 2023-07-13.
+//  Created by Kristoffer Anger on 2023-07-27.
 //
 
 import Foundation
+import SwiftUI
 
-struct Page: Codable, Identifiable {
+struct WPPost: Codable, Identifiable {
     
     let id: Int
     let date, dateGmt, modified, modifiedGmt: String
-    let title, guid, content, excerpt: Paragraph
+    let title, guid, content, excerpt: Section
     let author, featuredMedia: Int
     let parent, menuOrder: Int?
     let slug, status, type, link, commentStatus, pingStatus, template: String
@@ -22,7 +23,7 @@ struct Page: Codable, Identifiable {
         case links = "_links"
     }
     
-    struct Paragraph: Codable {
+    struct Section: Codable {
         let rendered: String
         let protected: Bool?
     }
@@ -44,7 +45,7 @@ struct Page: Codable, Identifiable {
     }
 }
 
-extension Post.Paragraph {
+extension WPPost.Section {
     // easy access of html stripped string
     var text: String {
         return self.rendered.htmlStripped()
@@ -53,4 +54,11 @@ extension Post.Paragraph {
     var imageUrls: [String] {
         return self.rendered.htmlImageUrls()
     }
+}
+
+
+struct WPParagraph {
+    var text: String
+    var font: Font
+    var images: [Image]
 }

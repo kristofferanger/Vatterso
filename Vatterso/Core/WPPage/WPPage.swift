@@ -9,13 +9,12 @@ import SwiftUI
 
 struct WPPage: View {
     
-    var page: Page
-    
+    var page: WPPost
+
     var body: some View {
         ScrollView {
             VStack {
-                Text(page.excerpt.rendered)
-                Text(page.content.rendered)
+                Text(.init(page.content.text))
             }
             .padding()
         }
