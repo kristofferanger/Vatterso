@@ -131,12 +131,14 @@ extension String {
                 // font size is captured (optional)
                 Optionally {
                     "style"
-                    ZeroOrMore(.any)
+                    OneOrMore(.any)
                     // font size starts with font-size and :
                     "font-size:"
                     // capture size
-                    Capture {
+                    TryCapture {
                         ZeroOrMore(.any)
+                    } transform: {
+                        Float($0)
                     }
                     // size ends with px
                     "px"
@@ -147,7 +149,7 @@ extension String {
                 // image url is captured (optional)
                 Optionally {
                     "[<"
-                    ZeroOrMore(.any)
+                    OneOrMore(.any)
                     ">]("
                     // url is captured
                     Capture {
@@ -159,6 +161,7 @@ extension String {
                 Capture {
                     ZeroOrMore(.any)
                 }
+
                 // text ends just before end mark </p>
                 ChoiceOf {
                     "</p>"
@@ -171,8 +174,8 @@ extension String {
                 let (paragraph, fontSize, imageUrl, text) = match.output
                 
                 var font: Font
-                if let fontSize, let size = Float(fontSize) {
-                    font = Font.system(size: CGFloat(size))
+                if let fontSize {
+                    font = Font.system(size: CGFloat(fontSize))
                 }
                 else {
                     font = Font.body
