@@ -122,8 +122,12 @@ extension String {
         func processString(string: String, paragraphs: [WPParagraph]) -> [WPParagraph] {
             // try matching paragraphs, starts with a "<p>"  or "<p style...>"and ends with a "</p>"
             let paragraph = Regex {
-                "<p"
-                ZeroOrMore(.whitespace)
+                ChoiceOf {
+                    "<p"
+                    "<h2"
+                    "<figure"
+                }
+                ZeroOrMore(.any)
                 // font size is captured (optional)
                 Optionally {
                     "style"
@@ -140,16 +144,31 @@ extension String {
                     ZeroOrMore(.any)
                 }
                 ">"
+                // image url is captured (optional)
+                Optionally {
+                    "[<"
+                    ZeroOrMore(.any)
+                    ">]("
+                    // url is captured
+                    Capture {
+                        ZeroOrMore(.any)
+                    }
+                    ")"
+                }
                 // text is captured
                 Capture {
                     ZeroOrMore(.any)
                 }
                 // text ends just before end mark </p>
-                "</p>"
+                ChoiceOf {
+                    "</p>"
+                    "</h2>"
+                    "</figure>"
+                }
             }.repetitionBehavior(.reluctant)
             
             if let match = string.firstMatch(of: paragraph) {
-                let (paragraph, fontSize, text) = match.output
+                let (paragraph, fontSize, imageUrl, text) = match.output
                 
                 var font: Font
                 if let fontSize, let size = Float(fontSize) {
@@ -158,6 +177,12 @@ extension String {
                 else {
                     font = Font.body
                 }
+                
+                var url: String
+                if let imageUrl {
+                    print(imageUrl)
+                }
+                
                 // call method recursively until all matches are found
                 return processString(string: string.replacing(paragraph, with: ""), paragraphs: paragraphs + [WPParagraph(text: String(text), font: font)])
             }
