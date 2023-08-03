@@ -34,27 +34,6 @@ class NetworkingManager {
         }
         return output.data
     }
-    
-    static func defaultDecoder() -> JSONDecoder {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
-        return decoder
-    }
-    
-    static func handleCompletion(completion: Subscribers.Completion<Error>, networkingError:((NetworkingError) -> Void)) {
-        if case .failure(let error) = completion {
-            if let error = error as? NetworkingError {
-                networkingError(error)
-            }
-            else if let urlError = error as? URLError, urlError.code == URLError.Code.notConnectedToInternet {
-                networkingError(NetworkingError.noNetwork)
-            }
-            else {
-                networkingError(NetworkingError.unknown)
-            }
-        }
-    }
 }
 
 // API constants
@@ -74,8 +53,14 @@ extension NetworkingManager {
         case .mock:
             fatalError("[🛑] Mock data service should not use the network!")
         }
-        
         return URL(string: urlString)?.appending(queryItems: parameters.map { URLQueryItem(name: $0, value: $1) })
+    }
+    
+    static func defaultDecoder() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+        return decoder
     }
 }
 
@@ -97,6 +82,18 @@ enum NetworkingError: LocalizedError, Identifiable {
         }
     }
     
+    init(error: Error) {
+        if let error = error as? NetworkingError {
+            self = error
+        }
+        else if let urlError = error as? URLError, urlError.code == URLError.Code.notConnectedToInternet {
+            self = NetworkingError.noNetwork
+        }
+        else {
+            self = NetworkingError.unknown
+        }
+    }
+
     var id: String {
         return UUID().uuidString
     }

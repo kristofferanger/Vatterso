@@ -8,6 +8,10 @@
 import Foundation
 import SwiftUI
 
+// Model for WordPress site data
+// same model is used for both page and post, the difference
+// is that page also includes values for "parent" and "menuOrder"
+
 struct WPPost: Codable, Identifiable {
     
     let id: Int
@@ -51,14 +55,24 @@ extension WPPost.Section {
         return self.rendered.htmlStripped()
     }
     
+    var markdownText: String {
+        return self.rendered.htmlToMarkDown()
+    }
+    
+    var paragraphs: [WPParagraph] {
+        let result = self.rendered.htmlToMarkDown().createParagraphs()
+        return result
+    }
+    
     var imageUrls: [String] {
         return self.rendered.htmlImageUrls()
     }
 }
 
-
-struct WPParagraph {
-    var text: String
-    var font: Font
-    var images: [Image]
+struct WPParagraph: Identifiable {
+    let id = UUID().uuidString
+    var text: String?
+    var font: Font?
+    var color: Color?
+    var imageUrl: String?
 }
