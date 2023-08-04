@@ -15,23 +15,11 @@ extension String {
         return self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
     }
     
+    // simple method to remove all tags
     func htmlStripped() -> String {
         let pattern = "<[^>]+>"
         let stripped = self.trimmed().replacingOccurrences(of: pattern, with: "", options: .regularExpression, range: nil)
         return stripped
-    }
-    
-    func htmlImageUrls() -> [String] {
-        let pattern = "(http[^\\s]+(jpg|jpeg|png|tiff)\\b)"
-        do {
-            let regex = try NSRegularExpression(pattern: pattern, options: [])
-            let nsString = self as NSString
-            let results = regex.matches(in: self, range: NSMakeRange(0, nsString.length))
-            return results.map { nsString.substring(with: $0.range)}
-        } catch let error as NSError {
-            print("invalid regex: \(error.localizedDescription)")
-            return []
-        }
     }
     
     // Replace HTML comments, in the format <!-- ... comment ... -->
@@ -116,11 +104,11 @@ extension String {
         }
         return text
     }
-    
+    // split text into paragraphs with text, font, and image and more
     func createParagraphs() -> [WPParagraph] {
         
         func processString(string: String, paragraphs: [WPParagraph]) -> [WPParagraph] {
-            // try matching paragraphs, starts with a "<p>"  or "<p style...>"and ends with a "</p>"
+            // try matching paragraphs, starts with a "<p>", "<p style...>" and ends with a "</p>"
             let paragraph = Regex {
                 ChoiceOf {
                     "<p"
@@ -131,8 +119,9 @@ extension String {
                 // font size is captured (optional)
                 Optionally {
                     "style"
+                    // step forward
                     OneOrMore(.any)
-                    // font size starts with font-size and :
+                    // font size starts with font-size:
                     "font-size:"
                     // capture size
                     TryCapture {
@@ -145,24 +134,30 @@ extension String {
                     // could include other styles too
                     ZeroOrMore(.any)
                 }
+                // end of initial tag
                 ">"
-                // image url is captured (optional)
-                Optionally {
-                    "[<"
-                    OneOrMore(.any)
-                    ">]("
-                    // url is captured
+                // capture either image url or text
+                ChoiceOf {
+                    // image url is captured (optional)
+                    Optionally {
+                        "[<img"
+                        OneOrMore(.any)
+                        ">]"
+                        // url is captured
+                        "("
+                        Capture {
+                            OneOrMore(.any)
+                        }
+                        ")"
+                    }
+                    // text is captured
                     Capture {
                         ZeroOrMore(.any)
+                    } transform: {
+                        String($0)
                     }
-                    ")"
                 }
-                // text is captured
-                Capture {
-                    ZeroOrMore(.any)
-                }
-
-                // text ends just before end mark </p>
+                // text ends right before end mark, ex </p>
                 ChoiceOf {
                     "</p>"
                     "</h2>"
@@ -173,6 +168,7 @@ extension String {
             if let match = string.firstMatch(of: paragraph) {
                 let (paragraph, fontSize, imageUrl, text) = match.output
                 
+                // handle font
                 var font: Font
                 if let fontSize {
                     font = Font.system(size: CGFloat(fontSize))
@@ -181,28 +177,30 @@ extension String {
                     font = Font.body
                 }
                 
-                var url: String
-                if let imageUrl {
-                    print(imageUrl)
+                // handle url
+                var url: URL? = nil
+                if let imageUrl, let wrappedValue = imageUrl {
+                    url = URL(string: String(wrappedValue))
                 }
-                
+   
                 // call method recursively until all matches are found
-                return processString(string: string.replacing(paragraph, with: ""), paragraphs: paragraphs + [WPParagraph(text: String(text), font: font)])
+                return processString(string: string.replacing(paragraph, with: ""), paragraphs: paragraphs + [WPParagraph(text: text, font: font, imageUrl: url)])
             }
             else {
                 // return created paragraphs
                 return paragraphs
             }
         }
-
+        // start recusion with self and an empty arrray
         return processString(string: self, paragraphs: [WPParagraph]())
     }
     
+    // translate html tags to markdown text
     func htmlToMarkDown() -> String {
         return self.removeComments() // remove comments like "<!-- ... comment ... -->"
-            .replace(substrings: ["\n", "</div>"], with: "")  // replace tags with nothing
+            .replace(substrings: ["\n", "</div>"], with: "")  // replace elements with nothing
             .replace(substrings: ["<div>"], with: "\n") // add linebreak
-            .replace(substrings: ["<br>"], with: "\n") // add linebreak with inset
+            .replace(substrings: ["<br>"], with: "\n") // add linebreak
 
             .replace(substrings: ["<strong>", "</strong>", "<b>", "</b>"], with: "**") // add bold text
             .replace(substrings: ["<em>", "</em>", "<i>", "</i>"], with: "*") // add italic text

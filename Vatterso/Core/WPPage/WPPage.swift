@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct WPPage: View {
     
     var page: WPPost
-    
 
     var body: some View {
         ScrollView {
@@ -23,11 +23,15 @@ struct WPPage: View {
                     }
                     if let imageUrl = paragraph.imageUrl {
                         // wite out image for now
-                        Text(imageUrl)
+                        WebImage(url: imageUrl)
+                            .resizable()
+                            .scaledToFit()
+                            .padding(.vertical, 16)
                     }
                 }
             }
             .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .navigationTitle(page.title.text)
     }
