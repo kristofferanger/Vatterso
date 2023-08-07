@@ -10,7 +10,7 @@ import Combine
 
 class SidebarViewModel: ObservableObject {
     
-    @Published var sideBarItems = [VASideBarItem]()
+    @Published var items = [VASideBarItem]()
     @Published var loadingStatus: LoadingStatus = .unknown
 
     private let pagesDataService = DataService<WPPost>(url: NetworkingManager.url(endpoint: "/pages", parameters: ["context": "view", "per_page": "100"]))
@@ -31,7 +31,7 @@ class SidebarViewModel: ObservableObject {
                 switch result {
                 case .success(let pages):
                     self?.loadingStatus = .finished
-                    self?.sideBarItems = pages.compactMap{ page in
+                    self?.items = pages.compactMap{ page in
                         guard let parent = page.parent, parent == 0 else { return nil }
                         let children = pages.filter{ page.id == $0.parent }.map{ VASideBarItem(page: $0) }
                         return VASideBarItem(page: page, items: children.isEmpty ? nil : children)

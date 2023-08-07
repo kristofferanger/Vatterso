@@ -109,7 +109,7 @@ extension String {
         
         func processString(string: String, paragraphs: [WPParagraph]) -> [WPParagraph] {
             // try matching paragraphs, starts with a "<p>", "<p style...>" and ends with a "</p>"
-            let paragraph = Regex {
+            let paragraphRegex = Regex {
                 ChoiceOf {
                     "<p"
                     "<h2"
@@ -165,7 +165,8 @@ extension String {
                 }
             }.repetitionBehavior(.reluctant)
             
-            if let match = string.firstMatch(of: paragraph) {
+            // get first match
+            if let match = string.firstMatch(of: paragraphRegex) {
                 let (paragraph, fontSize, imageUrl, text) = match.output
                 
                 // handle font
@@ -182,12 +183,14 @@ extension String {
                 if let imageUrl, let wrappedValue = imageUrl {
                     url = URL(string: String(wrappedValue))
                 }
+                // create paragraph
+                let newParagraph = WPParagraph(text: text, font: font, imageUrl: url)
    
-                // call method recursively until all matches are found
-                return processString(string: string.replacing(paragraph, with: ""), paragraphs: paragraphs + [WPParagraph(text: text, font: font, imageUrl: url)])
+                // call method recursively (with match removed) until all matches are found
+                return processString(string: string.replacing(paragraph, with: ""), paragraphs: paragraphs + [newParagraph])
             }
             else {
-                // return created paragraphs
+                // return list of created paragraphs
                 return paragraphs
             }
         }

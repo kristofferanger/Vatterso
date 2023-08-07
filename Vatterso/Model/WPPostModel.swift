@@ -63,10 +63,6 @@ extension WPPost.Section {
         let result = self.rendered.htmlToMarkDown().createParagraphs()
         return result
     }
-    
-    var imageUrls: [String] {
-        return self.rendered.htmlImageUrls()
-    }
 }
 
 struct WPParagraph: Identifiable {

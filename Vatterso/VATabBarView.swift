@@ -10,7 +10,7 @@ import SwiftUI
 struct VATabBarView: View {
 
     var tabs = [VATabBarItem]()
-    @Binding var selection: VATabBarItem
+    @Binding var selection: VATabBarItem? 
     @Namespace private var namespace
     
     var body: some View {
@@ -34,8 +34,10 @@ struct VATabBarView: View {
     
     private func tabView(item: VATabBarItem) -> some View {
         VStack {
-            Image(systemName: item.iconName)
-                .font( .subheadline)
+            if let iconName = item.iconName {
+                Image(systemName: iconName)
+                    .font( .subheadline)
+            }
             Text(item.title)
                 .font( .system(size: 10, weight: .semibold, design: .rounded))
         }
@@ -57,7 +59,7 @@ struct VATabBarView: View {
 struct VATabBarItem: Identifiable, Hashable {
     
     let title: String
-    let iconName: String
+    let iconName: String?
     let iconUrl: String? = nil
     
     var id: String {

@@ -9,18 +9,25 @@ import SwiftUI
 
 struct MainTabBarView: View {
 
-    @State var selection: VATabBarItem = VATabBarItem(title: "Home", iconName: "house")
+    @StateObject private var viewModel = SidebarViewModel()
+    @State private var selection: VATabBarItem?
+    
     
     var body: some View {
         VATabBarContainerView(selection: $selection) {
-            Start()
-                .tabBarItem(VATabBarItem(title: "Home", iconName: "house"), selection: $selection)
-            Color.blue
-                .tabBarItem(VATabBarItem(title: "Favourites", iconName: "heart"), selection: $selection)
-            Color.orange
-                .tabBarItem(VATabBarItem(title: "Profile", iconName: "person"), selection: $selection)
+            ForEach(viewModel.items) { sideBarItem in
+                switch sideBarItem.pageType {
+                case .blog(let posts):
+                    WPPage(page: posts.first!)
+                        .tabBarItem(VATabBarItem(title: sideBarItem.name, iconName: sideBarItem.icon), selection: $selection)
+                case .page(let page):
+                    WPPage(page: page)
+                        .tabBarItem(VATabBarItem(title: sideBarItem.name, iconName: sideBarItem.icon), selection: $selection)
+                }
+            }
         }
         .ignoresSafeArea()
+        .onAppear{ viewModel.loadPages() }
     }
 }
 

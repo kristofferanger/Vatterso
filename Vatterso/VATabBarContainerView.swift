@@ -10,7 +10,7 @@ import SwiftUI
 
 struct VATabBarContainerView<Content: View>: View {
     
-    @Binding var selection: VATabBarItem
+    @Binding var selection: VATabBarItem?
     private var content: () -> Content
     
     @State private var tabs: [VATabBarItem] = []
@@ -30,7 +30,7 @@ struct VATabBarContainerView<Content: View>: View {
     
     /// Creates an instance that selects from content associated with
     /// `Selection` values.
-    init(selection: Binding<VATabBarItem>, @ViewBuilder content: @escaping () -> Content) {
+    init(selection: Binding<VATabBarItem?>, @ViewBuilder content: @escaping () -> Content) {
         self._selection = selection
         self.content = content
     }

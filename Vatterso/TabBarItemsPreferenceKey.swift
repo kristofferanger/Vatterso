@@ -18,7 +18,7 @@ struct TabBarItemsPreferenceKey: PreferenceKey {
 
 struct TabBarItemViewModifier: ViewModifier {
     let tab: VATabBarItem
-    @Binding var selection: VATabBarItem
+    @Binding var selection: VATabBarItem?
     func body(content: Content) -> some View {
         content
             .opacity(selection == tab ? 1 : 0)
@@ -27,7 +27,7 @@ struct TabBarItemViewModifier: ViewModifier {
 }
 
 extension View {
-    func tabBarItem(_ item: VATabBarItem, selection: Binding<VATabBarItem>) -> some View {
+    func tabBarItem(_ item: VATabBarItem, selection: Binding<VATabBarItem?>) -> some View {
         self.modifier(TabBarItemViewModifier(tab: item, selection: selection))
     }
 }

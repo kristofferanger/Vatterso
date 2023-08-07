@@ -18,11 +18,10 @@ struct WPPage: View {
                 ForEach(page.content.paragraphs) { paragraph in
                     if let text = paragraph.text {
                         Text(.init(text))
-                            .font(paragraph.font ?? Font.body)
+                            .font(paragraph.font)
                             .foregroundColor(paragraph.color ?? Color.primary)
                     }
                     if let imageUrl = paragraph.imageUrl {
-                        // wite out image for now
                         WebImage(url: imageUrl)
                             .resizable()
                             .scaledToFit()
