@@ -24,7 +24,9 @@ extension UIScreen {
 extension UINavigationController {
     override open func viewDidLoad() {
         super.viewDidLoad()
-              
+        
+        // add any custom navigation bar appearance here
+        /*
         let compactAppearance = UINavigationBarAppearance()
         compactAppearance.backgroundColor = .green
         navigationBar.compactAppearance = compactAppearance
@@ -40,12 +42,7 @@ extension UINavigationController {
             appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
             return appearance
         }()
+         */
         
-    }
-}
-
-extension UINavigationBar {
-    open override func draw(_ rect: CGRect) {
-        super.draw(rect)
     }
 }

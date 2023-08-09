@@ -65,5 +65,6 @@ struct WPPage: View {
                 Image(systemName: "line.3.horizontal")
             }))
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }

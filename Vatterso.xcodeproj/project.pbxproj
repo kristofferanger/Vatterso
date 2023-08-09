@@ -35,6 +35,7 @@
 		C9EBDE6D2A8258860059CC8F /* SideBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EBDE6C2A8258860059CC8F /* SideBar.swift */; };
 		C9EBDE6F2A8259CE0059CC8F /* SideBarItemPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EBDE6E2A8259CE0059CC8F /* SideBarItemPreferenceKey.swift */; };
 		C9EBDE712A82620E0059CC8F /* SidebarMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EBDE702A82620E0059CC8F /* SidebarMenu.swift */; };
+		C9EBDE732A840B7F0059CC8F /* String+regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EBDE722A840B7F0059CC8F /* String+regex.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +87,7 @@
 		C9EBDE6C2A8258860059CC8F /* SideBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBar.swift; sourceTree = "<group>"; };
 		C9EBDE6E2A8259CE0059CC8F /* SideBarItemPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarItemPreferenceKey.swift; sourceTree = "<group>"; };
 		C9EBDE702A82620E0059CC8F /* SidebarMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarMenu.swift; sourceTree = "<group>"; };
+		C9EBDE722A840B7F0059CC8F /* String+regex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+regex.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,6 +234,7 @@
 			children = (
 				C9040BBB2A5FFBBC004E965D /* UIKit.swift */,
 				C9040BBD2A5FFBDF004E965D /* Foundation.swift */,
+				C9EBDE722A840B7F0059CC8F /* String+regex.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 				C9EBDE6D2A8258860059CC8F /* SideBar.swift in Sources */,
 				C9EBDE6F2A8259CE0059CC8F /* SideBarItemPreferenceKey.swift in Sources */,
 				C9040BC12A6059BD004E965D /* StartPageViewModel.swift in Sources */,
+				C9EBDE732A840B7F0059CC8F /* String+regex.swift in Sources */,
 				C93AE2E22A702EA000BCF683 /* WPPage.swift in Sources */,
 				C93AE2E62A7133DE00BCF683 /* VASideBarItem.swift in Sources */,
 				C97EA7212A288A1E0082001B /* VATabBarView.swift in Sources */,

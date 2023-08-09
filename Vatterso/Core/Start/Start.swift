@@ -32,7 +32,7 @@ struct SpinnerWhileLoadingView<Content>: View where Content: View {
     }
     
     var body: some View {
-        Group {
+        ZStack {
             switch status {
             case .error(let error):
                 Color.clear

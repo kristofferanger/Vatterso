@@ -25,7 +25,7 @@ struct SidebarMenu<Content: View>: View {
                     .transition( .move(edge: .leading))
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        .frame(maxWidth: .infinity)
         .ignoresSafeArea()
         .animation(.easeInOut, value: isShowing)
     }
@@ -45,8 +45,10 @@ struct SideMenuView: View {
                 .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
             
             VStack(alignment: .leading, spacing: 0) {
+                // present the list of tabs
                 List(tabs, children: \.items) { tab in
                     Button {
+                        // make selection and dismiss menu
                         selectedTab = tab
                         showingSideMenu = false
                     } label: {
@@ -69,7 +71,6 @@ struct SideMenuView: View {
         }
         Spacer()
     }
-    
 }
 
 
