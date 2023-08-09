@@ -31,7 +31,6 @@ struct SideBar<Content>: View where Content: View {
         self._selection = selection
         self.content = content
     }
-    
 }
 
 //struct SideBar_Previews: PreviewProvider {

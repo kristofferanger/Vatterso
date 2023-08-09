@@ -8,11 +8,6 @@
 import Foundation
 import Combine
 
-
-enum LoadingStatus {
-    case unknown, loading, finished, error(NetworkingError)
-}
-
 protocol DataServiceProtocol {
     associatedtype DataType
     

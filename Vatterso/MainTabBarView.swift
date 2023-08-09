@@ -13,9 +13,13 @@ struct MainTabBarView: View {
     @State private var selection: VASideBarItem?
     
     var body: some View {
-        SideBar(selection: $selection) {
-            SpinnerWhileLoadingView(viewModel.loadingStatus) {
+        // container view hat handles the loading stages
+        SpinnerWhileLoadingView(viewModel.loadingStatus) {
+            // side bar struct, handling side menu and pages
+            SideBar(selection: $selection) {
+                // iterate through sidebar items that contains the pages
                 ForEach(viewModel.items) { sideBarItem in
+                    // init page
                     switch sideBarItem.pageType {
                     case .blog(let posts):
                         WPPage(posts: posts)
@@ -25,9 +29,9 @@ struct MainTabBarView: View {
                             .sideBarItem(sideBarItem, selection: $selection)
                     }
                 }
-            } errorAlert: { error in
-                return Alert(title: Text(""), message: Text(error.localizedDescription))
             }
+        } errorAlert: { error in
+            return Alert(title: Text(""), message: Text(error.localizedDescription))
         }
         .ignoresSafeArea()
         .onAppear{

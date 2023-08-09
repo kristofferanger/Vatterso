@@ -8,6 +8,10 @@
 import Foundation
 import Combine
 
+enum LoadingStatus {
+    case unknown, loading, finished, error(NetworkingError)
+}
+
 class SidebarViewModel: ObservableObject {
     
     @Published var items = [VASideBarItem]()

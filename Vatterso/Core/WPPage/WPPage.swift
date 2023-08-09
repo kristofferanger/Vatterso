@@ -26,31 +26,41 @@ struct WPPage: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 8) {
-                ForEach(posts) { post in
-                    ForEach(post.content.paragraphs) { paragraph in
-                        if let text = paragraph.text {
-                            Text(.init(text))
-                                .font(paragraph.font)
-                                .foregroundColor(paragraph.color ?? Color.primary)
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 16) {
+                    ForEach(posts) { post in
+                        VStack(alignment: .leading, spacing: 8) {
+                            ForEach(post.content.paragraphs) { paragraph in
+                                if let text = paragraph.text {
+                                    Text(.init(text))
+                                        .font(paragraph.font)
+                                        .foregroundColor(paragraph.color ?? Color.primary)
+                                }
+                                if let imageUrl = paragraph.imageUrl {
+                                    WebImage(url: imageUrl)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .padding(.vertical, 16)
+                                }
+                            }
+                            if posts.count > 1 {
+                                Text("Publicerat av \(post.author)")
+                                    .font(.footnote)
+                                    .foregroundColor(Color.secondary)
+                            }
                         }
-                        if let imageUrl = paragraph.imageUrl {
-                            WebImage(url: imageUrl)
-                                .resizable()
-                                .scaledToFit()
-                                .padding(.vertical, 16)
-                        }
-                    }
-                    // check if the page is showing multiple posts
-                    if posts.count > 1 {
-                        Text("publicerat av \(post.author)")
                     }
                 }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .navigationTitle(navigationTitle)
+            .navigationBarItems(leading: Button(action: {
+                print("hep")
+            }, label: {
+                Image(systemName: "line.3.horizontal")
+            }))
         }
-        .navigationTitle(navigationTitle)
     }
 }
