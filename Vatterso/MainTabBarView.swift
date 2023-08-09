@@ -16,18 +16,12 @@ struct MainTabBarView: View {
         // container view hat handles the loading stages
         SpinnerWhileLoadingView(viewModel.loadingStatus) {
             // side bar struct, handling side menu and pages
-            SideBar(selection: $selection) {
-                // iterate through sidebar items that contains the pages
+            SideBar(selection: $selection) { showingSidebar in
+                // iterate through sidebar items which contains the pages
                 ForEach(viewModel.items) { sideBarItem in
                     // init page
-                    switch sideBarItem.pageType {
-                    case .blog(let posts):
-                        WPPage(posts: posts)
-                            .sideBarItem(sideBarItem, selection: $selection)
-                    case .page(let page):
-                        WPPage(page: page)
-                            .sideBarItem(sideBarItem, selection: $selection)
-                    }
+                    WPPage(sidebarItem: sideBarItem, showingSidebar: showingSidebar)
+                        .sideBarItem(sideBarItem, selection: $selection)
                 }
             }
         } errorAlert: { error in

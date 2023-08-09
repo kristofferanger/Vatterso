@@ -68,10 +68,10 @@ struct Start: View {
                         }
                         Text(row.name)
                     }
-                    .overlay(
-                        NavigationLink("", destination: WPPage(page: row.page!))
-                            .opacity(0)
-                    )
+//                    .overlay(
+//                        NavigationLink("", destination: WPPage(page: row.page!))
+//                            .opacity(0)
+//                    )
                 }.listStyle(.plain)
             } errorAlert: { error in
                 Alert(title: Text("Something went wrong"), message: Text(error.localizedDescription))

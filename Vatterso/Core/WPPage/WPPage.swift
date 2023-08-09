@@ -11,13 +11,16 @@ import SDWebImageSwiftUI
 struct WPPage: View {
     
     private var posts: [WPPost]
-    
-    init(page: WPPost) {
-        self.posts = [page]
-    }
-    
-    init(posts: [WPPost]) {
-        self.posts = posts
+    @Binding var showingSidebar: Bool
+
+    init(sidebarItem: VASideBarItem, showingSidebar: Binding<Bool>) {
+        switch sidebarItem.pageType {
+        case .blog(let posts):
+            self.posts = posts
+        case .page(let page):
+            self.posts = [page]
+        }
+        self._showingSidebar = showingSidebar
     }
     
     private var navigationTitle: String {
@@ -57,7 +60,7 @@ struct WPPage: View {
             }
             .navigationTitle(navigationTitle)
             .navigationBarItems(leading: Button(action: {
-                print("hep")
+                showingSidebar.toggle()
             }, label: {
                 Image(systemName: "line.3.horizontal")
             }))
