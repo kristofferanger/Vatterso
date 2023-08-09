@@ -32,6 +32,9 @@
 		C97EA7272A2B5F450082001B /* TabBarItemsPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7262A2B5F450082001B /* TabBarItemsPreferenceKey.swift */; };
 		C97EA7322A2CFF4C0082001B /* Start.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7312A2CFF4C0082001B /* Start.swift */; };
 		C9C7572A2A7C4750008AB0DD /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C9C757292A7C4750008AB0DD /* SDWebImageSwiftUI */; };
+		C9EBDE6D2A8258860059CC8F /* SideBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EBDE6C2A8258860059CC8F /* SideBar.swift */; };
+		C9EBDE6F2A8259CE0059CC8F /* SideBarItemPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EBDE6E2A8259CE0059CC8F /* SideBarItemPreferenceKey.swift */; };
+		C9EBDE712A82620E0059CC8F /* SidebarMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EBDE702A82620E0059CC8F /* SidebarMenu.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +83,9 @@
 		C97EA7242A28F0620082001B /* VATabBarContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VATabBarContainerView.swift; sourceTree = "<group>"; };
 		C97EA7262A2B5F450082001B /* TabBarItemsPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItemsPreferenceKey.swift; sourceTree = "<group>"; };
 		C97EA7312A2CFF4C0082001B /* Start.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Start.swift; sourceTree = "<group>"; };
+		C9EBDE6C2A8258860059CC8F /* SideBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBar.swift; sourceTree = "<group>"; };
+		C9EBDE6E2A8259CE0059CC8F /* SideBarItemPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarItemPreferenceKey.swift; sourceTree = "<group>"; };
+		C9EBDE702A82620E0059CC8F /* SidebarMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarMenu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,7 +151,10 @@
 		C93AE2E42A7130E800BCF683 /* SideMenu */ = {
 			isa = PBXGroup;
 			children = (
+				C9EBDE6C2A8258860059CC8F /* SideBar.swift */,
 				C93AE2E52A7133DE00BCF683 /* VASideBarItem.swift */,
+				C9EBDE6E2A8259CE0059CC8F /* SideBarItemPreferenceKey.swift */,
+				C9EBDE702A82620E0059CC8F /* SidebarMenu.swift */,
 			);
 			path = SideMenu;
 			sourceTree = "<group>";
@@ -400,6 +409,8 @@
 				C97EA6FE2A28896C0082001B /* Vatterso.xcdatamodeld in Sources */,
 				C97EA6F42A2889670082001B /* ContentView.swift in Sources */,
 				C93AE2EA2A77F89F00BCF683 /* SidebarViewModel.swift in Sources */,
+				C9EBDE6D2A8258860059CC8F /* SideBar.swift in Sources */,
+				C9EBDE6F2A8259CE0059CC8F /* SideBarItemPreferenceKey.swift in Sources */,
 				C9040BC12A6059BD004E965D /* StartPageViewModel.swift in Sources */,
 				C93AE2E22A702EA000BCF683 /* WPPage.swift in Sources */,
 				C93AE2E62A7133DE00BCF683 /* VASideBarItem.swift in Sources */,
@@ -409,6 +420,7 @@
 				C9040BBC2A5FFBBC004E965D /* UIKit.swift in Sources */,
 				C97EA7322A2CFF4C0082001B /* Start.swift in Sources */,
 				C97EA7272A2B5F450082001B /* TabBarItemsPreferenceKey.swift in Sources */,
+				C9EBDE712A82620E0059CC8F /* SidebarMenu.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

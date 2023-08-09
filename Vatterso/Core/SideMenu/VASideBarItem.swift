@@ -40,6 +40,7 @@ enum PageType {
 
 
 struct VASideBarItem: Identifiable {
+    
     var pageType: PageType
     var items: [VASideBarItem]?
     
@@ -81,5 +82,12 @@ struct VASideBarItem: Identifiable {
         default:
             return nil
         }
+    }
+}
+
+extension VASideBarItem: Equatable {
+    
+    static func == (lhs: VASideBarItem, rhs: VASideBarItem) -> Bool {
+        lhs.id == rhs.id
     }
 }
