@@ -13,7 +13,6 @@ protocol DataServiceProtocol {
     
     // subscribe vars
     var dataPublisher: Published<Result<[DataType], NetworkingError>>.Publisher { get }
-    
     // method to ask for updates
     func loadData()
 }

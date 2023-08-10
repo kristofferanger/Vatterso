@@ -17,9 +17,9 @@ struct SideBar<Content>: View where Content: View {
     
     var body: some View {
         ZStack() {
-            // passing showingSideBar to content so pages use it
+            // passing showingSideBar to content so that pages use it
             content($showingSideBar)
-            //  passing showingSideBar to SidebarMenu to handle handle the transision
+            //  passing showingSideBar to SidebarMenu to handle the transision
             SidebarMenu(isShowing: $showingSideBar) {
                 // passing showingSideBar to SideMenuView so it can be dismissed
                 // also passing items and selection of obvious reasons
@@ -28,7 +28,8 @@ struct SideBar<Content>: View where Content: View {
             }
         }
         .onPreferenceChange(SidebarItemPreferenceKey.self) { value in
-            // getting items with preference key
+            // getting items with preference key,
+            // ie when they are added to the layout
             self.items = value
         }
     }
