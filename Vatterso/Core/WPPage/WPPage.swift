@@ -11,11 +11,11 @@ import SDWebImageSwiftUI
 // a page that is showing wordpress contents
 // can show both a list of posts and a page
 // since it's basicly the same data structure
-
 struct WPPage: View {
     // the page data,
     // 1 item == page, 1+ items == blog
     private var posts: [WPPost]
+    private var title: String
     // make the side bar appear
     @Binding var showingSidebar: Bool
 
@@ -26,6 +26,7 @@ struct WPPage: View {
         case .page(let page):
             self.posts = [page]
         }
+        self.title = sidebarItem.pageType.title
         self._showingSidebar = showingSidebar
     }
     
@@ -39,7 +40,7 @@ struct WPPage: View {
                                 paragraphView(paragraph: paragraph)
                             }
                             if posts.count > 1 {
-                                Text("Publicerat av \(post.author)")
+                                Text("Publicerat av \(post.authorName)")
                                     .font(.footnote)
                                     .foregroundColor(Color.secondary)
                             }
@@ -49,7 +50,7 @@ struct WPPage: View {
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .navigationTitle(navigationTitle)
+            .navigationTitle(title)
             .navigationBarItems(leading: Button(action: {
                 // hamburger button pressed
                 showingSidebar.toggle()
@@ -58,11 +59,6 @@ struct WPPage: View {
             }))
         }
         .navigationViewStyle(StackNavigationViewStyle())
-    }
-    
-    private var navigationTitle: String {
-        let firstPostTitle = self.posts.first?.title.text
-        return firstPostTitle ?? ""
     }
     
     private func paragraphView(paragraph: WPParagraph) -> some View {

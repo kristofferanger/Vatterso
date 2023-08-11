@@ -45,7 +45,7 @@ extension NetworkingManager {
     private static let api: API = .production
     private static let baseUrl = "https://wetterso.se/wp-json/wp/v2"
     
-    static func url(endpoint: String, parameters: [String: String] = [:]) -> URL? {
+    static func url(endpoint: String, parameters: [String: String?] = [:]) -> URL? {
         var urlString: String
         switch api {
         case .production:

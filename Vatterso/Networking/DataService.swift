@@ -47,6 +47,7 @@ class DataService<DataType: Codable>: DataServiceProtocol {
                 }
                 // cancel subscription
                 self?.loadDataSubscription?.cancel()
+                self?.dataPublisher.send(completion: .finished)
             }, receiveValue:{ [weak self] receivedData in
                 // set succeeded result
                 self?.dataPublisher.send(receivedData)

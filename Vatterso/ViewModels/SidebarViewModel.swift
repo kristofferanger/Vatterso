@@ -18,7 +18,7 @@ class SidebarViewModel: ObservableObject {
     @Published var loadingStatus: LoadingStatus = .unknown
 
     private let pagesDataService = DataService<WPPost>(url: NetworkingManager.url(endpoint: "/pages", parameters: ["context": "view", "per_page": "100"]))
-    private let postsDataService = DataService<WPPost>(url: NetworkingManager.url(endpoint: "/posts", parameters: ["orderby": "date", "per_page": "100"]))
+    private let postsDataService = DataService<WPPost>(url: NetworkingManager.url(endpoint: "/posts", parameters: ["orderby": "date", "per_page": "100", "_embed": nil]))
     private var cancellables = Set<AnyCancellable>()
     
     init() {
@@ -39,16 +39,15 @@ class SidebarViewModel: ObservableObject {
                 let pages = VASideBarItem.sorted(pages: pages)
                 return blog + pages
             }
-            .print("debugging")
+            // .print("debugging")
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
                     self?.loadingStatus = .error(error)
                 case .finished:
-                    break
+                    self?.loadingStatus = .finished
                 }
             }, receiveValue: { [weak self] items in
-                self?.loadingStatus = .finished
                 self?.items = items
             })
             .store(in: &cancellables)
