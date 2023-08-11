@@ -68,6 +68,11 @@ struct WPPage: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
+    private func imageView(url: URL) -> some View {
+        return WebImage(url: url)
+            .resizable()
+    }
+    
     private func paragraphView(paragraph: WPParagraph) -> some View {
         Group {
             if let text = paragraph.text {
@@ -76,10 +81,18 @@ struct WPPage: View {
                     .foregroundColor(paragraph.color ?? Color.primary)
             }
             if let imageUrl = paragraph.imageUrl {
-                WebImage(url: imageUrl)
-                    .resizable()
-                    .scaledToFit()
-                    .padding(.vertical, 16)
+                NavigationLink {
+                    ScrollView {
+                        imageView(url: imageUrl)
+                            .scaledToFill()
+                        Spacer()
+                    }
+                } label: {
+                    imageView(url: imageUrl)
+                        .scaledToFit()
+                        .padding(.vertical, 10)
+                        .frame(maxWidth: 400)
+                }
             }
         }
     }
