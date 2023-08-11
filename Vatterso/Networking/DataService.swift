@@ -10,7 +10,6 @@ import Combine
 
 protocol DataServiceProtocol {
     associatedtype DataType
-    
     // subscribe vars
     var dataPublisher: PassthroughSubject<[DataType], NetworkingError> { get }
     // method to ask for updates
@@ -41,13 +40,15 @@ class DataService<DataType: Codable>: DataServiceProtocol {
             .decode(type: [DataType].self, decoder: NetworkingManager.defaultDecoder())
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-                if case .failure(let error) = completion {
+                switch completion {
+                case .failure(let error):
                     // set failed result
                     self?.dataPublisher.send(completion: .failure(NetworkingError(error: error)))
+                case .finished:
+                    self?.dataPublisher.send(completion: .finished)
                 }
                 // cancel subscription
                 self?.loadDataSubscription?.cancel()
-                self?.dataPublisher.send(completion: .finished)
             }, receiveValue:{ [weak self] receivedData in
                 // set succeeded result
                 self?.dataPublisher.send(receivedData)

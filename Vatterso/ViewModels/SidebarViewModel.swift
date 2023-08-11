@@ -34,12 +34,13 @@ class SidebarViewModel: ObservableObject {
     private func addSubscribers() {
         pagesDataService.dataPublisher
             .combineLatest(postsDataService.dataPublisher)
-            .map{ pages, posts in
+            .eraseToAnyPublisher()
+            .compactMap{ pages, posts in
                 let blog = [VASideBarItem(posts: posts)]
                 let pages = VASideBarItem.sorted(pages: pages)
                 return blog + pages
             }
-            // .print("debugging")
+            //.print("debugging")
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
