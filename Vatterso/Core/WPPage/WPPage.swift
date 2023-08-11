@@ -16,6 +16,9 @@ struct WPPage: View {
     // 1 item == page, 1+ items == blog
     private var posts: [WPPost]
     private var title: String
+    private var isBlog: Bool {
+        return posts.count > 1
+    }
     // make the side bar appear
     @Binding var showingSidebar: Bool
 
@@ -33,14 +36,18 @@ struct WPPage: View {
     internal var body: some View {
         NavigationView {
             ScrollView {
-                VStack(spacing: 16) {
+                VStack(spacing: 40) {
                     ForEach(posts) { post in
                         VStack(alignment: .leading, spacing: 8) {
+                            if isBlog {
+                                Text(post.title.text)
+                                    .font(.headline)
+                            }
                             ForEach(post.content.paragraphs) { paragraph in
                                 paragraphView(paragraph: paragraph)
                             }
-                            if posts.count > 1 {
-                                Text("Publicerat av \(post.authorName)")
+                            if isBlog {
+                                Text("Publicerat den \(post.date.dateSting()) av \(post.authorName)")
                                     .font(.footnote)
                                     .foregroundColor(Color.secondary)
                             }

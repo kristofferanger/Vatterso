@@ -17,9 +17,7 @@ protocol DataServiceProtocol {
 }
 
 class DataService<DataType: Codable>: DataServiceProtocol {
-        
-    @Published var result: Result<[DataType], NetworkingError> = .success([])
-
+    
     var dataPublisher = PassthroughSubject<[DataType], NetworkingError>()
     
     init(url: URL?) {

@@ -15,7 +15,7 @@ import SwiftUI
 struct WPPost: Codable, Identifiable {
     
     let id: Int
-    let date, dateGmt, modified, modifiedGmt: String
+    let date, dateGmt, modified, modifiedGmt: Date
     let title, guid, content, excerpt: Section
     let author, featuredMedia: Int
     let parent, menuOrder: Int?
@@ -61,7 +61,7 @@ struct WPPost: Codable, Identifiable {
 }
 
 extension WPPost {
-    // easy access of the authors name
+    // easy (+ safe) access of the authors name
     var authorName: String {
         let authorId = self.author
         return self.embedded?.author.first(where: { $0.id == authorId })?.name ?? "Okänd"

@@ -59,7 +59,18 @@ extension NetworkingManager {
     static func defaultDecoder() -> JSONDecoder {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .custom{ decoder in
+            // date format: 2023-06-28T18:38:37
+            let container = try decoder.singleValueContainer()
+            let dateStr = try container.decode(String.self)
+
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            if let date = formatter.date(from: dateStr) {
+                return date
+            }
+            return Date.distantPast
+        } //  .iso8601
         return decoder
     }
 }
@@ -70,11 +81,14 @@ enum NetworkingError: LocalizedError, Identifiable {
     case badURLResponse(urlString: String, statusCode: Int)
     case unknown
     case noNetwork
+    case decodingError(reason: String)
     
     var errorDescription: String? {
         switch self {
         case .badURLResponse(let url, let statusCode):
             return "[🔥] Status code: \(statusCode). Bad response from URL: \(url)"
+        case .decodingError(let reason):
+            return "[💣] Data could not be parsed. \(reason)"
         case .unknown:
             return "[⚡️] Unknown error occured"
         case .noNetwork:
@@ -88,6 +102,23 @@ enum NetworkingError: LocalizedError, Identifiable {
         }
         else if let urlError = error as? URLError, urlError.code == URLError.Code.notConnectedToInternet {
             self = NetworkingError.noNetwork
+        }
+        else if let decodingError = error as? DecodingError {
+            var errorMessage: String = ""
+            switch decodingError {
+            case .dataCorrupted(let corrupted):
+                errorMessage = "Data is corrupted: \(corrupted)"
+            case .keyNotFound(let key, _):
+                errorMessage = "Key not found: \(key)"
+            case .typeMismatch(let type, _):
+                errorMessage = "Type mismatch: \(type)"
+            case .valueNotFound(let value, _):
+                errorMessage = "Value not found: \(value)"
+            default:
+                errorMessage = "Unknown decoding error"
+            }
+            print(errorMessage)
+            self = NetworkingError.decodingError(reason: "")
         }
         else {
             self = NetworkingError.unknown
