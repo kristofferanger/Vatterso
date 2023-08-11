@@ -53,6 +53,17 @@ struct VASideBarItem: Identifiable {
         self.pageType = .blog(posts)
     }
     
+    static func sorted(pages: [WPPost]) -> [VASideBarItem] {
+        return pages.compactMap { page in
+            // only add pages that are on top level, ie parents
+            guard let parent = page.parent, parent == 0 else { return nil }
+            // find children to parents
+            let children = pages.filter{ page.id == $0.parent }.map{ VASideBarItem(page: $0) }
+            // create side bar items including parent and it's children
+            return  VASideBarItem(page: page, items: children.isEmpty ? nil : children)
+        }
+    }
+    
     var id: Int {
         return pageType.id
     }

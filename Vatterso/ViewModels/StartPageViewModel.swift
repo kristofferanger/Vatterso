@@ -27,22 +27,24 @@ class StartPageViewModel: ObservableObject {
         pagesDataService.loadData()
         loadingStatus = .loading
     }
-
+    
     private func addSubscribers() {
-        pagesDataService.dataPublisher
-            .sink { [weak self] result in
-                switch result {
-                case .success(let pages):
-                    self?.loadingStatus = .finished
-                    self?.sideBarItems = pages.compactMap{ page in
-                        guard let parent = page.parent, parent == 0 else { return nil }
-                        let children = pages.filter{ page.id == $0.parent }.map{ VASideBarItem(page: $0) }
-                        return VASideBarItem(page: page, items: children.isEmpty ? nil : children)
-                    }
-                case .failure(let error):
-                    self?.loadingStatus = .error(error)
-                }
-            }
-            .store(in: &cancellables)
+        //        pagesDataService.dataPublisher
+        //            .sink { [weak self] result in
+        //                switch result {
+        //                case .success(let pages):
+        //                    self?.loadingStatus = .finished
+        //                    self?.sideBarItems = pages.compactMap{ page in
+        //                        guard let parent = page.parent, parent == 0 else { return nil }
+        //                        let children = pages.filter{ page.id == $0.parent }.map{ VASideBarItem(page: $0) }
+        //                        return VASideBarItem(page: page, items: children.isEmpty ? nil : children)
+        //                    }
+        //                case .failure(let error):
+        //                    self?.loadingStatus = .error(error)
+        //                }
+        //            }
+        //            .store(in: &cancellables)
+        //    }
+        
     }
 }

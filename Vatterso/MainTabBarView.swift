@@ -25,7 +25,7 @@ struct MainTabBarView: View {
                 }
             }
         } errorAlert: { error in
-            return Alert(title: Text(""), message: Text(error.localizedDescription))
+            return Alert(title: Text("Oops"), message: Text(error.localizedDescription))
         }
         .ignoresSafeArea()
         .onAppear{

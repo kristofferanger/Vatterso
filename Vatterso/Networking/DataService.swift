@@ -12,7 +12,7 @@ protocol DataServiceProtocol {
     associatedtype DataType
     
     // subscribe vars
-    var dataPublisher: Published<Result<[DataType], NetworkingError>>.Publisher { get }
+    var dataPublisher: PassthroughSubject<[DataType], NetworkingError> { get }
     // method to ask for updates
     func loadData()
 }
@@ -20,8 +20,8 @@ protocol DataServiceProtocol {
 class DataService<DataType: Codable>: DataServiceProtocol {
         
     @Published var result: Result<[DataType], NetworkingError> = .success([])
-    
-    var dataPublisher: Published<Result<[DataType], NetworkingError>>.Publisher { $result }
+
+    var dataPublisher = PassthroughSubject<[DataType], NetworkingError>()
     
     init(url: URL?) {
         guard let url else { fatalError("[💣] Malformed URL!") }
@@ -43,13 +43,13 @@ class DataService<DataType: Codable>: DataServiceProtocol {
             .sink(receiveCompletion: { [weak self] completion in
                 if case .failure(let error) = completion {
                     // set failed result
-                    self?.result = .failure(NetworkingError(error: error))
+                    self?.dataPublisher.send(completion: .failure(NetworkingError(error: error)))
                 }
                 // cancel subscription
                 self?.loadDataSubscription?.cancel()
             }, receiveValue:{ [weak self] receivedData in
                 // set succeeded result
-                self?.result = .success(receivedData)
+                self?.dataPublisher.send(receivedData)
             })
     }
 }
