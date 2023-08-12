@@ -8,8 +8,8 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-// a page that is showing wordpress contents
-// can show both a list of posts and a page
+// a page that shows wordpress content
+// it can show both a blog with posts and a page
 // since it's basically the same data structure
 struct WPPage: View {
     // the page data,
@@ -33,22 +33,12 @@ struct WPPage: View {
         self._showingSidebar = showingSidebar
     }
     
-    internal var body: some View {
+    var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 40) {
                     ForEach(posts) { post in
-                        VStack(alignment: .leading, spacing: 8) {
-                            if isBlog {
-                                titleView(text: post.title.text)
-                            }
-                            ForEach(post.content.paragraphs) { paragraph in
-                                paragraphView(paragraph: paragraph)
-                            }
-                            if isBlog {
-                                footnoteView(text: "Publicerat den \(post.date.dateSting()) av \(post.authorName)")
-                            }
-                        }
+                        postView(post: post)
                     }
                 }
                 .padding()
@@ -65,7 +55,25 @@ struct WPPage: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
+    private func postView(post: WPPost) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if isBlog {
+                Text(post.title.text)
+                    .font(.headline)
+            }
+            ForEach(post.content.paragraphs) { paragraph in
+                paragraphView(paragraph: paragraph)
+            }
+            if isBlog {
+                Text("Publicerat den \(post.date.dateSting()) av \(post.authorName)")
+                    .font(.footnote)
+                    .foregroundColor(Color.secondary)
+            }
+        }
+    }
+    
     private func paragraphView(paragraph: WPParagraph) -> some View {
+        // paragraph is either a text or an image
         Group {
             if let text = paragraph.text {
                 // text paragraph
@@ -79,7 +87,6 @@ struct WPPage: View {
                     ScrollView {
                         imageView(url: imageUrl)
                             .scaledToFill()
-                        Spacer()
                     }
                 } label: {
                     // image paragraph
@@ -91,18 +98,7 @@ struct WPPage: View {
             }
         }
     }
-    
-    private func titleView(text title: String) -> some View {
-        Text(title)
-            .font(.headline)
-    }
-    
-    private func footnoteView(text footnote: String) -> some View {
-        Text(footnote)
-            .font(.footnote)
-            .foregroundColor(Color.secondary)
-    }
-    
+
     private func imageView(url: URL) -> some View {
         return WebImage(url: url)
             .resizable()
