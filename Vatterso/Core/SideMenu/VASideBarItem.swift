@@ -44,13 +44,13 @@ struct VASideBarItem: Identifiable {
     var pageType: PageType
     var items: [VASideBarItem]?
     
+    init(posts: [WPPost]) {
+        self.pageType = .blog(posts)
+    }
+    
     init(page: WPPost, items: [VASideBarItem]? = nil) {
         self.pageType = .page(page)
         self.items = items
-    }
-    
-    init(posts: [WPPost]) {
-        self.pageType = .blog(posts)
     }
     
     static func sorted(pages: [WPPost]) -> [VASideBarItem] {
@@ -77,6 +77,7 @@ struct VASideBarItem: Identifiable {
     }
     
     var icon: String? {
+        // icons for pages
         switch self.name.lowercased() {
         case "wfff", "vnsf", "vsbsf":
             return "person.3"

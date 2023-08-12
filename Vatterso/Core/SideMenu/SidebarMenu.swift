@@ -26,7 +26,6 @@ struct SidebarMenu<Content: View>: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .ignoresSafeArea()
         .animation(.easeInOut, value: isShowing)
     }
 }
@@ -40,10 +39,7 @@ struct SideMenuView: View {
     var body: some View {
         ZStack{
             Rectangle()
-                .fill(.white)
-                .frame(width: 270)
                 .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
-            
             VStack(alignment: .leading, spacing: 0) {
                 // present the list of tabs
                 List(tabs, children: \.items) { tab in
@@ -61,21 +57,25 @@ struct SideMenuView: View {
                     }
                 }
                 .listStyle(.plain)
+                .scrollContentBackground(.hidden)
                 Spacer()
             }
-            .padding(.top, 100)
-            .frame(width: 270)
-            .background(
-                Color.white
-            )
+            .padding(.top, 80)
+            .background(.background)
         }
-        Spacer()
+        .frame(width: 270)
     }
 }
 
 
-//struct SidebarMenu_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SidebarMenu()
-//    }
-//}
+struct SidebarMenu_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        SidebarMenu(isShowing: .constant(true)) {
+            List(1..<10) {
+                Text("Tab \($0)")
+                    .font(.headline)
+            }
+        }
+    }
+}

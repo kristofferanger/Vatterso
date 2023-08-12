@@ -89,5 +89,6 @@ struct WPParagraph: Identifiable {
     var text: String?
     var font: Font?
     var color: Color?
+    var weight: Font.Weight?
     var imageUrl: URL?
 }
