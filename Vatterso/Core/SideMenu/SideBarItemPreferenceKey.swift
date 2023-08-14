@@ -8,26 +8,26 @@
 import Foundation
 import SwiftUI
 
-struct SidebarItemPreferenceKey: PreferenceKey {
-    static var defaultValue: [VASideBarItem] = []
+struct SideBarItemPreferenceKey: PreferenceKey {
+    static var defaultValue: [SidebarItem] = []
     
-    static func reduce(value: inout [VASideBarItem], nextValue:() -> [VASideBarItem]) {
+    static func reduce(value: inout [SidebarItem], nextValue:() -> [SidebarItem]) {
         value += nextValue()
     }
 }
 
 struct SideBarItemViewModifier: ViewModifier {
-    let item: VASideBarItem
-    @Binding var selection: VASideBarItem?
+    let item: SidebarItem
+    @Binding var selection: SidebarItem?
     func body(content: Content) -> some View {
         content
             .opacity(selection == item ? 1 : 0)
-            .preference(key: SidebarItemPreferenceKey.self, value: [item])
+            .preference(key: SideBarItemPreferenceKey.self, value: [item])
     }
 }
 
 extension View {
-    func sideBarItem(_ item: VASideBarItem, selection: Binding<VASideBarItem?>) -> some View {
+    func sideBarItem(_ item: SidebarItem, selection: Binding<SidebarItem?>) -> some View {
         self.modifier(SideBarItemViewModifier(item: item, selection: selection))
     }
 }

@@ -1,8 +1,8 @@
 //
-//  VASideBarItem.swift
+//  SidebarItem.swift
 //  Vatterso
 //
-//  Created by Kristoffer Anger on 2023-07-26.
+//  Created by Kristoffer Anger on 2023-08-14.
 //
 
 import Foundation
@@ -39,28 +39,28 @@ enum PageType {
 }
 
 
-struct VASideBarItem: Identifiable {
+struct SidebarItem: Identifiable {
     
     var pageType: PageType
-    var items: [VASideBarItem]?
+    var items: [SidebarItem]?
     
     init(posts: [WPPost]) {
         self.pageType = .blog(posts)
     }
     
-    init(page: WPPost, items: [VASideBarItem]? = nil) {
+    init(page: WPPost, items: [SidebarItem]? = nil) {
         self.pageType = .page(page)
         self.items = items
     }
     
-    static func sorted(pages: [WPPost]) -> [VASideBarItem] {
+    static func sorted(pages: [WPPost]) -> [SidebarItem] {
         return pages.compactMap { page in
             // only add pages that are on top level, ie parents
             guard let parent = page.parent, parent == 0 else { return nil }
             // find children to parents
-            let children = pages.filter{ page.id == $0.parent }.map{ VASideBarItem(page: $0) }
+            let children = pages.filter{ page.id == $0.parent }.map{ SidebarItem(page: $0) }
             // create side bar items including parent and it's children
-            return  VASideBarItem(page: page, items: children.isEmpty ? nil : children)
+            return  SidebarItem(page: page, items: children.isEmpty ? nil : children)
         }
     }
     
@@ -97,9 +97,9 @@ struct VASideBarItem: Identifiable {
     }
 }
 
-extension VASideBarItem: Equatable {
+extension SidebarItem: Equatable {
     
-    static func == (lhs: VASideBarItem, rhs: VASideBarItem) -> Bool {
+    static func == (lhs: SidebarItem, rhs: SidebarItem) -> Bool {
         lhs.id == rhs.id
     }
 }

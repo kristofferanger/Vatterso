@@ -10,13 +10,13 @@ import SwiftUI
 struct MainTabBarView: View {
 
     @StateObject private var viewModel = SidebarViewModel()
-    @State private var selection: VASideBarItem?
+    @State private var selection: SidebarItem?
     
     var body: some View {
         // container view hat handles the loading stages
         SpinnerWhileLoadingView(viewModel.loadingStatus) {
             // side bar struct, handling side menu and pages
-            SideBar(selection: $selection) { showingSidebar in
+            SidebarView(selection: $selection) { showingSidebar in
                 // iterate through sidebar items which contains the pages
                 ForEach(viewModel.items) { sideBarItem in
                     // init page

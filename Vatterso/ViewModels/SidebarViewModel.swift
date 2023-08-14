@@ -14,7 +14,7 @@ enum LoadingStatus {
 
 class SidebarViewModel: ObservableObject {
     
-    @Published var items: [VASideBarItem] = []
+    @Published var items: [SidebarItem] = []
     @Published var loadingStatus: LoadingStatus = .unknown
 
     private let pagesDataService = DataService<WPPost>(url: NetworkingManager.url(endpoint: "/pages", parameters: ["context": "view", "per_page": "100"]))
@@ -36,8 +36,8 @@ class SidebarViewModel: ObservableObject {
             .combineLatest(postsDataService.dataPublisher)
             .eraseToAnyPublisher()
             .compactMap{ pages, posts in
-                let blog = [VASideBarItem(posts: posts)]
-                let pages = VASideBarItem.sorted(pages: pages)
+                let blog = [SidebarItem(posts: posts)]
+                let pages = SidebarItem.sorted(pages: pages)
                 return blog + pages
             }
             //.print("debugging")

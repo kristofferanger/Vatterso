@@ -22,7 +22,7 @@ struct WPPage: View {
     // make the side bar appear
     @Binding var showingSidebar: Bool
 
-    init(sidebarItem: VASideBarItem, showingSidebar: Binding<Bool>) {
+    init(sidebarItem: SidebarItem, showingSidebar: Binding<Bool>) {
         switch sidebarItem.pageType {
         case .blog(let posts):
             self.posts = posts
