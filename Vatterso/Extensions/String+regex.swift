@@ -190,7 +190,7 @@ extension String {
                 // handle font
                 var font: Font
                 if let fontSize {
-                    font = Font.system(size: CGFloat(fontSize))
+                    font = Font.system(size: CGFloat(fontSize + 5))
                 }
                 else {
                     font = Font.body

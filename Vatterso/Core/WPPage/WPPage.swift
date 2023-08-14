@@ -55,6 +55,7 @@ struct WPPage: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
+    // private stuff
     private func postView(post: WPPost) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             if isBlog {
@@ -67,7 +68,7 @@ struct WPPage: View {
             if isBlog {
                 Text("Publicerat den \(post.date.dateSting()) av \(post.authorName)")
                     .font(.footnote)
-                    .foregroundColor(Color.secondary)
+                    .foregroundColor(.secondary)
             }
         }
     }
@@ -82,6 +83,7 @@ struct WPPage: View {
                     .foregroundColor(paragraph.color ?? Color.primary)
             }
             if let imageUrl = paragraph.imageUrl {
+                // image paragraph
                 NavigationLink {
                     // clicked image
                     ScrollView {
@@ -89,7 +91,6 @@ struct WPPage: View {
                             .scaledToFill()
                     }
                 } label: {
-                    // image paragraph
                     imageView(url: imageUrl)
                         .scaledToFit()
                         .padding(.vertical, 10)
