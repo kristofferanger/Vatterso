@@ -25,7 +25,6 @@ extension UIScreen {
 extension Color {
  
     static func hex(_ hex: String) -> Color {
-
         let scanner = Scanner(string: hex.description.trimmingCharacters(in: CharacterSet.alphanumerics.inverted))
         var hexNumber: UInt64 = 0
         var r: CGFloat = 0.0, g: CGFloat = 0.0, b: CGFloat = 0.0
