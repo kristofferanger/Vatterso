@@ -1,8 +1,8 @@
 //
-//  SideBarItemPreferenceKey.swift
+//  SidebarItemPreferenceKey.swift
 //  Vatterso
 //
-//  Created by Kristoffer Anger on 2023-08-08.
+//  Created by Kristoffer Anger on 2023-08-14.
 //
 
 import Foundation

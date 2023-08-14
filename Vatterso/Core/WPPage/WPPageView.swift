@@ -1,8 +1,8 @@
 //
-//  WPPage.swift
+//  WPPageView.swift
 //  Vatterso
 //
-//  Created by Kristoffer Anger on 2023-07-25.
+//  Created by Kristoffer Anger on 2023-08-14.
 //
 
 import SwiftUI
@@ -11,7 +11,7 @@ import SDWebImageSwiftUI
 // a page that shows wordpress content
 // it can show both a blog with posts and a page
 // since it's basically the same data structure
-struct WPPage: View {
+struct WPPageView: View {
     // the page data,
     // 1 item == page, 1+ items == blog
     private var posts: [WPPost]

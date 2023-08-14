@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SidebarView<Content>: View where Content: View {
+struct SidebarView<Content: View>: View {
 
     @Binding var selection: SidebarItem?
     @State private var items: [SidebarItem] = []
@@ -39,11 +39,5 @@ struct SidebarView<Content>: View where Content: View {
     init(selection: Binding<SidebarItem?>, @ViewBuilder content: @escaping (Binding<Bool>) -> Content) {
         self._selection = selection
         self.content = content
-    }
-}
-
-struct SidebarView_Previews: PreviewProvider {
-    static var previews: some View {
-        SidebarView()
     }
 }

@@ -8,17 +8,16 @@
 import Foundation
 import SwiftUI
 
-// Model for WordPress site data
-// same model is used for both page and post, the difference
+// Model for WordPress data
+// same model is used for both pages and posts, the difference
 // is that page also includes values for "parent" and "menuOrder"
-
 struct WPPost: Codable, Identifiable {
     
     let id: Int
     let date, dateGmt, modified, modifiedGmt: Date
     let title, guid, content, excerpt: Section
     let author, featuredMedia: Int
-    let parent, menuOrder: Int?
+    let parent, menuOrder: Int? // page specific properties
     let slug, status, type, link, commentStatus, pingStatus, template: String
     let links: Links
     let embedded: Embedded?
