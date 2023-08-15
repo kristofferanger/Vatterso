@@ -11,14 +11,14 @@ import Combine
 protocol DataServiceProtocol {
     associatedtype DataType
     // subscribe vars
-    var dataPublisher: PassthroughSubject<[DataType], NetworkingError> { get }
+    var dataPublisher: PassthroughSubject<DataType, NetworkingError> { get set }
     // method to ask for updates
     func loadData()
 }
 
 class DataService<DataType: Codable>: DataServiceProtocol {
     
-    var dataPublisher = PassthroughSubject<[DataType], NetworkingError>()
+    var dataPublisher = PassthroughSubject<DataType, NetworkingError>()
     
     init(url: URL?) {
         guard let url else { fatalError("[💣] Malformed URL!") }
@@ -35,7 +35,7 @@ class DataService<DataType: Codable>: DataServiceProtocol {
 
     func loadData() {
         loadDataSubscription = NetworkingManager.download(request: request)
-            .decode(type: [DataType].self, decoder: NetworkingManager.defaultDecoder())
+            .decode(type: DataType.self, decoder: NetworkingManager.defaultDecoder())
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -45,8 +45,10 @@ class DataService<DataType: Codable>: DataServiceProtocol {
                 case .finished:
                     self?.dataPublisher.send(completion: .finished)
                 }
-                // cancel subscription
+                // cancel subscription and renew publisher
+                // to be ready for a new download
                 self?.loadDataSubscription?.cancel()
+                self?.dataPublisher = PassthroughSubject<DataType, NetworkingError>()
             }, receiveValue:{ [weak self] receivedData in
                 // set succeeded result
                 self?.dataPublisher.send(receivedData)

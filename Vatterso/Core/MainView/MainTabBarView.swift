@@ -25,7 +25,12 @@ struct MainTabBarView: View {
                 }
             }
         } errorAlert: { error in
-            return Alert(title: Text("Oops"), message: Text(error.localizedDescription))
+            let alert = Alert(title: Text("Oops"), message: Text(error.localizedDescription), dismissButton: .default(Text("Retry")) {
+                // try load items again on error dismiss
+                viewModel.reloadPages()
+            })
+           
+            return alert
         }
         .ignoresSafeArea()
         .onAppear{
