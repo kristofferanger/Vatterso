@@ -27,7 +27,7 @@ struct SidebarView<Content: View>: View {
                 SideMenuView(tabs: $items, selectedTab: $selection, showingSideMenu: $showingSideBar)
             }
         }
-        .onPreferenceChange(SideBarItemPreferenceKey.self) { value in
+        .onPreferenceChange(SidebarPreferenceKey.self) { value in
             // getting items with preference key,
             // ie when they are added to the layout
             self.items = value
