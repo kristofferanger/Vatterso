@@ -14,22 +14,31 @@ import SDWebImageSwiftUI
 struct WPPageView: View {
     // the page data,
     // 1 item == page, 1+ items == blog
-    private var posts: [WPPost]
-    private var title: String
+    private var page: SidebarItem
+    
+    private var posts: [WPPost] {
+        switch page.pageType {
+        case .blog(let posts):
+            return posts
+        case .page(let page):
+            return [page]
+        }
+    }
+    
+    private var title: String {
+        return page.pageType.title
+    }
+    
     private var isBlog: Bool {
-        return posts.count > 1
+        return page.pageType.isBlog
     }
     // make the side bar appear
     @Binding var showingSidebar: Bool
-
-    init(sidebarItem: SidebarItem, showingSidebar: Binding<Bool>) {
-        switch sidebarItem.pageType {
-        case .blog(let posts):
-            self.posts = posts
-        case .page(let page):
-            self.posts = [page]
-        }
-        self.title = sidebarItem.pageType.title
+    @Binding var selection: SidebarItem?
+    
+    init(sidebarItem: SidebarItem, selection: Binding<SidebarItem?>, showingSidebar: Binding<Bool>) {
+        self.page = sidebarItem
+        self._selection = selection
         self._showingSidebar = showingSidebar
     }
     
@@ -44,6 +53,13 @@ struct WPPageView: View {
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .onChange(of: selection, perform: { selection in
+                // only interested in clicks on a tab with same tabId but different page id
+                guard let selection, selection.tabId == page.tabId, selection.id != page.id else { return }
+                // update page
+                print("update with page: \(selection.name)")
+                // self.page = selection
+            })
             .navigationTitle(title)
             .navigationBarItems(leading: Button(action: {
                 // hamburger button pressed

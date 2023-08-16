@@ -20,7 +20,7 @@ struct MainTabBarView: View {
                 // iterate through sidebar items which contains the pages
                 ForEach(viewModel.items) { sideBarItem in
                     // init page
-                    WPPageView(sidebarItem: sideBarItem, showingSidebar: showingSidebar)
+                    WPPageView(sidebarItem: sideBarItem, selection: $selection, showingSidebar: showingSidebar)
                         .sideBarItem(sideBarItem, selection: $selection)
                 }
             }

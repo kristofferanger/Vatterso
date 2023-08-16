@@ -10,6 +10,8 @@ import Foundation
 enum PageType {
     case blog([WPPost]), page(WPPost)
     
+    static let blogPageId = 0
+    
     var page: WPPost? {
         if case .page(let page) = self {
             return page
@@ -22,10 +24,14 @@ enum PageType {
     var id: Int {
         switch self {
         case .blog(_):
-            return 0
+            return PageType.blogPageId
         case .page(let post):
             return post.id
         }
+    }
+    
+    var isBlog: Bool {
+        return self.id == PageType.blogPageId
     }
     
     var title: String {
@@ -43,14 +49,23 @@ struct SidebarItem: Identifiable {
     
     var pageType: PageType
     var items: [SidebarItem]?
+    var tabId: Int
     
     init(posts: [WPPost]) {
         self.pageType = .blog(posts)
+        self.tabId = PageType.blogPageId
     }
     
     init(page: WPPost, items: [SidebarItem]? = nil) {
         self.pageType = .page(page)
         self.items = items
+        
+        if let parent = page.parent, parent == 0 {
+            self.tabId = page.id
+        }
+        else {
+            self.tabId = page.parent ?? NSNotFound
+        }
     }
     
     static func sorted(pages: [WPPost]) -> [SidebarItem] {
