@@ -57,7 +57,6 @@ struct SideMenuView: View {
                     }
                 }
                 .listStyle(.plain)
-                .scrollContentBackground(.hidden)
                 Spacer()
             }
             .padding(.top, 80)

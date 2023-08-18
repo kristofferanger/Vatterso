@@ -13,6 +13,7 @@ struct NavigationStackModifier<Item, Destination: View>: ViewModifier {
     let destination: (Item) -> Destination
 
     func body(content: Content) -> some View {
+        
         content.background( NavigationLink(isActive: item.mappedToBool() ) {
             if let item = item.wrappedValue {
                 destination(item)

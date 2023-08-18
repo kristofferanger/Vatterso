@@ -53,7 +53,11 @@ extension NetworkingManager {
         case .mock:
             fatalError("[🛑] Mock data service should not use the network!")
         }
-        return URL(string: urlString)?.appending(queryItems: parameters.map { URLQueryItem(name: $0, value: $1) })
+        
+        let queryItems = parameters.map { URLQueryItem(name: $0, value: $1) }
+        var components = URLComponents(string: urlString)
+        components?.queryItems = queryItems
+        return components?.url
     }
     
     static func defaultDecoder() -> JSONDecoder {
