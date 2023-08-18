@@ -9,7 +9,6 @@ import UIKit
 import SwiftUI
 
 extension UIScreen {
-    
     static var safeArea: UIEdgeInsets {
         let keyWindow = UIApplication.shared.connectedScenes
             .filter{ $0.activationState == .foregroundActive }
@@ -23,7 +22,6 @@ extension UIScreen {
 }
 
 extension Color {
- 
     static func hex(_ hex: String) -> Color {
         let scanner = Scanner(string: hex.description.trimmingCharacters(in: CharacterSet.alphanumerics.inverted))
         var hexNumber: UInt64 = 0
@@ -38,6 +36,7 @@ extension Color {
         return Color(red: r, green: g, blue: b)
     }
 }
+
 
 extension UINavigationController {
     override open func viewDidLoad() {

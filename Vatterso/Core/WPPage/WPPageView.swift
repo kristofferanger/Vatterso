@@ -35,15 +35,31 @@ struct WPPageView: View {
     // make the side bar appear
     @Binding var showingSidebar: Bool
     @Binding var selection: SidebarItem?
+    // show child view
+    @State private var showChildView: SidebarItem?
+    @State private var showChild: Bool = false
+    @State private var path = NavigationPath()
     
-    init(sidebarItem: SidebarItem, selection: Binding<SidebarItem?>, showingSidebar: Binding<Bool>) {
+    init(sidebarItem: SidebarItem, selection: Binding<SidebarItem?>, showingSidebar: Binding<Bool>? = nil) {
         self.page = sidebarItem
         self._selection = selection
-        self._showingSidebar = showingSidebar
+        
+        if let showingSidebar {
+            // connect to toggle side bar
+            self._showingSidebar = showingSidebar
+        }
+        else {
+            // dummy action
+            var flag: Bool = false
+            self._showingSidebar = Binding(
+                get: { flag },
+                set: { flag = $0 }
+            )
+        }
     }
     
     var body: some View {
-        NavigationView {
+        NavigationView { // NavigationStack(path: $path) {
             ScrollView {
                 VStack(spacing: 40) {
                     ForEach(posts) { post in
@@ -57,9 +73,13 @@ struct WPPageView: View {
                 // only interested in clicks on a tab with same tabId but different page id
                 guard let selection, selection.tabId == page.tabId, selection.id != page.id else { return }
                 // update page
-                print("update with page: \(selection.name)")
-                // self.page = selection
+                self.showChildView = selection
+                //self.path.append(selection)
+                self.showChild.toggle()
             })
+            .navigationDestination(for: $showChildView) { child in
+                WPPageView(sidebarItem: child, selection: $selection)
+            }
             .navigationTitle(title)
             .navigationBarItems(leading: Button(action: {
                 // hamburger button pressed
@@ -68,7 +88,7 @@ struct WPPageView: View {
                 Image(systemName: "line.3.horizontal")
             }))
         }
-        .navigationViewStyle(StackNavigationViewStyle())
+        .navigationViewStyle(.stack)
     }
     
     // private stuff

@@ -118,3 +118,10 @@ extension SidebarItem: Equatable {
         lhs.id == rhs.id
     }
 }
+
+extension SidebarItem: Hashable {
+    
+    func hash(into hasher: inout Hasher) {
+        return hasher.combine(id)
+    }
+}
