@@ -5,7 +5,6 @@
 //  Created by Kristoffer Anger on 2023-08-09.
 //
 
-import Foundation
 import RegexBuilder // NEW! iOS 16 stuff
 import SwiftUI
 
@@ -22,7 +21,7 @@ extension String {
         return stripped
     }
     
-    // Replace HTML comments, in the format <!-- ... comment ... -->
+    // Replace HTML sections, eg comments in the format <!-- ... comment ... -->
     func removeBetween(prefix: String, suffix: String) -> String {
         var text = self
         var loop = true
@@ -49,7 +48,7 @@ extension String {
         return text
     }
     
-    // replacing all substrings block, ex ["<div>", "<br>"] with "\n"
+    // replacing all substrings, ex ["<div>", "<br>"] with "\n"
     func replace(substrings: [String], with string: String) -> String {
         var text = self
         for substring in substrings {
@@ -116,7 +115,7 @@ extension String {
                     "<figure"
                 }
                 ZeroOrMore(.any)
-                // font size is captured (optional)
+                // color or font is captured (optional)
                 Optionally {
                     "style"
                     // step forward
@@ -196,6 +195,7 @@ extension String {
                     font = Font.body
                 }
                 
+                // handle color
                 var color: Color? = nil
                 if let textColor, let wrappedValue = textColor {
                     color = Color.hex(wrappedValue)
@@ -217,16 +217,19 @@ extension String {
                 return paragraphs
             }
         }
-        // start recusion with self and an empty arrray
+        // start recusion with self as input
         return processString(string: self, paragraphs: [WPParagraph]())
     }
     
     // translate html tags to markdown text
     func htmlToMarkDown() -> String {
-        return self.removeBetween(prefix:"<!--", suffix: "-->") // remove comments like "<!-- ... comment ... -->"
+        return self
+        // cleaning string
+            .removeBetween(prefix:"<!--", suffix: "-->") // remove comments
             .removeBetween(prefix:"<script", suffix: "/script>") // remove java scripts
-            .replace(substrings: ["\n", "</div>"], with: "")  // replace elements with nothing
+            .replace(substrings: ["\n", "</div>"], with: "")  // replace elements with blanks
             .replace(substrings: ["<div>", "<br>", "<br />"], with: "\n") // add linebreak
+        // text modifiers
             .replace(substrings: ["<strong>", "</strong>", "<b>", "</b>"], with: "**") // add bold text
             .replace(substrings: ["<em>", "</em>", "<i>", "</i>"], with: "*") // add italic text
             .replaceHyperlinks() // replace pattern <a... href="<hyperlink>"....> with [content](href)
