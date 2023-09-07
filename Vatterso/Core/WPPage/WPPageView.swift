@@ -103,6 +103,14 @@ struct WPPageContentView: View {
         return page.pageType.title
     }
     
+    private func publishedString(post: WPPost) -> String {
+        var published = "Publicerat den \(post.date.dateSting())"
+        if let authorName = post.authorName {
+            published += "av \(authorName)"
+        }
+        return published
+    }
+    
     // view for showing a single post (in a page)
     private func postView(post: WPPost) -> some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -114,20 +122,25 @@ struct WPPageContentView: View {
                 paragraphView(paragraph: paragraph)
             }
             if isBlog {
-                Text("Publicerat den \(post.date.dateSting()) av \(post.authorName)")
+                Text(publishedString(post: post))
                     .font(.footnote)
                     .foregroundColor(.secondary)
             }
         }
     }
     
+    private func markdownText(paragraph: WPParagraph) -> LocalizedStringKey? {
+        guard let string = paragraph.text else { return nil }
+        return LocalizedStringKey(string)
+    }
+    
     // view that shows a single paragraph (in a post)
     private func paragraphView(paragraph: WPParagraph) -> some View {
         // paragraph is either a text or an image
         Group {
-            if let text = paragraph.text {
+            if let text = markdownText(paragraph: paragraph)   {
                 // text paragraph
-                Text(.init(text))
+                Text(text)
                     .font(paragraph.font)
                     .foregroundColor(paragraph.color ?? Color.primary)
             }

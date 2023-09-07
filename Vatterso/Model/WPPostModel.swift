@@ -53,17 +53,16 @@ struct WPPost: Codable, Identifiable {
         let author:  [Author]
         
         struct Author: Codable, Identifiable {
-            let id: Int
-            let name: String
+            let id: Int?
+            let name: String?
         }
     }
 }
 
 extension WPPost {
-    // easy (+ safe) access of the authors name
-    var authorName: String {
-        let authorId = self.author
-        return self.embedded?.author.first(where: { $0.id == authorId })?.name ?? "Okänd"
+    // easy access of the authors name
+    var authorName: String? {
+        return self.embedded?.author.first(where: { $0.id == self.author })?.name
     }
 }
 

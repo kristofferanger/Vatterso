@@ -21,7 +21,7 @@ extension String {
         return stripped
     }
     
-    // Replace HTML sections, eg comments in the format <!-- ... comment ... -->
+    // Replace non essential HTML sections, eg comments in the format <!-- ... comment ... -->
     func removeBetween(prefix: String, suffix: String) -> String {
         var text = self
         var loop = true

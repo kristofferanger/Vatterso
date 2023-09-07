@@ -45,7 +45,7 @@ class SidebarViewModel: ObservableObject {
                 let pages = SidebarItem.sorted(pages: pages)
                 return blog + pages
             }
-            .print("debugging")
+            //.print("debugging")
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
