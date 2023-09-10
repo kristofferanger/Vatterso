@@ -11,6 +11,7 @@
 		C9040BBC2A5FFBBC004E965D /* UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BBB2A5FFBBC004E965D /* UIKit.swift */; };
 		C9040BBE2A5FFBDF004E965D /* Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BBD2A5FFBDF004E965D /* Foundation.swift */; };
 		C908A5142A8A468C0031C8DE /* WPPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C908A5132A8A468C0031C8DE /* WPPageView.swift */; };
+		C91259DA2AAB33B700A74B16 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = C91259D92AAB33B700A74B16 /* SwiftSoup */; };
 		C93299D42A8F798C000E3C26 /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93299D32A8F798C000E3C26 /* ViewModifiers.swift */; };
 		C93AE2E02A700FAC00BCF683 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93AE2DF2A700FAC00BCF683 /* DataService.swift */; };
 		C93AE2E82A731D1800BCF683 /* WPPostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93AE2E72A731D1800BCF683 /* WPPostModel.swift */; };
@@ -88,6 +89,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9C7572A2A7C4750008AB0DD /* SDWebImageSwiftUI in Frameworks */,
+				C91259DA2AAB33B700A74B16 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +282,7 @@
 			name = Vatterso;
 			packageProductDependencies = (
 				C9C757292A7C4750008AB0DD /* SDWebImageSwiftUI */,
+				C91259D92AAB33B700A74B16 /* SwiftSoup */,
 			);
 			productName = Vatterso;
 			productReference = C97EA6EE2A2889670082001B /* Vatterso.app */;
@@ -355,6 +358,7 @@
 			mainGroup = C97EA6E52A2889660082001B;
 			packageReferences = (
 				C9C757282A7C4750008AB0DD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				C91259D82AAB33B700A74B16 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			productRefGroup = C97EA6EF2A2889670082001B /* Products */;
 			projectDirPath = "";
@@ -749,6 +753,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C91259D82AAB33B700A74B16 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		C9C757282A7C4750008AB0DD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
@@ -760,6 +772,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C91259D92AAB33B700A74B16 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C91259D82AAB33B700A74B16 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
 		C9C757292A7C4750008AB0DD /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9C757282A7C4750008AB0DD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;

@@ -74,7 +74,7 @@ struct WPPageContentView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 40) {
+            VStack(alignment: .leading, spacing: 40) {
                 ForEach(posts) { post in
                     postView(post: post)
                 }
@@ -118,8 +118,9 @@ struct WPPageContentView: View {
                 Text(post.title.text)
                     .font(.headline)
             }
-            ForEach(post.content.paragraphs) { paragraph in
-                paragraphView(paragraph: paragraph)
+            ForEach(post.content.blocks) { block in
+                // paragraphView(paragraph: paragraph)
+                blockView(block: block)
             }
             if isBlog {
                 Text(publishedString(post: post))
@@ -127,6 +128,38 @@ struct WPPageContentView: View {
                     .foregroundColor(.secondary)
             }
         }
+    }
+    
+    private func blockView(block: WPBlock) -> some View {
+        Group {
+            if let text = markdownText(block: block)   {
+                // text paragraph
+                Text(text)
+                    .font(block.font)
+                    .foregroundColor(block.color ?? Color.primary)
+            }
+            if let imageUrl = block.imageUrl {
+                // image paragraph
+                NavigationLink {
+                    // clicked image
+                    ScrollView {
+                        imageView(url: imageUrl)
+                            .scaledToFill()
+                    }
+                } label: {
+                    imageView(url: imageUrl)
+                        .scaledToFit()
+                        .padding(.vertical, 10)
+                        .frame(maxWidth: 400)
+                }
+            }
+        }
+    }
+    
+    
+    private func markdownText(block: WPBlock) -> LocalizedStringKey? {
+        guard let string = block.text else { return nil }
+        return LocalizedStringKey(string)
     }
     
     private func markdownText(paragraph: WPParagraph) -> LocalizedStringKey? {
