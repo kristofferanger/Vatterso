@@ -7,6 +7,7 @@
 
 import RegexBuilder // NEW! iOS 16 stuff
 import SwiftUI
+import SwiftSoup
 
 extension String {
     
@@ -102,7 +103,100 @@ extension String {
         }
         return text
     }
+    
     // split text into paragraphs with text, font, color and image
+    // using SwiftSoup library
+    func makeParagraphs() -> [WPParagraph] {
+        
+        var paragraphs = [WPParagraph]()
+        // create docoument, focus on the body part
+        guard let doc: Document = try? SwiftSoup.parseBodyFragment(self), let body = doc.body() else { return paragraphs }
+        
+        for element in body.children() {
+            
+            var font: Font?
+            var color: Color?
+            
+            let texts: [String] = element.getChildNodes().compactMap { node in
+                                
+                // nodes that is an Element contains some kind of modifier
+                if let element = node as? SwiftSoup.Element, let text = try? element.text() {
+                    // ignore scripts
+                    guard element.tagName() != "script" else { return nil }
+                    
+                    
+                    if element.tagName() == "br" {
+                        return "\n"
+                    }
+                    
+                    if element.tagName() == "strong" {
+                        return "**\(text)**"
+                    }
+                    
+                    if element.tagName() == "em" {
+                        return "*\(text)*"
+                    }
+                    
+                    if element.tagName() == "li" {
+                        return "• \(text)\n"
+                    }
+                    
+                    if element.tagName() == "a", let href = try? element.attr("href") {
+                        return "[\(text)](\(href))"
+                    }
+
+                    if element.tagName() == "span", let style = try? element.attr("style") {
+                        (font, color) = style.findFontAndColor()
+                        return "\(text)"
+                    }
+                    
+                    if element.tagName() == "img" {
+                        let src = try? element.attr("src")
+                        paragraphs.append(WPParagraph(imageUrl: URL(optionalString: src)))
+                        return nil
+                    }
+                    
+                    // tag is missing
+                    print("WARNING: Tag is not parsed ")
+                    print("tag: \(element.tagName())")
+                    print("style: \(try? element.attr("style"))")
+                    print("text: \(try? element.text())")
+                }
+                // node contains only text, so return it
+                else if let textNode = node as? TextNode {
+                    return textNode.text()
+                }
+
+                return nil
+            }
+            paragraphs.append(WPParagraph(text: texts.joined(), font: font, color: color))
+        }
+        return paragraphs
+    }
+    
+    func findFontAndColor() -> (font: Font?, color: Color?) {
+        
+        var font: Font?
+        var color: Color?
+        
+        for style in self.split(separator: ";") {
+            let keysAndValues = style.split(separator: ":").map{ $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
+            guard let key = keysAndValues.first, let value = keysAndValues.last else { continue }
+            
+            if key == "font-size", let size = Int(value.trimmingCharacters(in: CharacterSet.decimalDigits.inverted)) {
+                font = Font.system(size: CGFloat(size) * 1.6)
+            }
+            if key == "color" {
+                color = Color.hex(value)
+            }
+        }
+        return (font, color)
+    }
+    
+    
+    // split text into paragraphs with text, font, color and image
+    // using regex builder
+    @available(*, deprecated, message: "use 'makeParagraphs()' instead")
     func createParagraphs() -> [WPParagraph] {
         
         func processString(string: String, paragraphs: [WPParagraph]) -> [WPParagraph] {
@@ -233,6 +327,5 @@ extension String {
             .replace(substrings: ["<strong>", "</strong>", "<b>", "</b>"], with: "**") // add bold text
             .replace(substrings: ["<em>", "</em>", "<i>", "</i>"], with: "*") // add italic text
             .replaceHyperlinks() // replace pattern <a... href="<hyperlink>"....> with [content](href)
-
     }
 }

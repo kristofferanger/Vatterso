@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import SwiftSoup
 
 // Model for WordPress data
 // same model is used for both pages and posts, the difference
@@ -78,112 +77,8 @@ extension WPPost.Section {
     }
     // text processed into paragraphs
     var paragraphs: [WPParagraph] {
-        let result = self.rendered.htmlToMarkDown().createParagraphs()
+        let result = self.rendered.makeParagraphs()
         return result
-    }
-    
-    var blocks: [WPBlock] {
-        
-        var blocks = [WPBlock]()
-        
-        guard let doc: Document = try? SwiftSoup.parseBodyFragment(self.rendered), let body = doc.body() else { return [] }
-    
-        
-        for element in body.children() {
-            
-            var font: Font?
-            var color: Color?
-            
-            let texts: [String] = element.getChildNodes().compactMap { node in
-                                
-                // node contains some kind of modifier
-                if let element = node as? Element {
-                    // get text
-                    let text = try? element.text()
-                    
-                    if element.tagName() == "a",
-                       let text,
-                       let href = try? element.attr("href")
-                    {
-                        return "[\(text)](\(href))"
-                    }
-                    
-                    if element.tagName() == "br" {
-                        return "\n"
-                    }
-                    
-                    if element.tagName() == "strong",
-                       let text
-                    {
-                        return "**\(text)**"
-                    }
-                    if element.tagName() == "em",
-                       let text
-                    {
-                        return "*\(text)*"
-                    }
-                    
-                    if element.tagName() == "span",
-                       let style = try? element.attr("style"),
-                       let text
-                    {
-                        (font, color) = getFontAndColorFromStyle(style)
-                        return "\(text)"
-                    }
-                    
-                    print("tag: \(element.tagName())")
-                    print("style: \(try? element.attr("style"))")
-                    print("text: \(try? element.text())")
-                    print("hep")
-                    
-                }
-                // node contains only text, so return it
-                else if let textNode = node as? TextNode {
-                    return textNode.text()
-                }
-
-                return nil
-            }
-            let text = texts.joined()
-            blocks.append(WPBlock(id: UUID().uuidString, text: text, font: font, color: color))
-        }
-        
-//        let children = doc.children()
-//
-//        let paragraphs = (try? body.getElementsByTag("p"))!
-//
-//        for element in paragraphs  {
-//            let bodyAttributes = element.getAttributes()
-//            print(try? bodyAttributes!.toString() ?? "meck")
-//            for childNode in element.children()  {
-//                if let text = try? childNode.text() {
-//                    blocks.append(WPBlock(id: childNode.id(), text: text))
-//                }
-//            }
-//
-//        }
-        return blocks
-    }
-    
-    var testText: [WPBlock] {
-        guard let doc: Document = try? SwiftSoup.parse(self.rendered) else { return [] }
-        guard let txt = try? doc.text() else { return [] }
-        guard let elements = try? doc.getAllElements() else { return [] }
-        for element in elements {
-            print(element.tagName())
-            
-            let attributes = element.getAttributes()
-            for attribute in attributes! {
-                print("Attribute: \(attribute.toString())")
-            }
-
-            for textNode in element.textNodes() {
-                print(textNode.text())
-                print("*")
-            }
-        }
-        
-        return [WPBlock(id: "sdfasdfa", text: txt)]
     }
 }
 
@@ -217,24 +112,3 @@ extension URL {
     }
 }
 
-
-
-private func getFontAndColorFromStyle(_ string: String) -> (font: Font?, color: Color?) {
-    
-    var font: Font?
-    var color: Color?
-    
-    for style in string.split(separator: ";") {
-        let keysAndValues = style.split(separator: ":").map{ $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
-        guard let key = keysAndValues.first, let value = keysAndValues.last else { continue }
-        
-        if key == "font-size", let size = Int(value.trimmingCharacters(in: CharacterSet.decimalDigits.inverted)) {
-            font = Font.system(size: CGFloat(size) * 1.6)
-        }
-        if key == "color" {
-            color = Color.hex(value)
-        }
-    }
-    return (font, color)
-
-}
