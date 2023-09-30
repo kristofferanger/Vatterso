@@ -141,13 +141,21 @@ extension String {
                         return "• \(text)\n"
                     }
                     
-                    if element.tagName() == "a", let href = try? element.attr("href") {
-                        return "[\(text)](\(href))"
-                    }
-
                     if element.tagName() == "span", let style = try? element.attr("style") {
                         (font, color) = style.findFontAndColor()
                         return "\(text)"
+                    }
+                    
+                    if element.tagName() == "a", let href = try? element.attr("href") {
+                        if element.parent()?.tagName() == "figure" || text.isEmpty  {
+                            // return image
+                            paragraphs.append(WPParagraph(imageUrl: URL(string: href)))
+                            return nil
+                        }
+                        else {
+                            // return link
+                            return "[\(text)](\(href))"
+                        }
                     }
                     
                     if element.tagName() == "img" {
@@ -162,9 +170,9 @@ extension String {
                     print("style: \(try? element.attr("style"))")
                     print("text: \(try? element.text())")
                 }
-                // node contains only text, so return it
+                // node contains only text, so return it, wth blanks removed
                 else if let textNode = node as? TextNode {
-                    return textNode.text()
+                    return textNode.text().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                 }
 
                 return nil
@@ -184,7 +192,8 @@ extension String {
             guard let key = keysAndValues.first, let value = keysAndValues.last else { continue }
             
             if key == "font-size", let size = Int(value.trimmingCharacters(in: CharacterSet.decimalDigits.inverted)) {
-                font = Font.system(size: CGFloat(size) * 1.6)
+                let multiplier = 1.6
+                font = Font.system(size: CGFloat(size) * multiplier)
             }
             if key == "color" {
                 color = Color.hex(value)
