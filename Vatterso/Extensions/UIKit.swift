@@ -38,6 +38,59 @@ extension Color {
 }
 
 
+extension UIView {
+    
+    // In order to create computed properties for extensions, we need a key to
+    // store and access the stored property
+    fileprivate struct AssociatedObjectKeys {
+        static var tapGestureRecognizer = "MediaViewerAssociatedObjectKey_mediaViewer"
+    }
+    
+    // Set our computed property type to a closure
+    fileprivate var gestureRecognizerAction: ((UIGestureRecognizer) -> Void)? {
+        set {
+            if let newValue {
+                // Computed properties get stored as associated objects
+                objc_setAssociatedObject(self, &AssociatedObjectKeys.tapGestureRecognizer, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+            }
+        }
+        get {
+            let gestureRecognizerActionInstance = objc_getAssociatedObject(self, &AssociatedObjectKeys.tapGestureRecognizer) as? ((UIGestureRecognizer) -> Void)
+            return gestureRecognizerActionInstance
+        }
+    }
+    
+    // This is the meat of the sauce, here we create the tap gesture recognizer and
+    // store the closure the user passed to us in the associated object we declared above
+    public func addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer? = nil, action: ((UIGestureRecognizer) -> Void)?) {
+        self.isUserInteractionEnabled = true
+        self.gestureRecognizerAction = action
+        
+        let gesture: UIGestureRecognizer
+        
+        if let gestureRecognizer {
+            gesture = gestureRecognizer
+            gesture.removeTarget(nil, action: nil)
+            gesture.addTarget(self, action: #selector(handleGesture))
+        }
+        else {
+            gesture = UITapGestureRecognizer(target: self, action: #selector(handleGesture))
+        }
+        self.addGestureRecognizer(gesture)
+    }
+    
+    // Every time the user taps on the UIImageView, this function gets called,
+    // which triggers the closure we stored
+    @objc fileprivate func handleGesture(sender: UIGestureRecognizer) {
+        if let action = self.gestureRecognizerAction {
+            action(sender)
+        } else {
+            // no action
+        }
+    }
+    
+}
+
 extension UINavigationController {
     override open func viewDidLoad() {
         super.viewDidLoad()

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SDWebImageSwiftUI
 
 // a page that shows wordpress content
 // it can show both a blog with posts and a page
@@ -153,9 +152,10 @@ struct WPPageContentView: View {
                 // image paragraph
                 NavigationLink {
                     // clicked image
-                    ZoomableScrollView() {
+                    ZoomableScrollView(enableTapToReset: true) {
                         WPImage(url: imageUrl)
                     }
+                    .navigationBarTitleDisplayMode(.inline)
                 } label: {
                     WPImage(url: imageUrl)
                         .padding(.vertical, 10)
@@ -164,82 +164,8 @@ struct WPPageContentView: View {
             }
         }
     }
-
-    // the image view
-}
-
-struct WPImage: View {
-    
-    private var url: URL?
-    
-    init(url: URL?) {
-        self.url = url
-    }
-
-    var body: some View {
-        AsyncImage(url: self.url) { phase in
-            if let image = phase.image {
-                image
-                    .resizable()
-                    .scaledToFit()
-            }
-            else {
-                ProgressView()
-            }
-        }
-    }
 }
 
 
-struct ZoomableScrollView<Content: View>: UIViewRepresentable {
-    
-    private var content: Content
 
-    init(@ViewBuilder content: () -> Content) {
-      self.content = content()
-    }
-
-    func makeUIView(context: Context) -> UIScrollView {
-      // set up the UIScrollView
-      let scrollView = UIScrollView()
-      scrollView.delegate = context.coordinator  // for viewForZooming(in:)
-      scrollView.maximumZoomScale = 20
-      scrollView.minimumZoomScale = 1
-      scrollView.bouncesZoom = true
-
-      // create a UIHostingController to hold our SwiftUI content
-      let hostedView = context.coordinator.hostingController.view!
-      hostedView.translatesAutoresizingMaskIntoConstraints = true
-      hostedView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-      hostedView.frame = scrollView.bounds
-      scrollView.addSubview(hostedView)
-
-      return scrollView
-    }
-
-    func makeCoordinator() -> Coordinator  {
-        let hostingViewController = UIHostingController(rootView: self.content)
-        return Coordinator(hostingController: hostingViewController, contentView: hostingViewController.view)
-    }
-    
-    func updateUIView(_ uiView: UIScrollView, context: Context) {
-      // update the hosting controller's SwiftUI content
-      assert(context.coordinator.hostingController.view.superview == uiView)
-    }
-
-    // MARK: - Coordinator
-    class Coordinator: NSObject, UIScrollViewDelegate {
-        var hostingController: UIHostingController<Content>
-        var contentView: UIView?
-      
-        init(hostingController: UIHostingController<Content>, contentView: UIView?) {
-            self.contentView = contentView
-            self.hostingController = hostingController
-        }
-        
-        func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-            return hostingController.view
-    }
-  }
-}
 
