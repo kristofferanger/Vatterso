@@ -31,7 +31,6 @@
 		C9AA75352AC9DB8F0038F893 /* WPImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA75342AC9DB8F0038F893 /* WPImage.swift */; };
 		C9BC0E4B2A8A3A6B00DCD270 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BC0E4A2A8A3A6B00DCD270 /* SidebarView.swift */; };
 		C9BC0E4D2A8A3AD900DCD270 /* SidebarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BC0E4C2A8A3AD900DCD270 /* SidebarItem.swift */; };
-		C9C7572A2A7C4750008AB0DD /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C9C757292A7C4750008AB0DD /* SDWebImageSwiftUI */; };
 		C9EBDE712A82620E0059CC8F /* SidebarMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EBDE702A82620E0059CC8F /* SidebarMenu.swift */; };
 		C9EBDE732A840B7F0059CC8F /* String+regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EBDE722A840B7F0059CC8F /* String+regex.swift */; };
 		C9EBDE752A84457E0059CC8F /* SpinnerWhileLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EBDE742A84457E0059CC8F /* SpinnerWhileLoadingView.swift */; };
@@ -92,7 +91,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9C7572A2A7C4750008AB0DD /* SDWebImageSwiftUI in Frameworks */,
 				C91259DA2AAB33B700A74B16 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,7 +285,6 @@
 			);
 			name = Vatterso;
 			packageProductDependencies = (
-				C9C757292A7C4750008AB0DD /* SDWebImageSwiftUI */,
 				C91259D92AAB33B700A74B16 /* SwiftSoup */,
 			);
 			productName = Vatterso;
@@ -363,7 +360,6 @@
 			);
 			mainGroup = C97EA6E52A2889660082001B;
 			packageReferences = (
-				C9C757282A7C4750008AB0DD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				C91259D82AAB33B700A74B16 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			productRefGroup = C97EA6EF2A2889670082001B /* Products */;
@@ -769,14 +765,6 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		C9C757282A7C4750008AB0DD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -784,11 +772,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C91259D82AAB33B700A74B16 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
-		};
-		C9C757292A7C4750008AB0DD /* SDWebImageSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9C757282A7C4750008AB0DD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
-			productName = SDWebImageSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 
