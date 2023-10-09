@@ -9,14 +9,6 @@ import Foundation
 import SwiftUI
 
 
-struct SidebarLabelsPreferenceKey: PreferenceKey {
-    static var defaultValue: [Text] = []
-    
-    static func reduce(value: inout [Text], nextValue:() -> [Text]) {
-        value += nextValue()
-    }
-}
-
 struct SidebarItemsPreferenceKey: PreferenceKey {
     static var defaultValue: [SidebarItem] = []
     
@@ -26,10 +18,10 @@ struct SidebarItemsPreferenceKey: PreferenceKey {
 }
 
 struct SidebarLabelViewModifier: ViewModifier {
-    var label: Text
+    var label: any View
     func body(content: Content) -> some View {
         content
-            .preference(key: SidebarLabelsPreferenceKey.self, value: [label])
+            //.preference(key: SidebarLabelsPreferenceKey.self, value: [label])
     }
 }
 
@@ -46,10 +38,9 @@ struct SidebarItemViewModifier: ViewModifier {
 
 extension View {
     
-    func sideBarLabel(@ViewBuilder  _ label: () -> Text) -> some View {
+    func sideBarLabel(@ViewBuilder  _ label: () -> some View) -> some View {
         self.modifier(SidebarLabelViewModifier(label: label()))
     }
-    
 
     func sideBarItem(_ item: SidebarItem, selection: Binding<SidebarItem?>) -> some View {
         self.modifier(SidebarItemViewModifier(item: item, selection: selection))

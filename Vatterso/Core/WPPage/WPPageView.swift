@@ -17,13 +17,9 @@ struct WPPageView: View {
     
     // make the side bar appear
     @Binding var showingSidebar: Bool
-    @Binding var selection: SidebarItem?
-    // show child view
-    @State private var showChildView: SidebarItem?
     
-    init(sidebarItem: SidebarItem, selection: Binding<SidebarItem?>, showingSidebar: Binding<Bool>? = nil) {
+    init(sidebarItem: SidebarItem, showingSidebar: Binding<Bool>? = nil) {
         self.page = sidebarItem
-        self._selection = selection
         
         if let showingSidebar {
             // connect to toggle side bar
@@ -45,15 +41,6 @@ struct WPPageView: View {
         NavigationView {
             VStack {
                 WPPageContentView(page: page)
-            }
-            .onChange(of: selection, perform: { selection in
-                // only interested in clicks on a tab with same tabId but different page id
-                guard let selection, selection.tabId == page.tabId, selection.id != page.id else { return }
-                // show child view if selection is actually a child (not parent)
-                self.showChildView = selection.id == page.tabId ? nil : selection
-            })
-            .navigationDestination(for: $showChildView) { child in
-                WPPageContentView(page: child)
             }
             .navigationBarItems(leading: Button(action: {
                 // hamburger button pressed

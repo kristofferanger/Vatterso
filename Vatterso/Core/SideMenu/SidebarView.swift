@@ -50,9 +50,6 @@ struct SidebarView<Content: View>: View {
                 SideMenuView(tabs: $items, selectedTab: $selection, showingSideMenu: $showingSideBar)
             }
         }
-        .onPreferenceChange(SidebarLabelsPreferenceKey.self) { value in
-            self.labels = value
-        }
         .onPreferenceChange(SidebarItemsPreferenceKey.self) { value in
             // getting items with preference key,
             // ie when they are added to the layout
@@ -63,16 +60,45 @@ struct SidebarView<Content: View>: View {
     // private stuff
     private var content: (_ showSideBar: Binding<Bool>) -> Content
     @State private var items: [SidebarItem] = []
-    @State private var labels: [Text] = []
     @State private var showingSideBar: Bool = false
 }
 
 
-struct ViewWrapper<Content: View>:Identifiable {
-    var id = UUID().uuidString
-    var content: Content
-    
-    init(_ content: Content) {
+struct SidebarView2<Content: View>: View {
+
+    init(viewModel: SidebarViewModel, @ViewBuilder content: @escaping((SidebarItem, Binding<Bool>)) -> Content) {
         self.content = content
+        self._viewModel = StateObject(wrappedValue: viewModel)
     }
+    
+    private var homePage: SidebarItem {
+        return SidebarItem(posts: [])
+    }
+    
+    var body: some View {
+        ZStack {
+            // passing showingSideBar to content so that pages use it
+            content((selection ?? homePage, $showingSidebar))
+            //  passing showingSideBar to SidebarMenu to handle the transision
+            SidebarMenu(isShowing: $showingSidebar) {
+                // passing showingSideBar to SideMenuView so it can be dismissed
+                // also passing items and selection of obvious reasons
+                // - since here is where the selection is taking place
+                SideMenuView(tabs: $items, selectedTab: $selection, showingSideMenu: $showingSidebar)
+            }
+            .onReceive(viewModel.$items, perform: { items in
+                if let firstItem = items.first {
+                    selection = firstItem
+                }
+                self.items = items
+            })
+        }
+    }
+    
+    // private stuff
+    @StateObject var viewModel: SidebarViewModel
+    @State private var items: [SidebarItem] = []
+    @State private var selection: SidebarItem?
+    @State private var showingSidebar: Bool = false
+    private var content: ((SidebarItem, Binding<Bool>)) -> Content
 }

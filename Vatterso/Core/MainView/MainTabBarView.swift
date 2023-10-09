@@ -10,18 +10,14 @@ import SwiftUI
 struct MainTabBarView: View {
 
     @StateObject private var viewModel = SidebarViewModel()
-    @State private var selection: SidebarItem?
     
     var body: some View {
         // container view hat handles the loading stages
         SpinnerWhileLoadingView(viewModel.loadingStatus) {
             // side bar struct, handling side menu and pages
-            SidebarView { showingSidebar in
+            SidebarView2(viewModel: viewModel) { selection, showingSidebar in
                 // iterate through sidebar items which contains the pages
-                WPPageView(sidebarItem: viewModel.items.first!, selection: $selection, showingSidebar: showingSidebar)
-                    .sideBarLabel {
-                        Text("Test test test")
-                    }
+                WPPageView(sidebarItem: selection, showingSidebar: showingSidebar)
                     //.sideBarItem(viewModel.items.first!, selection: $selection)
                 
                 
@@ -43,10 +39,6 @@ struct MainTabBarView: View {
         .onAppear{
             // load items on appearance
             viewModel.loadPages()
-        }
-        .onReceive(viewModel.$items) { items in
-            // when reloaded, set selection to first item
-            self.selection = items.first
         }
     }
 }
