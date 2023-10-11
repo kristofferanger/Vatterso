@@ -15,18 +15,20 @@ struct MainTabBarView: View {
         // container view hat handles the loading stages
         SpinnerWhileLoadingView(viewModel.loadingStatus) {
             // side bar struct, handling side menu and pages
-            SidebarView { selection, showingSidebar in
+            SidebarView(items: viewModel.items) { selection, showingSidebar in
                 // iterate through sidebar items which contains the pages
                 
-                Text("Page one")
-                    .sideBarItem(SidebarItem(posts: []), selection: selection)
-                Text("Page two")
-                    .sideBarItem(SidebarItem(posts: []), selection: selection)
+//                Text("Page one")
+//                    .sideBarItem(SidebarItem(posts: []), selection: selection)
+//                Text("Page two")
+//                    .sideBarItem(SidebarItem(posts: []), selection: selection)
 
 //                ForEach(viewModel.items) { item in
 //                    WPPageView(selection: item, showingSidebar: showingSidebar)
 //                        .sideBarItem(item, selection: selection)
 //                }
+//
+                WPPageView(item: selection.wrappedValue, showingSidebar: showingSidebar)
             }
         } errorAlert: { error in
             let alert = Alert(title: Text("Oops"), message: Text(error.localizedDescription), dismissButton: .default(Text("Retry")) {

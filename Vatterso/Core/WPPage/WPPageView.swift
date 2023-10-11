@@ -13,13 +13,13 @@ import SwiftUI
 struct WPPageView: View {
     // the page data,
     // 1 item == page, 1+ items == blog
-    private var selection: SidebarItem?
+    private var item: SidebarItem?
     
     // make the side bar appear
     @Binding var showingSidebar: Bool
     
-    init(selection: SidebarItem?, showingSidebar: Binding<Bool>? = nil) {
-        self.selection = selection
+    init(item: SidebarItem?, showingSidebar: Binding<Bool>? = nil) {
+        self.item = item
         
         if let showingSidebar {
             // connect to toggle side bar
@@ -40,7 +40,7 @@ struct WPPageView: View {
     var body: some View {
         NavigationView {
             VStack {
-                if let page = selection {
+                if let page = item {
                     WPPageContentView(page: page)
                 }
                 else {
