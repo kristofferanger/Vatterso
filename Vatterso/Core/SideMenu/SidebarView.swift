@@ -32,7 +32,7 @@ struct SidebarView<Content: View>: View {
         }
         .onPreferenceChange(SidebarItemsPreferenceKey.self) { value in
             // getting items with preference key,
-            // ie when they are added to the layout
+            // ie when pages are added to the layout
             if let selection = value.first {
                 self.selection = selection
                 self.items = value

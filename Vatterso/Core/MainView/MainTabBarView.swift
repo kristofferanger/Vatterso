@@ -19,15 +19,17 @@ struct MainTabBarView: View {
                 // iterate through sidebar items which contains the pages
                 
 //                Text("Page one")
-//                    .sideBarItem(SidebarItem(posts: []), selection: selection)
+//                    .sideBarLabel(selectedId: selection.wrappedValue.page.id) {
+//                        Text("Press page 1")
+//                    }
 //                Text("Page two")
 //                    .sideBarItem(SidebarItem(posts: []), selection: selection)
 
 //                ForEach(viewModel.items) { item in
-//                    WPPageView(selection: item, showingSidebar: showingSidebar)
+//                    WPPageView(item: item, showingSidebar: showingSidebar)
 //                        .sideBarItem(item, selection: selection)
 //                }
-//
+
                 WPPageView(item: selection.wrappedValue, showingSidebar: showingSidebar)
             }
         } errorAlert: { error in
