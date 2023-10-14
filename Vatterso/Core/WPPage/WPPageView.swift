@@ -90,16 +90,19 @@ struct WPPageContentView: View {
         return published
     }
     
-    // view for showing a single post (in a page)
+    // view for showing a post (in a page)
     private func postView(post: WPPost) -> some View {
         VStack(alignment: .leading, spacing: 8) {
+            // set headline for blog page
             if isBlog {
                 Text(post.title.text)
                     .font(.headline)
             }
+            // set paragraphs
             ForEach(post.content.paragraphs) { paragraph in
                 paragraphView(paragraph: paragraph)
             }
+            // set footer for blog page
             if isBlog {
                 Text(publishedString(post: post))
                     .font(.footnote)
@@ -107,7 +110,37 @@ struct WPPageContentView: View {
             }
         }
     }
-
+    
+    // view that shows a paragraph
+    private func paragraphView(paragraph: WPParagraph) -> some View {
+        // paragraph is either a text, list, grid or an image
+        ZStack {
+            if let text = markdownText(paragraph: paragraph)   {
+                // text paragraph
+                Text(text)
+                    .font(paragraph.font)
+                    .foregroundColor(paragraph.color ?? Color.primary)
+            }
+            else if let text = paragraph.listText {
+                // list paragraph
+                HStack(alignment: .top) {
+                    Text("•")
+                    Text(text)
+                        .font(paragraph.font)
+                        .foregroundColor(paragraph.color ?? Color.primary)
+                }
+            }
+            else if let table = paragraph.table, let grid = table.rows {
+                // grid paragraph
+                gridView(grid: grid)
+            }
+            else if let imageUrl = paragraph.imageUrl {
+                // image paragraph
+                imageView(url: imageUrl)
+            }
+        }
+    }
+    
     private func markdownText(paragraph: WPParagraph) -> LocalizedStringKey? {
         guard let string = paragraph.text else { return nil }
         return LocalizedStringKey(string)
@@ -120,61 +153,33 @@ struct WPPageContentView: View {
         return nil
     }
     
-    // view that shows a single paragraph (in a post)
-    private func paragraphView(paragraph: WPParagraph) -> some View {
-        // paragraph is either a text, list text or an image
-        ZStack {
-            if let text = markdownText(paragraph: paragraph)   {
-                // text paragraph
-                Text(text)
-                    .font(paragraph.font)
-                    .foregroundColor(paragraph.color ?? Color.primary)
-            }
-            else if let text = paragraph.listText {
-                // list text
-                HStack(alignment: .top) {
-                    Text("•")
-                    Text(text)
-                        .font(paragraph.font)
-                        .foregroundColor(paragraph.color ?? Color.primary)
-                }
-            }
-            else if let table = paragraph.table, let grid = table.rows {
-                gridView(grid: grid)
-            }
-            else if let imageUrl = paragraph.imageUrl {
-                imageView(url: imageUrl)
-            }
-        }
-    }
-}
-
-private func gridView(grid: [[String]]) -> some View {
-    Grid(alignment: .leading, horizontalSpacing: 8, verticalSpacing: 12) {
-        ForEach(grid, id: \.self) { row in
-            GridRow(alignment: .top) {
-                ForEach(row, id: \.self) { text in
-                    Text(text)
-                        .font( .caption)
+    private func gridView(grid: [[String]]) -> some View {
+        Grid(alignment: .leading, horizontalSpacing: 8, verticalSpacing: 12) {
+            ForEach(grid, id: \.self) { row in
+                GridRow(alignment: .top) {
+                    ForEach(row, id: \.self) { text in
+                        Text(text)
+                            .font( .caption)
+                    }
                 }
             }
         }
     }
-}
-
-private func imageView(url: URL) -> some View {
-    // image paragraphR
-    NavigationLink {
-        // clicked image
-        ZoomableScrollView(enableTapToReset: true) {
+    
+    private func imageView(url: URL) -> some View {
+        NavigationLink {
+            // detail view image
+            ZoomableScrollView(enableTapToReset: true) {
+                WPImage(url: url)
+            }
+            .navigationBarTitleDisplayMode(.inline)
+        } label: {
+            // the image
             WPImage(url: url)
+                .padding(.vertical, 10)
+                .frame(maxWidth: 400)
         }
-        .navigationBarTitleDisplayMode(.inline)
-    } label: {
-        WPImage(url: url)
-            .padding(.vertical, 10)
-            .frame(maxWidth: 400)
-    }}
-
+    }
+}
 
 
