@@ -129,14 +129,6 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		C9040BBF2A60597C004E965D /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				C93AE2E92A77F89F00BCF683 /* SidebarViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
 		C908A5122A8A45000031C8DE /* Reference */ = {
 			isa = PBXGroup;
 			children = (
@@ -152,7 +144,6 @@
 			isa = PBXGroup;
 			children = (
 				C908A5132A8A468C0031C8DE /* WPPageView.swift */,
-				C9AA75342AC9DB8F0038F893 /* WPImage.swift */,
 			);
 			path = WPPage;
 			sourceTree = "<group>";
@@ -193,7 +184,6 @@
 			children = (
 				C97EA6F12A2889670082001B /* VattersoApp.swift */,
 				C97EA72D2A2CF8A10082001B /* Core */,
-				C9040BBF2A60597C004E965D /* ViewModels */,
 				C9040BB02A5FD41E004E965D /* Model */,
 				C9040BAF2A5FD2E5004E965D /* Networking */,
 				C97EA72C2A2CF8860082001B /* Extensions */,
@@ -256,6 +246,7 @@
 			children = (
 				C9EBDE742A84457E0059CC8F /* SpinnerWhileLoadingView.swift */,
 				C9AA75322AC9DA960038F893 /* ZoomableScrollView.swift */,
+				C9AA75342AC9DB8F0038F893 /* WPImage.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -264,6 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				C97EA7222A28A1540082001B /* MainTabBarView.swift */,
+				C93AE2E92A77F89F00BCF683 /* SidebarViewModel.swift */,
 			);
 			path = MainView;
 			sourceTree = "<group>";
