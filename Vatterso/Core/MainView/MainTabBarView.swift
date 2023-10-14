@@ -16,20 +16,7 @@ struct MainTabBarView: View {
         SpinnerWhileLoadingView(viewModel.loadingStatus) {
             // side bar struct, handling side menu and pages
             SidebarView(items: viewModel.items) { selection, showingSidebar in
-                // iterate through sidebar items which contains the pages
-                
-//                Text("Page one")
-//                    .sideBarLabel(selectedId: selection.wrappedValue.page.id) {
-//                        Text("Press page 1")
-//                    }
-//                Text("Page two")
-//                    .sideBarItem(SidebarItem(posts: []), selection: selection)
-
-//                ForEach(viewModel.items) { item in
-//                    WPPageView(item: item, showingSidebar: showingSidebar)
-//                        .sideBarItem(item, selection: selection)
-//                }
-
+                // present selected side bar item
                 WPPageView(item: selection.wrappedValue, showingSidebar: showingSidebar)
             }
         } errorAlert: { error in

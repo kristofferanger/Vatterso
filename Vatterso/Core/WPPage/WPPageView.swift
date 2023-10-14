@@ -20,19 +20,7 @@ struct WPPageView: View {
     
     init(item: SidebarItem?, showingSidebar: Binding<Bool>? = nil) {
         self.item = item
-        
-        if let showingSidebar {
-            // connect to toggle side bar
-            self._showingSidebar = showingSidebar
-        }
-        else {
-            // dummy action
-            var flag: Bool = false
-            self._showingSidebar = Binding(
-                get: { flag },
-                set: { flag = $0 }
-            )
-        }
+        self._showingSidebar = showingSidebar ?? .constant(false)
     }
     
     // start page for tabs with navigation bar
@@ -120,44 +108,73 @@ struct WPPageContentView: View {
         }
     }
 
-    private func markdownText(block: WPBlock) -> LocalizedStringKey? {
-        guard let string = block.text else { return nil }
-        return LocalizedStringKey(string)
-    }
-    
     private func markdownText(paragraph: WPParagraph) -> LocalizedStringKey? {
         guard let string = paragraph.text else { return nil }
         return LocalizedStringKey(string)
     }
     
+    private func listText(paragraph: WPParagraph) -> String? {
+        if let text = paragraph.text, text.hasPrefix("\u{2022}") {
+            return text
+        }
+        return nil
+    }
+    
     // view that shows a single paragraph (in a post)
     private func paragraphView(paragraph: WPParagraph) -> some View {
-        // paragraph is either a text or an image
-        Group {
+        // paragraph is either a text, list text or an image
+        ZStack {
             if let text = markdownText(paragraph: paragraph)   {
                 // text paragraph
                 Text(text)
                     .font(paragraph.font)
                     .foregroundColor(paragraph.color ?? Color.primary)
             }
-            if let imageUrl = paragraph.imageUrl {
-                // image paragraph
-                NavigationLink {
-                    // clicked image
-                    ZoomableScrollView(enableTapToReset: true) {
-                        WPImage(url: imageUrl)
-                    }
-                    .navigationBarTitleDisplayMode(.inline)
-                } label: {
-                    WPImage(url: imageUrl)
-                        .padding(.vertical, 10)
-                        .frame(maxWidth: 400)
+            else if let text = paragraph.listText {
+                // list text
+                HStack(alignment: .top) {
+                    Text("•")
+                    Text(text)
+                        .font(paragraph.font)
+                        .foregroundColor(paragraph.color ?? Color.primary)
+                }
+            }
+            else if let table = paragraph.table, let grid = table.rows {
+                gridView(grid: grid)
+            }
+            else if let imageUrl = paragraph.imageUrl {
+                imageView(url: imageUrl)
+            }
+        }
+    }
+}
+
+private func gridView(grid: [[String]]) -> some View {
+    Grid(alignment: .leading, horizontalSpacing: 8, verticalSpacing: 12) {
+        ForEach(grid, id: \.self) { row in
+            GridRow(alignment: .top) {
+                ForEach(row, id: \.self) { text in
+                    Text(text)
+                        .font( .caption)
                 }
             }
         }
     }
 }
 
+private func imageView(url: URL) -> some View {
+    // image paragraphR
+    NavigationLink {
+        // clicked image
+        ZoomableScrollView(enableTapToReset: true) {
+            WPImage(url: url)
+        }
+        .navigationBarTitleDisplayMode(.inline)
+    } label: {
+        WPImage(url: url)
+            .padding(.vertical, 10)
+            .frame(maxWidth: 400)
+    }}
 
 
 

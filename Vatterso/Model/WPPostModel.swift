@@ -87,22 +87,35 @@ extension WPPost.Section {
 /// A block-level element always takes up the full width available (stretches out to the left and right as far as it can).
 /// Two commonly used block elements are: <p> and <div>.
 
-struct WPBlock: Identifiable {
-    let id: String
-    var text: String?
-    var font: Font?
-    var color: Color?
-    var weight: Font.Weight?
-    var imageUrl: URL?
-}
+//struct WPBlock: Identifiable {
+//    let id: String
+//    var text: String?
+//    var font: Font?
+//    var color: Color?
+//    var weight: Font.Weight?
+//    var imageUrl: URL?
+//}
 
 struct WPParagraph: Identifiable {
     let id = UUID().uuidString
     var text: String?
     var font: Font?
     var color: Color?
-    var weight: Font.Weight?
     var imageUrl: URL?
+    var listText: String?
+    var table: WPTable?
+}
+
+struct WPTable {
+    let headers: [String]?
+    let rows: [[String]]?
+    let footers: [String]?
+    
+    init(headers: [String]? = nil, rows: [[String]]? = nil, footers: [String]? = nil) {
+        self.headers = headers
+        self.rows = rows
+        self.footers = footers
+    }
 }
 
 extension URL {

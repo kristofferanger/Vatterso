@@ -42,7 +42,8 @@ extension String {
             if let match = text.firstMatch(of: searchTag) {
                 let (_, comment) = match.output
                 text = text.replacing(comment, with: "")
-            } else {
+            }
+            else {
                 loop = false
             }
         }
@@ -124,12 +125,11 @@ extension String {
                     // ignore scripts
                     guard element.tagName() != "script" else { return nil }
                     
-                    
                     if element.tagName() == "br" {
                         return "\n"
                     }
                     
-                    if element.tagName() == "strong" {
+                    if ["strong"].contains(element.tagName()) {
                         return "**\(text)**"
                     }
                     
@@ -138,12 +138,25 @@ extension String {
                     }
                     
                     if element.tagName() == "li" {
-                        return "• \(text)\n"
+                        // return list text
+                        paragraphs.append(WPParagraph(listText: text))
+                        return nil
                     }
                     
                     if element.tagName() == "span", let style = try? element.attr("style") {
                         (font, color) = style.findFontAndColor()
                         return "\(text)"
+                    }
+                    
+                    if element.tagName() == "small" {
+                        font = .title3
+                        return "\(text)"
+                    }
+                    
+                    if element.tagName() == "tbody" {
+                        let table = createTable(element)
+                        paragraphs.append(WPParagraph(table: table))
+                        return nil
                     }
                     
                     if element.tagName() == "a", let href = try? element.attr("href") {
@@ -172,7 +185,7 @@ extension String {
                 }
                 // node contains only text, so return it, wth blanks removed
                 else if let textNode = node as? TextNode {
-                    return textNode.text().trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    return textNode.text()
                 }
 
                 return nil
@@ -180,6 +193,12 @@ extension String {
             paragraphs.append(WPParagraph(text: texts.joined(), font: font, color: color))
         }
         return paragraphs
+    }
+    
+    func createTable(_ element: SwiftSoup.Element) -> WPTable {
+        let rows = element.children().filter{ $0.nodeName() == "tr" }
+        let rowItems = rows.map { $0.children().compactMap { try? $0.text() }}
+        return WPTable(rows: rowItems)
     }
     
     func findFontAndColor() -> (font: Font?, color: Color?) {
