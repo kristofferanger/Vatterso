@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SDWebImageSwiftUI
 
 // a page that shows wordpress content
 // it can show both a blog with posts and a page
@@ -14,30 +13,14 @@ import SDWebImageSwiftUI
 struct WPPageView: View {
     // the page data,
     // 1 item == page, 1+ items == blog
-    private var page: SidebarItem
+    private var item: SidebarItem?
     
     // make the side bar appear
     @Binding var showingSidebar: Bool
-    @Binding var selection: SidebarItem?
-    // show child view
-    @State private var showChildView: SidebarItem?
     
-    init(sidebarItem: SidebarItem, selection: Binding<SidebarItem?>, showingSidebar: Binding<Bool>? = nil) {
-        self.page = sidebarItem
-        self._selection = selection
-        
-        if let showingSidebar {
-            // connect to toggle side bar
-            self._showingSidebar = showingSidebar
-        }
-        else {
-            // dummy action
-            var flag: Bool = false
-            self._showingSidebar = Binding(
-                get: { flag },
-                set: { flag = $0 }
-            )
-        }
+    init(item: SidebarItem?, showingSidebar: Binding<Bool>? = nil) {
+        self.item = item
+        self._showingSidebar = showingSidebar ?? .constant(false)
     }
     
     // start page for tabs with navigation bar
@@ -45,16 +28,12 @@ struct WPPageView: View {
     var body: some View {
         NavigationView {
             VStack {
-                WPPageContentView(page: page)
-            }
-            .onChange(of: selection, perform: { selection in
-                // only interested in clicks on a tab with same tabId but different page id
-                guard let selection, selection.tabId == page.tabId, selection.id != page.id else { return }
-                // show child view if selection is actually a child (not parent)
-                self.showChildView = selection.id == page.tabId ? nil : selection
-            })
-            .navigationDestination(for: $showChildView) { child in
-                WPPageContentView(page: child)
+                if let page = item {
+                    WPPageContentView(page: page)
+                }
+                else {
+                    ProgressView()
+                }
             }
             .navigationBarItems(leading: Button(action: {
                 // hamburger button pressed
@@ -74,7 +53,7 @@ struct WPPageContentView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 40) {
+            VStack(alignment: .leading, spacing: 40) {
                 ForEach(posts) { post in
                     postView(post: post)
                 }
@@ -103,55 +82,104 @@ struct WPPageContentView: View {
         return page.pageType.title
     }
     
-    // view for showing a single post (in a page)
+    private func publishedString(post: WPPost) -> String {
+        var published = "Publicerat den \(post.date.dateSting())"
+        if let authorName = post.authorName {
+            published += "av \(authorName)"
+        }
+        return published
+    }
+    
+    // view for showing a post (in a page)
     private func postView(post: WPPost) -> some View {
         VStack(alignment: .leading, spacing: 8) {
+            // set headline for blog page
             if isBlog {
                 Text(post.title.text)
                     .font(.headline)
             }
+            // set paragraphs
             ForEach(post.content.paragraphs) { paragraph in
                 paragraphView(paragraph: paragraph)
             }
+            // set footer for blog page
             if isBlog {
-                Text("Publicerat den \(post.date.dateSting()) av \(post.authorName)")
+                Text(publishedString(post: post))
                     .font(.footnote)
                     .foregroundColor(.secondary)
             }
         }
     }
     
-    // view that shows a single paragraph (in a post)
+    // view that shows a paragraph
     private func paragraphView(paragraph: WPParagraph) -> some View {
-        // paragraph is either a text or an image
-        Group {
-            if let text = paragraph.text {
+        // paragraph is either a text, list, grid or an image
+        ZStack {
+            if let text = markdownText(paragraph: paragraph)   {
                 // text paragraph
-                Text(.init(text))
+                Text(text)
                     .font(paragraph.font)
                     .foregroundColor(paragraph.color ?? Color.primary)
             }
-            if let imageUrl = paragraph.imageUrl {
+            else if let text = paragraph.listText {
+                // list paragraph
+                HStack(alignment: .top) {
+                    Text("•")
+                    Text(text)
+                        .font(paragraph.font)
+                        .foregroundColor(paragraph.color ?? Color.primary)
+                }
+            }
+            else if let table = paragraph.table, let grid = table.rows {
+                // grid paragraph
+                gridView(grid: grid)
+            }
+            else if let imageUrl = paragraph.imageUrl {
                 // image paragraph
-                NavigationLink {
-                    // clicked image
-                    ScrollView {
-                        imageView(url: imageUrl)
-                            .scaledToFill()
+                imageView(url: imageUrl)
+            }
+        }
+    }
+    
+    private func markdownText(paragraph: WPParagraph) -> LocalizedStringKey? {
+        guard let string = paragraph.text else { return nil }
+        return LocalizedStringKey(string)
+    }
+    
+    private func listText(paragraph: WPParagraph) -> String? {
+        if let text = paragraph.text, text.hasPrefix("\u{2022}") {
+            return text
+        }
+        return nil
+    }
+    
+    private func gridView(grid: [[String]]) -> some View {
+        Grid(alignment: .leading, horizontalSpacing: 8, verticalSpacing: 12) {
+            ForEach(grid, id: \.self) { row in
+                GridRow(alignment: .top) {
+                    ForEach(row, id: \.self) { text in
+                        Text(text)
+                            .font( .caption)
                     }
-                } label: {
-                    imageView(url: imageUrl)
-                        .scaledToFit()
-                        .padding(.vertical, 10)
-                        .frame(maxWidth: 400)
                 }
             }
         }
     }
-
-    // the image view
+    
     private func imageView(url: URL) -> some View {
-        return WebImage(url: url)
-            .resizable()
+        NavigationLink {
+            // detail view image
+            ZoomableScrollView(enableTapToReset: true) {
+                WPImage(url: url)
+            }
+            .navigationBarTitleDisplayMode(.inline)
+        } label: {
+            // the image
+            WPImage(url: url)
+                .padding(.vertical, 10)
+                .frame(maxWidth: 400)
+        }
     }
 }
+
+

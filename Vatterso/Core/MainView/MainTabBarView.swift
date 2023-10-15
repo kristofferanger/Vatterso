@@ -10,36 +10,26 @@ import SwiftUI
 struct MainTabBarView: View {
 
     @StateObject private var viewModel = SidebarViewModel()
-    @State private var selection: SidebarItem?
     
     var body: some View {
         // container view hat handles the loading stages
         SpinnerWhileLoadingView(viewModel.loadingStatus) {
             // side bar struct, handling side menu and pages
-            SidebarView(selection: $selection) { showingSidebar in
-                // iterate through sidebar items which contains the pages
-                ForEach(viewModel.items) { sideBarItem in
-                    // init a page for each sidebar item
-                    WPPageView(sidebarItem: sideBarItem, selection: $selection, showingSidebar: showingSidebar)
-                        .sideBarItem(sideBarItem, selection: $selection)
-                }
+            SidebarView(items: viewModel.items) { selection, showingSidebar in
+                // present selected side bar item
+                WPPageView(item: selection.wrappedValue, showingSidebar: showingSidebar)
             }
         } errorAlert: { error in
             let alert = Alert(title: Text("Oops"), message: Text(error.localizedDescription), dismissButton: .default(Text("Retry")) {
                 // try load items again on error dismiss
                 viewModel.reloadPages()
             })
-           
             return alert
         }
         .ignoresSafeArea()
         .onAppear{
             // load items on appearance
             viewModel.loadPages()
-        }
-        .onReceive(viewModel.$items) { items in
-            // when reloaded, set selection to first item
-            self.selection = items.first
         }
     }
 }

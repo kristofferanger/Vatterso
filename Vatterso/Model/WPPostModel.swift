@@ -53,17 +53,16 @@ struct WPPost: Codable, Identifiable {
         let author:  [Author]
         
         struct Author: Codable, Identifiable {
-            let id: Int
-            let name: String
+            let id: Int?
+            let name: String?
         }
     }
 }
 
 extension WPPost {
-    // easy (+ safe) access of the authors name
-    var authorName: String {
-        let authorId = self.author
-        return self.embedded?.author.first(where: { $0.id == authorId })?.name ?? "Okänd"
+    // easy access of the authors name
+    var authorName: String? {
+        return self.embedded?.author.first(where: { $0.id == self.author })?.name
     }
 }
 
@@ -78,16 +77,51 @@ extension WPPost.Section {
     }
     // text processed into paragraphs
     var paragraphs: [WPParagraph] {
-        let result = self.rendered.htmlToMarkDown().createParagraphs()
+        let result = self.rendered.makeParagraphs()
         return result
     }
 }
+
+
+/// A block-level element always starts on a new line, and the browsers automatically add some space (a margin) before and after the element.
+/// A block-level element always takes up the full width available (stretches out to the left and right as far as it can).
+/// Two commonly used block elements are: <p> and <div>.
+
+//struct WPBlock: Identifiable {
+//    let id: String
+//    var text: String?
+//    var font: Font?
+//    var color: Color?
+//    var weight: Font.Weight?
+//    var imageUrl: URL?
+//}
 
 struct WPParagraph: Identifiable {
     let id = UUID().uuidString
     var text: String?
     var font: Font?
     var color: Color?
-    var weight: Font.Weight?
     var imageUrl: URL?
+    var listText: String?
+    var table: WPTable?
 }
+
+struct WPTable {
+    let headers: [String]?
+    let rows: [[String]]?
+    let footers: [String]?
+    
+    init(headers: [String]? = nil, rows: [[String]]? = nil, footers: [String]? = nil) {
+        self.headers = headers
+        self.rows = rows
+        self.footers = footers
+    }
+}
+
+extension URL {
+    init?(optionalString: Optional<String>) {
+        guard let string = optionalString else { return nil }
+        self.init(string: string)
+    }
+}
+

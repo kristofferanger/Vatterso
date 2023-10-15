@@ -11,11 +11,12 @@
 		C9040BBC2A5FFBBC004E965D /* UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BBB2A5FFBBC004E965D /* UIKit.swift */; };
 		C9040BBE2A5FFBDF004E965D /* Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9040BBD2A5FFBDF004E965D /* Foundation.swift */; };
 		C908A5142A8A468C0031C8DE /* WPPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C908A5132A8A468C0031C8DE /* WPPageView.swift */; };
+		C91259DA2AAB33B700A74B16 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = C91259D92AAB33B700A74B16 /* SwiftSoup */; };
 		C93299D42A8F798C000E3C26 /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93299D32A8F798C000E3C26 /* ViewModifiers.swift */; };
 		C93AE2E02A700FAC00BCF683 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93AE2DF2A700FAC00BCF683 /* DataService.swift */; };
 		C93AE2E82A731D1800BCF683 /* WPPostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93AE2E72A731D1800BCF683 /* WPPostModel.swift */; };
 		C93AE2EA2A77F89F00BCF683 /* SidebarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93AE2E92A77F89F00BCF683 /* SidebarViewModel.swift */; };
-		C94EB6C62A8CE66D005AD895 /* SidebarPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94EB6C52A8CE66D005AD895 /* SidebarPreferenceKey.swift */; };
+		C94EB6C62A8CE66D005AD895 /* SidebarItemsPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C94EB6C52A8CE66D005AD895 /* SidebarItemsPreferenceKey.swift */; };
 		C97EA6F22A2889670082001B /* VattersoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA6F12A2889670082001B /* VattersoApp.swift */; };
 		C97EA6F42A2889670082001B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA6F32A2889670082001B /* ContentView.swift */; };
 		C97EA6F62A28896C0082001B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C97EA6F52A28896C0082001B /* Assets.xcassets */; };
@@ -26,9 +27,10 @@
 		C97EA7122A28896D0082001B /* VattersoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7112A28896D0082001B /* VattersoUITests.swift */; };
 		C97EA7142A28896D0082001B /* VattersoUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7132A28896D0082001B /* VattersoUITestsLaunchTests.swift */; };
 		C97EA7232A28A1540082001B /* MainTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97EA7222A28A1540082001B /* MainTabBarView.swift */; };
+		C9AA75332AC9DA960038F893 /* ZoomableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA75322AC9DA960038F893 /* ZoomableScrollView.swift */; };
+		C9AA75352AC9DB8F0038F893 /* WPImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA75342AC9DB8F0038F893 /* WPImage.swift */; };
 		C9BC0E4B2A8A3A6B00DCD270 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BC0E4A2A8A3A6B00DCD270 /* SidebarView.swift */; };
 		C9BC0E4D2A8A3AD900DCD270 /* SidebarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9BC0E4C2A8A3AD900DCD270 /* SidebarItem.swift */; };
-		C9C7572A2A7C4750008AB0DD /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C9C757292A7C4750008AB0DD /* SDWebImageSwiftUI */; };
 		C9EBDE712A82620E0059CC8F /* SidebarMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EBDE702A82620E0059CC8F /* SidebarMenu.swift */; };
 		C9EBDE732A840B7F0059CC8F /* String+regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EBDE722A840B7F0059CC8F /* String+regex.swift */; };
 		C9EBDE752A84457E0059CC8F /* SpinnerWhileLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EBDE742A84457E0059CC8F /* SpinnerWhileLoadingView.swift */; };
@@ -61,7 +63,7 @@
 		C93AE2E72A731D1800BCF683 /* WPPostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WPPostModel.swift; sourceTree = "<group>"; };
 		C93AE2E92A77F89F00BCF683 /* SidebarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewModel.swift; sourceTree = "<group>"; };
 		C93F18792A62D62E00CA661C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		C94EB6C52A8CE66D005AD895 /* SidebarPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarPreferenceKey.swift; sourceTree = "<group>"; };
+		C94EB6C52A8CE66D005AD895 /* SidebarItemsPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarItemsPreferenceKey.swift; sourceTree = "<group>"; };
 		C97EA6EE2A2889670082001B /* Vatterso.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vatterso.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C97EA6F12A2889670082001B /* VattersoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VattersoApp.swift; sourceTree = "<group>"; };
 		C97EA6F32A2889670082001B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -75,6 +77,8 @@
 		C97EA7112A28896D0082001B /* VattersoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VattersoUITests.swift; sourceTree = "<group>"; };
 		C97EA7132A28896D0082001B /* VattersoUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VattersoUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		C97EA7222A28A1540082001B /* MainTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarView.swift; sourceTree = "<group>"; };
+		C9AA75322AC9DA960038F893 /* ZoomableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableScrollView.swift; sourceTree = "<group>"; };
+		C9AA75342AC9DB8F0038F893 /* WPImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WPImage.swift; sourceTree = "<group>"; };
 		C9BC0E4A2A8A3A6B00DCD270 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		C9BC0E4C2A8A3AD900DCD270 /* SidebarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarItem.swift; sourceTree = "<group>"; };
 		C9EBDE702A82620E0059CC8F /* SidebarMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarMenu.swift; sourceTree = "<group>"; };
@@ -87,7 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9C7572A2A7C4750008AB0DD /* SDWebImageSwiftUI in Frameworks */,
+				C91259DA2AAB33B700A74B16 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,14 +129,6 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		C9040BBF2A60597C004E965D /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				C93AE2E92A77F89F00BCF683 /* SidebarViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
 		C908A5122A8A45000031C8DE /* Reference */ = {
 			isa = PBXGroup;
 			children = (
@@ -158,7 +154,7 @@
 				C9BC0E4A2A8A3A6B00DCD270 /* SidebarView.swift */,
 				C9BC0E4C2A8A3AD900DCD270 /* SidebarItem.swift */,
 				C9EBDE702A82620E0059CC8F /* SidebarMenu.swift */,
-				C94EB6C52A8CE66D005AD895 /* SidebarPreferenceKey.swift */,
+				C94EB6C52A8CE66D005AD895 /* SidebarItemsPreferenceKey.swift */,
 			);
 			path = SideMenu;
 			sourceTree = "<group>";
@@ -188,7 +184,6 @@
 			children = (
 				C97EA6F12A2889670082001B /* VattersoApp.swift */,
 				C97EA72D2A2CF8A10082001B /* Core */,
-				C9040BBF2A60597C004E965D /* ViewModels */,
 				C9040BB02A5FD41E004E965D /* Model */,
 				C9040BAF2A5FD2E5004E965D /* Networking */,
 				C97EA72C2A2CF8860082001B /* Extensions */,
@@ -250,6 +245,8 @@
 			isa = PBXGroup;
 			children = (
 				C9EBDE742A84457E0059CC8F /* SpinnerWhileLoadingView.swift */,
+				C9AA75322AC9DA960038F893 /* ZoomableScrollView.swift */,
+				C9AA75342AC9DB8F0038F893 /* WPImage.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -258,6 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				C97EA7222A28A1540082001B /* MainTabBarView.swift */,
+				C93AE2E92A77F89F00BCF683 /* SidebarViewModel.swift */,
 			);
 			path = MainView;
 			sourceTree = "<group>";
@@ -279,7 +277,7 @@
 			);
 			name = Vatterso;
 			packageProductDependencies = (
-				C9C757292A7C4750008AB0DD /* SDWebImageSwiftUI */,
+				C91259D92AAB33B700A74B16 /* SwiftSoup */,
 			);
 			productName = Vatterso;
 			productReference = C97EA6EE2A2889670082001B /* Vatterso.app */;
@@ -354,7 +352,7 @@
 			);
 			mainGroup = C97EA6E52A2889660082001B;
 			packageReferences = (
-				C9C757282A7C4750008AB0DD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				C91259D82AAB33B700A74B16 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			productRefGroup = C97EA6EF2A2889670082001B /* Products */;
 			projectDirPath = "";
@@ -399,15 +397,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				C9EBDE752A84457E0059CC8F /* SpinnerWhileLoadingView.swift in Sources */,
+				C9AA75352AC9DB8F0038F893 /* WPImage.swift in Sources */,
 				C9040BBE2A5FFBDF004E965D /* Foundation.swift in Sources */,
 				C9040BB62A5FDDBE004E965D /* NetworkManager.swift in Sources */,
 				C93299D42A8F798C000E3C26 /* ViewModifiers.swift in Sources */,
 				C97EA6FB2A28896C0082001B /* Persistence.swift in Sources */,
 				C9BC0E4D2A8A3AD900DCD270 /* SidebarItem.swift in Sources */,
-				C94EB6C62A8CE66D005AD895 /* SidebarPreferenceKey.swift in Sources */,
+				C94EB6C62A8CE66D005AD895 /* SidebarItemsPreferenceKey.swift in Sources */,
 				C97EA7232A28A1540082001B /* MainTabBarView.swift in Sources */,
 				C93AE2E02A700FAC00BCF683 /* DataService.swift in Sources */,
 				C9BC0E4B2A8A3A6B00DCD270 /* SidebarView.swift in Sources */,
+				C9AA75332AC9DA960038F893 /* ZoomableScrollView.swift in Sources */,
 				C97EA6FE2A28896C0082001B /* Vatterso.xcdatamodeld in Sources */,
 				C908A5142A8A468C0031C8DE /* WPPageView.swift in Sources */,
 				C97EA6F42A2889670082001B /* ContentView.swift in Sources */,
@@ -749,9 +749,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C9C757282A7C4750008AB0DD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+		C91259D82AAB33B700A74B16 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			repositoryURL = "https://github.com/scinfu/SwiftSoup";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.0.0;
@@ -760,10 +760,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C9C757292A7C4750008AB0DD /* SDWebImageSwiftUI */ = {
+		C91259D92AAB33B700A74B16 /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C9C757282A7C4750008AB0DD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
-			productName = SDWebImageSwiftUI;
+			package = C91259D82AAB33B700A74B16 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
 		};
 /* End XCSwiftPackageProductDependency section */
 
