@@ -20,7 +20,7 @@ struct SidebarView<Content: View>: View {
     
     var body: some View {
         ZStack {
-            // passing showingSideBar to content so that pages use it
+            // passing selection and showingSideBar to content so that pages use it
             content(($selection, $showingSidebar))
             //  passing showingSideBar to SidebarMenu to handle the transision
             SidebarMenu(isShowing: $showingSidebar) {
