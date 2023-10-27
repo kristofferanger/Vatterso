@@ -43,7 +43,10 @@ extension NetworkingManager {
     }
     
     private static let api: API = .production
-    private static let baseUrl = "https://wetterso.se/wp-json/wp/v2" // "https://techcrunch.com/wp-json/wp/v2" //"https://www.katyperry.com/wp-json/wp/v2"
+    private static let baseUrl = "https://wetterso.se/wp-json/wp/v2"
+    //"https://connecthotels.se/wp-json/wp/v2"
+    //"https://techcrunch.com/wp-json/wp/v2"
+    //"https://www.katyperry.com/wp-json/wp/v2"
     
     static func url(endpoint: String, parameters: [String: String?] = [:]) -> URL? {
         var urlString: String

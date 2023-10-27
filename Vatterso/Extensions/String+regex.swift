@@ -159,6 +159,12 @@ extension String {
                         return nil
                     }
                     
+                    if element.tagName() == "table", let tbody = element.children().first(where: { $0.tagName() == "tbody" })  {
+                        let table = createTable(tbody)
+                        paragraphs.append(WPParagraph(table: table))
+                        return nil
+                    }
+                    
                     if element.tagName() == "a", let href = try? element.attr("href") {
                         if element.parent()?.tagName() == "figure" || text.isEmpty  {
                             // return image

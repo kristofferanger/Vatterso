@@ -52,7 +52,7 @@ struct SideMenuView: View {
                             if let icon = tab.icon {
                                 Image(systemName: icon)
                             }
-                            Text(tab.name)
+                            Text(tab.title)
                         }
                     }
                 }

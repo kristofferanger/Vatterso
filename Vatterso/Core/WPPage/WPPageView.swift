@@ -54,38 +54,24 @@ struct WPPageContentView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 40) {
-                ForEach(posts) { post in
+                ForEach(page.posts) { post in
                     postView(post: post)
                 }
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .navigationTitle(title)
-    }
-
-    // MARK: - private stuff
-    private var posts: [WPPost] {
-        switch page.pageType {
-        case .blog(let posts):
-            return posts
-        case .page(let page):
-            return [page]
-        }
+        .navigationTitle(page.title)
     }
     
     private var isBlog: Bool {
-        return page.pageType.isBlog
-    }
-    
-    private var title: String {
-        return page.pageType.title
+        return page.pageType == .blog
     }
     
     private func publishedString(post: WPPost) -> String {
         var published = "Publicerat den \(post.date.dateSting())"
         if let authorName = post.authorName {
-            published += "av \(authorName)"
+            published += " av \(authorName)"
         }
         return published
     }
