@@ -16,11 +16,10 @@ class SidebarViewModel: ObservableObject {
     
     @Published var items: [SidebarItem] = []
     @Published var loadingStatus: LoadingStatus = .unknown
-
+    
     private let pagesDataService = DataService<[WPPost]>(url: NetworkingManager.url(endpoint: "/pages", parameters: ["context": "view", "per_page": "100"]))
     private let postsDataService = DataService<[WPPost]>(url: NetworkingManager.url(endpoint: "/posts", parameters: ["orderby": "date", "per_page": "100", "_embed": nil]))
     private var cancellables = Set<AnyCancellable>()
-    private let coreDataManager = CoreDataManager.instance
     
     init() {
         addSubscribers()
@@ -49,7 +48,7 @@ class SidebarViewModel: ObservableObject {
                 let pages = SidebarItem.sorted(pages: pages)
                 return blog + pages
             }
-            //.print("debugging")
+            .print("debugging")
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):

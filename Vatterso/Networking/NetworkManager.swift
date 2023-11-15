@@ -19,15 +19,37 @@ class NetworkingManager {
     
     static func download(request: URLRequest) -> AnyPublisher<Data, Error> {
         return URLSession.shared.dataTaskPublisher(for: request)
-            .tryMap { try handleURLResponse(output: $0, url: request.url) }
             .retry(3)
+            .tryMap { output in
+                // handle session output, store data or throw error
+                let newData = try handleURLResponse(output: output, url: request.url)
+                self.storeData(newData, url: request.url)
+                return newData
+            }
+            .tryCatch { error in
+                // fetch stored data or throw error
+                let recentDownload = try fetchStoredData(url: request.url)
+                return Just(recentDownload.data)
+            }
             .eraseToAnyPublisher()
     }
     
+    static func storeData(_ data: Data, url: URL?) {
+//        guard let urlString = url?.absoluteString else { return }
+//        let manager = DBManager<RecentDownload>()
+//        manager.insert(item: RecentDownload(id: urlString, date: Date(), data: data))
+    }
+    
+    static func fetchStoredData(url: URL?) throws -> DBItem {
+//        let manager = DBManager()
+//        guard let urlString = url?.absoluteString else { throw NetworkingError.unknown }
+//        let request = try manager.fetchItem<PostRequest>(id: urlString, table: "PostRequest")
+//        return request
+        return DBItem(id: "", date: Date(), data: Data())
+    }
+    
     static func handleURLResponse(output: URLSession.DataTaskPublisher.Output, url: URL?) throws -> Data {
-        guard let response = output.response as? HTTPURLResponse else {
-            throw NetworkingError.unknown
-        }
+        guard let response = output.response as? HTTPURLResponse else { throw NetworkingError.unknown }
         guard (200..<300).contains(response.statusCode) else {
             let urlString = response.url?.absoluteString ?? url?.absoluteString ?? "URL is missing!"
             throw NetworkingError.badURLResponse(urlString: urlString, statusCode: response.statusCode)
@@ -70,25 +92,59 @@ extension NetworkingManager {
             // date format: 2023-06-28T18:38:37
             let container = try decoder.singleValueContainer()
             let dateStr = try container.decode(String.self)
-
+            // try iso8601 formats generally
+            let iso8601Formatter = ISO8601DateFormatter()
+            if let date = iso8601Formatter.date(from: dateStr) {
+                return date
+            }
+            // try specific format of type 2023-06-28T18:38:37
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
             if let date = formatter.date(from: dateStr) {
                 return date
             }
+            // return whatever
             return Date.distantPast
-        } //  .iso8601
+        }
         return decoder
+    }
+    
+    static func defaultEncoder() -> JSONEncoder {
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        encoder.dateEncodingStrategy = .iso8601
+        return encoder
+    }
+}
+
+//  Persistence
+extension NetworkingManager {
+    // structure to store in the SQLite database
+    struct DBItem {
+        let id: String
+        let date: Date
+        let data: Data
+    }
+}
+
+extension NetworkingManager.DBItem {
+    // convenience init to store any struct conformig to Codable and Indentifiable as a DBItem
+    init?<T: Identifiable & Codable>(item: T) {
+        guard let data = try? NetworkingManager.defaultEncoder().encode(item) else { return nil }
+        self.id = "\(item.id)"
+        self.date = Date()
+        self.data = data
     }
 }
 
 // MARK: Helpers
 
 enum NetworkingError: LocalizedError, Identifiable {
-    case badURLResponse(urlString: String, statusCode: Int)
-    case unknown
+    case malformedURL(urlString: String)
     case noNetwork
+    case badURLResponse(urlString: String, statusCode: Int)
     case decodingError(reason: String)
+    case unknown
     
     var errorDescription: String? {
         switch self {
@@ -100,6 +156,8 @@ enum NetworkingError: LocalizedError, Identifiable {
             return "[⚡️] Unknown error occured"
         case .noNetwork:
             return "[⚠️] No network found"
+        case .malformedURL(urlString: let url):
+            return "[?¿] Cannot make sense of URL: \(url)"
         }
     }
     
