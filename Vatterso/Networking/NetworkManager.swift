@@ -28,24 +28,26 @@ class NetworkingManager {
             }
             .tryCatch { error in
                 // fetch stored data or throw error
-                let recentDownload = try fetchStoredData(url: request.url)
-                return Just(recentDownload.data)
+                let storedData = try fetchStoredData(url: request.url)
+                return Just(storedData)
             }
             .eraseToAnyPublisher()
     }
     
     static func storeData(_ data: Data, url: URL?) {
-//        guard let urlString = url?.absoluteString else { return }
-//        let manager = DBManager<RecentDownload>()
-//        manager.insert(item: RecentDownload(id: urlString, date: Date(), data: data))
+        guard let urlString = url?.absoluteString else { return }
+        let manager = DBManager()!
+        let recentDownload = RecentDownload(id: urlString, date: Date(), data: data)
+        manager.insert(item: recentDownload)
     }
     
-    static func fetchStoredData(url: URL?) throws -> DBItem {
-//        let manager = DBManager()
-//        guard let urlString = url?.absoluteString else { throw NetworkingError.unknown }
-//        let request = try manager.fetchItem<PostRequest>(id: urlString, table: "PostRequest")
+    static func fetchStoredData(url: URL?) throws -> Data {
+        let manager = DBManager()!
+        guard let urlString = url?.absoluteString else { throw NetworkingError.unknown }
+        //let request = try manager.fetchItem(id: urlString)
 //        return request
-        return DBItem(id: "", date: Date(), data: Data())
+        // return DBManager.DBItem(id: "", date: Date(), data: Data()).data
+        return Data()
     }
     
     static func handleURLResponse(output: URLSession.DataTaskPublisher.Output, url: URL?) throws -> Data {
@@ -117,27 +119,40 @@ extension NetworkingManager {
     }
 }
 
-//  Persistence
-extension NetworkingManager {
-    // structure to store in the SQLite database
-    struct DBItem {
-        let id: String
-        let date: Date
-        let data: Data
-    }
-}
-
-extension NetworkingManager.DBItem {
-    // convenience init to store any struct conformig to Codable and Indentifiable as a DBItem
-    init?<T: Identifiable & Codable>(item: T) {
-        guard let data = try? NetworkingManager.defaultEncoder().encode(item) else { return nil }
-        self.id = "\(item.id)"
-        self.date = Date()
-        self.data = data
-    }
-}
-
 // MARK: Helpers
+
+struct RecentDownload: DBItem {
+    
+    let id: String
+    let date: Date
+    let data: Data
+    
+    var unixDate: TimeInterval {
+        self.date.timeIntervalSince1970
+    }
+    
+    // DBItem protocol
+    
+    func valueFor(column: String) -> Any? {
+        switch column {
+        case "id":
+            return self.id
+        case "date":
+            return self.unixDate
+        case "data":
+            return self.data
+        default:
+            return nil
+        }
+    }
+    
+    static var colums: [String : DBType] {
+        return ["id": .string, "date": .integer, "data": .data]
+    }
+    static var tableName: String {
+        return "downloads"
+    }
+}
 
 enum NetworkingError: LocalizedError, Identifiable {
     case malformedURL(urlString: String)

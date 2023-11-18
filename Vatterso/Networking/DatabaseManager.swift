@@ -10,62 +10,174 @@ import SQLite3
 import SwiftUI
 
 
-// MARK: error handling
-extension DBManager {
-    enum Error: Swift.Error {
-        case onOpen(Int32, String)
-        case onClose(Int32)
-        case onPrepareStatement(Int32, String)
-        case onGetParameterIndex(String)
-        case onBindParameter(Int32, Int32, DBManager.Value)
-        case onStep(Int32, String)
-        case onGetColumnType(Int32)
+enum DBType {
+    case string, integer, float, data, null
+    
+    var string: String {
+        switch self {
+        case .data: return "blob"
+        case .string: return "text"
+        case .float: return "float"
+        case .integer: return "integer"
+        case .null: return "null"
+        }
     }
 }
 
+protocol DBItem: Identifiable {
 
-class DBManager<T: Codable & Identifiable> {
+    static var tableName: String { get }
+    static var colums: [String: DBType] { get }
+
+    func valueFor(column: String) -> Any?
+}
+
+extension DBItem {
     
-    init() {
-        db = try? openDatabase()
+    static var columnLabels: [String] {
+        return self.colums.map{ $0.key.lowercased() }
+    }
+    
+    static var columnLabelsAndTypes: String {
+        let columns = self.colums.map {
+            let label = $0.key.lowercased()
+            let type = $0.value.string.uppercased()
+            var components = [label, type]
+            if label == "id" {
+                components.append("PRIMARY KEY")
+            }
+            return components.joined(separator: .space)
+        }
+        return columns.joined(separator: .comma)
+    }
+}
+
+    // convenience init to store any struct conformig to Codable and Indentifiable
+//    init?<T: Identifiable & Codable>(item: T) {
+//        guard let data = try? NetworkingManager.defaultEncoder().encode(item) else { return nil }
+//        self.id = "\(item.id)"
+//        self.date = Date()
+//        self.data = data
+//
+//
+//        if let encoded = try? JSONEncoder().encode(item) {
+//            if let json = String(data: encoded, encoding: .utf8) {
+//                print(json)
+//            }
+//
+//            let decoder = JSONDecoder()
+//            if let decoded = try? decoder.decode(T.self, from: encoded) {
+//                print(decoded.id)
+//            }
+//        }
+//    }
+
+
+class DBManager {
+    
+    init?() {
+        guard let db = try? openDatabase() else { return nil }
+        self.db = db
     }
     
     private let dbPath = "database.sqlite"
     private var db: OpaquePointer?
     
     private func openDatabase() throws -> OpaquePointer? {
-        let fileURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        let fileURL = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
             .appendingPathComponent(dbPath)
         var db: OpaquePointer? = nil
         
-        let result = sqlite3_open(fileURL.path, &db)
-        guard result == SQLITE_OK else {
-            throw DBManager.Error.onOpen(result, "error opening database")
+        if sqlite3_open(fileURL?.path, &db) != SQLITE_OK {
+            print("Error opening database")
         }
-        print("Successfully opened connection to database at \(dbPath)")
         return db
     }
     
-    private func createTable(dictionary: PropertyListDecoder) {
+    private func createTable<T: DBItem>(type: T.Type) {
+        let createTableString = ["CREATE TABLE IF NOT EXISTS", "\(type.tableName)(\(type.columnLabelsAndTypes));"].joined(separator: .space)
+        var statement: OpaquePointer? = nil
         
-        let createTableString = "CREATE TABLE IF NOT EXISTS downloads(id TEXT PRIMARY KEY, date INTEGER, data BLOB);"
-        var createTableStatement: OpaquePointer? = nil
-        if sqlite3_prepare_v2(db, createTableString, -1, &createTableStatement, nil) == SQLITE_OK {
-            
-            if sqlite3_step(createTableStatement) == SQLITE_DONE {
-                print("person table created.")
+        if sqlite3_prepare_v2(db, createTableString, -1, &statement, nil) == SQLITE_OK {
+            if sqlite3_step(statement) == SQLITE_DONE {
+                print("Table created with name: \(type.tableName).")
             }
             else {
-                print("person table could not be created.")
+                print("Table could not be created with name \(type.tableName).")
             }
-        } else {
-            print("CREATE TABLE statement could not be prepared.")
         }
-        sqlite3_finalize(createTableStatement)
+        sqlite3_finalize(statement)
     }
     
-    func insert(item: T) {
-        item.id
+    private func tableExists(named: String) -> Bool {
+        let queryStatementString = "SELECT count(*) FROM sqlite_schema WHERE type='table' AND name='\(named.lowercased())';"
+        var queryStatement: OpaquePointer? = nil
+        var foundTable: Bool = false
+                
+        if sqlite3_prepare(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                foundTable = sqlite3_column_int(queryStatement, 0) > 0
+            }
+        }
+        else {
+            print("Count statement could not be prepared")
+        }
+        sqlite3_finalize(queryStatement)
+        return foundTable
+    }
+    
+    func insert<T: DBItem>(item: T) {
+        
+        let type = type(of: item)
+        
+        if !tableExists(named: type.tableName) {
+            self.createTable(type: type)
+        }
+        // create insert statement
+        // "INSERT INTO person (id, name, age) VALUES (?, ?, ?);"
+        let columns = type.columnLabels
+        let columnsString = columns.joined(separator: .comma)
+        let questionmarks = Array(repeating: "?", count: columns.count).joined(separator: .comma)
+        let insertStatementString = "INSERT OR REPLACE INTO \(type.tableName) (\(columnsString)) values (\(questionmarks))"
+        
+        var statement: OpaquePointer? = nil
+        // insert values
+        if sqlite3_prepare_v2(db, insertStatementString, -1, &statement, nil) == SQLITE_OK {
+            for (index, column) in columns.enumerated() {
+                let value = item.valueFor(column: column)
+                try? self.bind(value: value, index: index, statement: statement)
+            }
+            
+            if sqlite3_step(statement) == SQLITE_DONE {
+                print("Successfully inserted row.")
+            }
+            else {
+                print("Could not insert row.")
+            }
+        } else {
+            print("INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(statement)
+
+        
+        
+        
+        
+        
+//
+//        if let encoded = try? JSONEncoder().encode(item) {
+//
+//            print(encoded.description)
+//
+//            if let json = String(data: encoded, encoding: .utf8) {
+//                print(json)
+//            }
+//
+//            let decoder = JSONDecoder()
+//            if let decoded = try? decoder.decode(T.self, from: encoded) {
+//                print(decoded.id)
+//            }
+//        }
     }
 
     func insertData(table: String, values: () -> (key: String, value: DBManager.Value)) {  //(id: String, date: Date, data: Data) {
@@ -141,9 +253,15 @@ class DBManager<T: Codable & Identifiable> {
         return result
     }
     
+    
+    
+    
+    
+//    func fetchItem<T: DBItem>(id: String) -> T {
+//        DBItem(id: "test", date: Date(), data: Data())
+//    }
+
     func fetchItem<T: Codable>(id: String, table: String) throws -> T? {
-        
-        
         
         let statementString = "SELECT * FROM \(table) WHERE id=\(id)"
         let tableInfo = self.columnNamesInTable(name: table)
@@ -152,7 +270,8 @@ class DBManager<T: Codable & Identifiable> {
         
         let prepare = sqlite3_prepare_v2(db, statementString, -1, &statement, nil)
         guard prepare == SQLITE_OK else {
-            throw DBManager.Error.onPrepareStatement(prepare, "Could not prepare fetch statement")
+            return nil
+            // throw DBManager.Error.onPrepareStatement(prepare, "Could not prepare fetch statement")
         }
         
         while sqlite3_step(statement) == SQLITE_ROW {
@@ -221,7 +340,11 @@ class DBManager<T: Codable & Identifiable> {
         sqlite3_finalize(deleteStatement)
     }
     
-    // private stuff
+    // MARK: - Private stuff
+    
+    // string creation
+
+    // introspect table
     private func columnNamesInTable(name: String) -> [[String]] {
         let columnsStatementString = "PRAGMA table_info('\(name)');"
         var columnsStatement: OpaquePointer? = nil
@@ -245,6 +368,7 @@ class DBManager<T: Codable & Identifiable> {
 extension DBManager {
     
     enum Value {
+        
         case data(Data)
         case double(Double)
         case integer(Int64)
@@ -292,27 +416,36 @@ extension DBManager {
         }
     }
     
-    func bind(value: DBManager.Value, index: Int, statement: OpaquePointer?) throws {
+    func bind(value: Any?, index: Int, statement: OpaquePointer?) throws {
         let result: Int32
         let index = Int32(index)
         
-        switch value {
-        case .data(let data):
-            result = data.withUnsafeBytes { buffer -> Int32 in
-                return sqlite3_bind_blob(statement, index, buffer, Int32(data.count), nil)
+        if let data = value as? Data {
+            //            result = data.withUnsafeBytes { dataBytes in
+            //                let buffer: UnsafePointer<UInt8> = dataBytes.baseAddress!.assumingMemoryBound(to: UInt8.self)
+            //                return sqlite3_bind_blob(statement, index, buffer, Int32(data.count), nil)
+            //                //OutputStream(toMemory: ()).write(buffer, maxLength: dataBytes.count)
+            //            }
+            result = data.withUnsafeBytes { rawBufferPointer in
+                let rawPtr = rawBufferPointer.baseAddress!
+                return sqlite3_bind_blob(statement, index, rawPtr, Int32(data.count), nil)
             }
-        case .text(let string):
+        }
+        else if let string = value as? String {
             result = sqlite3_bind_text(statement, index, string, -1, nil)
-        case .double(let double):
+        }
+        else if let double = value as? Double {
             result = sqlite3_bind_double(statement, index, double)
-        case .integer(let int):
-            result = sqlite3_bind_int64(statement, index, int)
-        case .null:
+        }
+        else if let int = value as? Int {
+            result = sqlite3_bind_int64(statement, index, sqlite3_int64(int))
+        }
+        else {
             result = sqlite3_bind_null(statement, index)
         }
-        
+
         if SQLITE_OK != result {
-            throw DBManager.Error.onBindParameter(result, index, value)
+            // throw DBManager.Error.onBindParameter(result, index, value)
         }
     }
     

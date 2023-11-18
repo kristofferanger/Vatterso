@@ -8,6 +8,13 @@
 import Foundation
 import SwiftUI
 
+
+extension String {
+    static let space = " "
+    static let comma = ", "
+    static let period = ". "
+}
+
 extension Date {
     func dateSting() -> String {
         let relativeDateFormatter = DateFormatter()
