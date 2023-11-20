@@ -21,7 +21,7 @@ class NetworkingManager {
         return URLSession.shared.dataTaskPublisher(for: request)
             .retry(3)
             .tryMap { output in
-                // handle session output, store data or throw error
+                // handle output, store data or throw error
                 let newData = try handleURLResponse(output: output, url: request.url)
                 self.storeData(newData, url: request.url)
                 return newData
@@ -36,7 +36,10 @@ class NetworkingManager {
     
     static func storeData(_ data: Data, url: URL?) {
         
-        guard let urlString = url?.absoluteString, let manager = DBManager(), let jsonString = String(data: data, encoding: .utf8) else { return }
+        guard let manager = DBManager(),
+              let urlString = url?.absoluteString,
+              let jsonString = String(data: data, encoding: .utf8)
+        else { return }
         let recentDownload = RecentDownload(id: urlString, date: Date(), data: jsonString)
         manager.insert(item: recentDownload)
     }
@@ -61,11 +64,18 @@ class NetworkingManager {
     }
     
     static func handleURLResponse(output: URLSession.DataTaskPublisher.Output, url: URL?) throws -> Data {
-        guard let response = output.response as? HTTPURLResponse else { throw NetworkingError.unknown }
+        guard let response = output.response as? HTTPURLResponse else {
+            throw NetworkingError.unknown
+        }
+        guard let url = url?.absoluteString else {
+            throw NetworkingError.malformedURL(urlString: String(describing: url))
+        }
         guard (200..<300).contains(response.statusCode) else {
-            let urlString = response.url?.absoluteString ?? url?.absoluteString ?? "URL is missing!"
+            // prefer the response url (since it contains also any body parameters)
+            let urlString = response.url?.absoluteString ?? url
             throw NetworkingError.badURLResponse(urlString: urlString, statusCode: response.statusCode)
         }
+        // return the data if no errors were detected
         return output.data
     }
 }
