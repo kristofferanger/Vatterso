@@ -28,26 +28,36 @@ class NetworkingManager {
             }
             .tryCatch { error in
                 // fetch stored data or throw error
-                let storedData = try fetchStoredData(url: request.url)
+                guard let storedData = fetchStoredData(url: request.url) else { throw error }
                 return Just(storedData)
             }
             .eraseToAnyPublisher()
     }
     
     static func storeData(_ data: Data, url: URL?) {
-        guard let urlString = url?.absoluteString else { return }
-        let manager = DBManager()!
-        let recentDownload = RecentDownload(id: urlString, date: Date(), data: data)
+        
+        guard let urlString = url?.absoluteString, let manager = DBManager(), let jsonString = String(data: data, encoding: .utf8) else { return }
+        let recentDownload = RecentDownload(id: urlString, date: Date(), data: jsonString)
         manager.insert(item: recentDownload)
     }
     
-    static func fetchStoredData(url: URL?) throws -> Data {
-        let manager = DBManager()!
-        guard let urlString = url?.absoluteString else { throw NetworkingError.unknown }
+    static func fetchStoredData(url: URL?) -> Data? {
+        guard let urlString = url?.absoluteString,
+              let manager = DBManager(),
+              let item = manager.fetchItem(id: urlString, type: RecentDownload.self)
+        else { return nil }
+        
+        if (Date().timeIntervalSince1970 - item.date.timeIntervalSince1970) < 3000 {
+            print("It's fresh")
+        }
+        
         //let request = try manager.fetchItem(id: urlString)
 //        return request
         // return DBManager.DBItem(id: "", date: Date(), data: Data()).data
-        return Data()
+        
+        let data: Data? = item.data.data(using: .utf8)
+        
+        return data
     }
     
     static func handleURLResponse(output: URLSession.DataTaskPublisher.Output, url: URL?) throws -> Data {
@@ -125,16 +135,15 @@ struct RecentDownload: DBItem {
     
     let id: String
     let date: Date
-    let data: Data
+    let data: String
     
     var unixDate: TimeInterval {
         self.date.timeIntervalSince1970
     }
     
     // DBItem protocol
-    
-    func valueFor(column: String) -> Any? {
-        switch column {
+    func valueFor(columnLabel: String) -> Any? {
+        switch columnLabel {
         case "id":
             return self.id
         case "date":
@@ -146,8 +155,8 @@ struct RecentDownload: DBItem {
         }
     }
     
-    static var colums: [String : DBType] {
-        return ["id": .string, "date": .integer, "data": .data]
+    static var colums: [(label: String, type: DBType)] {
+        return [("id", .string), ("date", .float), ("data", .string)]
     }
     static var tableName: String {
         return "downloads"

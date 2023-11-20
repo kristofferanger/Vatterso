@@ -49,7 +49,7 @@ extension Binding {
 
 extension Decodable {
     // failable init with a dictionary
-    init?(dictionary: [String: Any]) {
+    init?(dictionary: [String: Any?]) {
         // this shouldn't normally fail though unless the dictionary contains corrupt data
         do {
             // try to serialize (dictionary to data)

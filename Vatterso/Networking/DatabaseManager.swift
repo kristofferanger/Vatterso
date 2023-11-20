@@ -24,25 +24,26 @@ enum DBType {
     }
 }
 
-protocol DBItem: Identifiable {
+protocol DBItem: Identifiable & Codable {
 
     static var tableName: String { get }
-    static var colums: [String: DBType] { get }
+    static var colums: [(label: String, type: DBType)] { get }
 
-    func valueFor(column: String) -> Any?
+    func valueFor(columnLabel: String) -> Any?
 }
 
-extension DBItem {
+fileprivate extension DBItem {
     
     static var columnLabels: [String] {
-        return self.colums.map{ $0.key.lowercased() }
+        return self.colums.map{ $0.label.lowercased() }
     }
     
     static var columnLabelsAndTypes: String {
         let columns = self.colums.map {
-            let label = $0.key.lowercased()
-            let type = $0.value.string.uppercased()
+            let label = $0.label.lowercased()
+            let type = $0.type.string.uppercased()
             var components = [label, type]
+            // set id to primary key to avoid duplicates
             if label == "id" {
                 components.append("PRIMARY KEY")
             }
@@ -52,43 +53,25 @@ extension DBItem {
     }
 }
 
-    // convenience init to store any struct conformig to Codable and Indentifiable
-//    init?<T: Identifiable & Codable>(item: T) {
-//        guard let data = try? NetworkingManager.defaultEncoder().encode(item) else { return nil }
-//        self.id = "\(item.id)"
-//        self.date = Date()
-//        self.data = data
-//
-//
-//        if let encoded = try? JSONEncoder().encode(item) {
-//            if let json = String(data: encoded, encoding: .utf8) {
-//                print(json)
-//            }
-//
-//            let decoder = JSONDecoder()
-//            if let decoded = try? decoder.decode(T.self, from: encoded) {
-//                print(decoded.id)
-//            }
-//        }
-//    }
-
-
 class DBManager {
     
     init?() {
-        guard let db = try? openDatabase() else { return nil }
+        guard let db = openDatabase() else { return nil }
         self.db = db
     }
     
     private let dbPath = "database.sqlite"
     private var db: OpaquePointer?
     
-    private func openDatabase() throws -> OpaquePointer? {
+    private func openDatabase() -> OpaquePointer? {
         let fileURL = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
             .appendingPathComponent(dbPath)
         var db: OpaquePointer? = nil
         
-        if sqlite3_open(fileURL?.path, &db) != SQLITE_OK {
+        if sqlite3_open(fileURL?.path, &db) == SQLITE_OK {
+            print("Sucessfully opened database at: \(fileURL)")
+        }
+        else {
             print("Error opening database")
         }
         return db
@@ -135,174 +118,166 @@ class DBManager {
         }
         // create insert statement
         // "INSERT INTO person (id, name, age) VALUES (?, ?, ?);"
-        let columns = type.columnLabels
-        let columnsString = columns.joined(separator: .comma)
-        let questionmarks = Array(repeating: "?", count: columns.count).joined(separator: .comma)
-        let insertStatementString = "INSERT OR REPLACE INTO \(type.tableName) (\(columnsString)) values (\(questionmarks))"
+        let labels = type.columnLabels
+        let labelsString = labels.joined(separator: .comma)
+        let questionmarks = Array(repeating: "?", count: labels.count).joined(separator: .comma)
+        let insertStatementString = "INSERT OR REPLACE INTO \(type.tableName) (\(labelsString)) VALUES (\(questionmarks));"
         
         var statement: OpaquePointer? = nil
         // insert values
         if sqlite3_prepare_v2(db, insertStatementString, -1, &statement, nil) == SQLITE_OK {
-            for (index, column) in columns.enumerated() {
-                let value = item.valueFor(column: column)
-                try? self.bind(value: value, index: index, statement: statement)
+            for (index, label) in labels.enumerated() {
+                let value = item.valueFor(columnLabel: label)
+                self.bind(value: value, index: index, statement: statement)
             }
-            
             if sqlite3_step(statement) == SQLITE_DONE {
                 print("Successfully inserted row.")
             }
             else {
                 print("Could not insert row.")
             }
-        } else {
-            print("INSERT statement could not be prepared.")
         }
-        sqlite3_finalize(statement)
-
-        
-        
-        
-        
-        
-//
-//        if let encoded = try? JSONEncoder().encode(item) {
-//
-//            print(encoded.description)
-//
-//            if let json = String(data: encoded, encoding: .utf8) {
-//                print(json)
-//            }
-//
-//            let decoder = JSONDecoder()
-//            if let decoded = try? decoder.decode(T.self, from: encoded) {
-//                print(decoded.id)
-//            }
-//        }
-    }
-
-    func insertData(table: String, values: () -> (key: String, value: DBManager.Value)) {  //(id: String, date: Date, data: Data) {
-        
-        let columnNames = self.columnNamesInTable(name: table)
-        /*
-        func insertItemStatement(named: String, properties: [DBManager.Value]) -> String {
-            // "INSERT INTO person (Id, name, age) VALUES (?, ?, ?);"
-            let properties = properties.map{ $0.label }
-            let questionmarks = Array(repeating: "?", count: properties.count)
-            
-            return "INSERT INTO \(named) (\(properties.joined(separator: ", "))) VALUES (\(questionmarks.joined(separator: ", ")));"
-        }
-         */
-        
-        let date = Date()
-        let id = "1234"
-        let data = Data()
-        
-        let statementString = "INSERT INTO downloads (id, date, data) VALUES (?, ?, ?);"
-        let unixDate = date.timeIntervalSince1970
-        var statement: OpaquePointer? = nil
-
-        if sqlite3_prepare_v2(db, statementString, -1, &statement, nil) == SQLITE_OK {
-            
-            try? self.bind(value: Value(id), index: 1, statement: statement)
-            try? self.bind(value: Value(unixDate), index: 2, statement: statement)
-            try? self.bind(value: Value(data), index: 3, statement: statement)
-            
-            if sqlite3_step(statement) == SQLITE_DONE {
-                print("Successfully inserted row.")
-            } else {
-                print("Could not insert row.")
-            }
-        } else {
+        else {
             print("INSERT statement could not be prepared.")
         }
         sqlite3_finalize(statement)
     }
     
-    func fetchAll<T: Codable>(table: String) -> [T] {
-        let statementString = "SELECT * FROM \(table)"
-        let tableInfo = self.columnNamesInTable(name: table)
+    func fetchItem<T: DBItem>(id: String, type: T.Type) -> T? {
+        return fetchAll(contition: "id='\(id)'").first
+    }
+    
+    func fetchAll<T: DBItem>(contition: String? = nil) -> [T] {
+        var statementString = "SELECT * FROM \(T.tableName)"
+        if let contition {
+            statementString.append(" WHERE \(contition);")
+        }
+        let tableInfo = self.columnNamesInTable(name: T.tableName)
+
         var statement: OpaquePointer? = nil
         var result: [T] = []
-        if sqlite3_prepare_v2(db, statementString, -1, &statement, nil) == SQLITE_OK {
+            if sqlite3_prepare_v2(db, statementString, -1, &statement, nil) == SQLITE_OK {
+            
             while sqlite3_step(statement) == SQLITE_ROW {
-                var item = Dictionary<String, Any>()
-                for index in tableInfo.indices {
-                    let info = tableInfo[index]
-                    switch info[1] {
-                    case "TEXT":
+                var item = Dictionary<String, Any?>()
+                for (index, property) in tableInfo.enumerated() {
+                    switch property.type.lowercased() {
+                    case "text":
                         let value = String(describing: String(cString: sqlite3_column_text(statement, Int32(index))))
-                        item[info[0]] = value
-                    case "INTEGER":
+                        item[property.label] = value
+                    case "integer":
                         let value = sqlite3_column_int(statement, Int32(index))
-                        item[info[0]] = value
-                    case "BLOB":
+                        item[property.label] = value
+                    case "blob":
                         let value = sqlite3_column_blob(statement, Int32(index))
-                        item[info[0]] = value
-                    case "FLOAT":
+                        item[property.label] = value
+                    case "float":
                         let value = sqlite3_column_double(statement, Int32(index))
-                        item[info[0]] = value
+                        item[property.label] = value
+                    case "null":
+                        item[property.label] = nil
                     default:
                         break
                     }
                 }
+//                let test = RecentDownload(id: "test", date: Date(), data: Data())
+//                item = text.dictionaryEncoded
+                
                 if let instance = T(dictionary: item) {
                     result.append(instance)
+                }
+                
+                if sqlite3_step(statement) == SQLITE_DONE {
+                   print("Done sepping")
+                }
+                else {
+                    print("something went wrong: \(sqlite3_step(statement))")
                 }
             }
         }
         return result
+        
     }
-    
-    
-    
-    
-    
-//    func fetchItem<T: DBItem>(id: String) -> T {
-//        DBItem(id: "test", date: Date(), data: Data())
+//
+//    func fetchAll<T: Codable>(table: String) -> [T] {
+//        let statementString = "SELECT * FROM \(table)"
+//        let tableInfo = self.columnNamesInTable(name: table)
+//        var statement: OpaquePointer? = nil
+//        var result: [T] = []
+//        if sqlite3_prepare_v2(db, statementString, -1, &statement, nil) == SQLITE_OK {
+//            while sqlite3_step(statement) == SQLITE_ROW {
+//                var item = Dictionary<String, Any>()
+//                for index in tableInfo.indices {
+//                    let info = tableInfo[index]
+//                    switch info[1] {
+//                    case "TEXT":
+//                        let value = String(describing: String(cString: sqlite3_column_text(statement, Int32(index))))
+//                        item[info[0]] = value
+//                    case "INTEGER":
+//                        let value = sqlite3_column_int(statement, Int32(index))
+//                        item[info[0]] = value
+//                    case "BLOB":
+//                        let value = sqlite3_column_blob(statement, Int32(index))
+//                        item[info[0]] = value
+//                    case "FLOAT":
+//                        let value = sqlite3_column_double(statement, Int32(index))
+//                        item[info[0]] = value
+//                    default:
+//                        break
+//                    }
+//                }
+//                if let instance = T(dictionary: item) {
+//                    result.append(instance)
+//                }
+//            }
+//        }
+//        return result
 //    }
-
-    func fetchItem<T: Codable>(id: String, table: String) throws -> T? {
-        
-        let statementString = "SELECT * FROM \(table) WHERE id=\(id)"
-        let tableInfo = self.columnNamesInTable(name: table)
-        var statement: OpaquePointer? = nil
-        var result: [T] = []
-        
-        let prepare = sqlite3_prepare_v2(db, statementString, -1, &statement, nil)
-        guard prepare == SQLITE_OK else {
-            return nil
-            // throw DBManager.Error.onPrepareStatement(prepare, "Could not prepare fetch statement")
-        }
-        
-        while sqlite3_step(statement) == SQLITE_ROW {
-            var item = Dictionary<String, Any>()
-            for index in tableInfo.indices {
-                let info = tableInfo[index]
-                switch info[1] {
-                case "TEXT":
-                    let value = String(describing: String(cString: sqlite3_column_text(statement, Int32(index))))
-                    item[info[0]] = value
-                case "INTEGER":
-                    let value = sqlite3_column_int(statement, Int32(index))
-                    item[info[0]] = value
-                case "BLOB":
-                    let value = sqlite3_column_blob(statement, Int32(index))
-                    item[info[0]] = value
-                case "FLOAT":
-                    let value = sqlite3_column_double(statement, Int32(index))
-                    item[info[0]] = value
-                default:
-                    break
-                }
-            }
-            if let instance = T(dictionary: item) {
-                result.append(instance)
-            }
-        }
-        sqlite3_finalize(statement)
-
-        return result.first
-    }
+//
+//
+//
+//    func fetchItem<T: Codable>(id: String, table: String) -> T? {
+//
+//        let statementString = "SELECT * FROM \(table) WHERE id=\(id)"
+//        let tableInfo = self.columnNamesInTable(name: table)
+//        var statement: OpaquePointer? = nil
+//        var result: [T] = []
+//
+//        let prepare = sqlite3_prepare_v2(db, statementString, -1, &statement, nil)
+//        guard prepare == SQLITE_OK else {
+//            return nil
+//            // throw DBManager.Error.onPrepareStatement(prepare, "Could not prepare fetch statement")
+//        }
+//
+//        while sqlite3_step(statement) == SQLITE_ROW {
+//            var item = Dictionary<String, Any>()
+//            for index in tableInfo.indices {
+//                let info = tableInfo[index]
+//                switch info[1] {
+//                case "TEXT":
+//                    let value = String(describing: String(cString: sqlite3_column_text(statement, Int32(index))))
+//                    item[info[0]] = value
+//                case "INTEGER":
+//                    let value = sqlite3_column_int(statement, Int32(index))
+//                    item[info[0]] = value
+//                case "BLOB":
+//                    let value = sqlite3_column_blob(statement, Int32(index))
+//                    item[info[0]] = value
+//                case "FLOAT":
+//                    let value = sqlite3_column_double(statement, Int32(index))
+//                    item[info[0]] = value
+//                default:
+//                    break
+//                }
+//            }
+//            if let instance = T(dictionary: item) {
+//                result.append(instance)
+//            }
+//        }
+//        sqlite3_finalize(statement)
+//
+//        return result.first
+//    }
     
     func read() -> [Post] {
         let queryStatementString = "SELECT * FROM person;"
@@ -345,17 +320,17 @@ class DBManager {
     // string creation
 
     // introspect table
-    private func columnNamesInTable(name: String) -> [[String]] {
+    private func columnNamesInTable(name: String) -> [(label: String, type: String)] {
         let columnsStatementString = "PRAGMA table_info('\(name)');"
         var columnsStatement: OpaquePointer? = nil
-        var array = [[String]]()
+        var array = [(String, String)]()
         if sqlite3_prepare_v2(db, columnsStatementString, -1, &columnsStatement, nil) == SQLITE_OK {
             while sqlite3_step(columnsStatement) == SQLITE_ROW {
                 //returns the name
                 let name = String(describing: String(cString: sqlite3_column_text(columnsStatement, 1)))
                 //returns the type
                 let type = String(describing: String(cString: sqlite3_column_text(columnsStatement, 2)))
-                array.append([name, type])
+                array.append((name, type))
             }
         }
         sqlite3_finalize(columnsStatement)
@@ -416,9 +391,9 @@ extension DBManager {
         }
     }
     
-    func bind(value: Any?, index: Int, statement: OpaquePointer?) throws {
+    func bind(value: Any?, index: Int, statement: OpaquePointer?) {
         let result: Int32
-        let index = Int32(index)
+        let index = Int32(index + 1)
         
         if let data = value as? Data {
             //            result = data.withUnsafeBytes { dataBytes in
@@ -431,8 +406,8 @@ extension DBManager {
                 return sqlite3_bind_blob(statement, index, rawPtr, Int32(data.count), nil)
             }
         }
-        else if let string = value as? String {
-            result = sqlite3_bind_text(statement, index, string, -1, nil)
+        else if let string = value as? NSString {
+            result = sqlite3_bind_text(statement, index, string.utf8String, -1, nil)
         }
         else if let double = value as? Double {
             result = sqlite3_bind_double(statement, index, double)
@@ -445,7 +420,7 @@ extension DBManager {
         }
 
         if SQLITE_OK != result {
-            // throw DBManager.Error.onBindParameter(result, index, value)
+            print("Failed to bind value '\(String(describing: value))' to property at index \(index)")
         }
     }
     
