@@ -98,32 +98,31 @@ struct WPPageContentView: View {
     }
     
     // view that shows a paragraph
+    @ViewBuilder
     private func paragraphView(paragraph: WPParagraph) -> some View {
         // paragraph is either a text, list, grid or an image
-        ZStack {
-            if let text = markdownText(paragraph: paragraph)   {
-                // text paragraph
+        if let text = markdownText(paragraph: paragraph)   {
+            // text paragraph
+            Text(text)
+                .font(paragraph.font)
+                .foregroundColor(paragraph.color ?? Color.primary)
+        }
+        else if let text = paragraph.listText {
+            // list paragraph
+            HStack(alignment: .top) {
+                Text("•")
                 Text(text)
                     .font(paragraph.font)
                     .foregroundColor(paragraph.color ?? Color.primary)
             }
-            else if let text = paragraph.listText {
-                // list paragraph
-                HStack(alignment: .top) {
-                    Text("•")
-                    Text(text)
-                        .font(paragraph.font)
-                        .foregroundColor(paragraph.color ?? Color.primary)
-                }
-            }
-            else if let table = paragraph.table, let grid = table.rows {
-                // grid paragraph
-                gridView(grid: grid)
-            }
-            else if let imageUrl = paragraph.imageUrl {
-                // image paragraph
-                imageView(url: imageUrl)
-            }
+        }
+        else if let table = paragraph.table, let grid = table.rows {
+            // grid paragraph
+            gridView(grid: grid)
+        }
+        else if let imageUrl = paragraph.imageUrl {
+            // image paragraph
+            imageView(url: imageUrl)
         }
     }
     
@@ -161,10 +160,14 @@ struct WPPageContentView: View {
             .navigationBarTitleDisplayMode(.inline)
         } label: {
             // the image
-            WPImage(url: url)
-                .padding(.vertical, 10)
-                .frame(maxWidth: 400)
+            WPImage(url: url) {
+                print("hep")
+            }
+            .padding(.vertical, 10)
+            .frame(maxWidth: 400)
+                
         }
+        .disabled(false)
     }
 }
 

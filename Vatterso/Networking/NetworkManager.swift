@@ -27,7 +27,7 @@ class NetworkingManager {
                 return newData
             }
             .tryCatch { error in
-                // fetch stored data or throw error
+                // when failure, fetch stored data or throw error
                 guard let storedData = fetchStoredData(url: request.url) else { throw error }
                 return Just(storedData)
             }
@@ -35,7 +35,7 @@ class NetworkingManager {
     }
     
     static func storeData(_ data: Data, url: URL?) {
-        
+        // TODO: fix more natural, straight forward usage of DBManager
         guard let manager = DBManager(),
               let urlString = url?.absoluteString,
               let jsonString = String(data: data, encoding: .utf8)
@@ -45,18 +45,16 @@ class NetworkingManager {
     }
     
     static func fetchStoredData(url: URL?) -> Data? {
+        // TODO: fix more natural, straight forward usage of DBManager
         guard let urlString = url?.absoluteString,
               let manager = DBManager(),
               let item = manager.fetchItem(id: urlString, type: RecentDownload.self)
         else { return nil }
         
+        // TODO: fix date issue
         if (Date().timeIntervalSince1970 - item.date.timeIntervalSince1970) < 3000 {
             print("It's fresh")
         }
-        
-        //let request = try manager.fetchItem(id: urlString)
-//        return request
-        // return DBManager.DBItem(id: "", date: Date(), data: Data()).data
         
         let data: Data? = item.data.data(using: .utf8)
         
@@ -92,7 +90,7 @@ extension NetworkingManager {
     //"https://techcrunch.com/wp-json/wp/v2"
     //"https://www.katyperry.com/wp-json/wp/v2"
     
-    static func url(endpoint: String, parameters: [String: String?] = [:]) -> URL? {
+    static func url(endpoint: String, parameters: [(name: String, value: String?)] = []) -> URL? {
         var urlString: String
         switch api {
         case .production:
@@ -101,7 +99,7 @@ extension NetworkingManager {
             fatalError("[🛑] Mock data service should not use the network!")
         }
         
-        let queryItems = parameters.map { URLQueryItem(name: $0, value: $1) }
+        let queryItems = parameters.map { URLQueryItem(name: $0.name, value: $0.value) }
         var components = URLComponents(string: urlString)
         components?.queryItems = queryItems
         return components?.url

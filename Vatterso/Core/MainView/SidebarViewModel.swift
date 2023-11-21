@@ -17,8 +17,8 @@ class SidebarViewModel: ObservableObject {
     @Published var items: [SidebarItem] = []
     @Published var loadingStatus: LoadingStatus = .unknown
     
-    private let pagesDataService = DataService<[WPPost]>(url: NetworkingManager.url(endpoint: "/pages", parameters: ["context": "view", "per_page": "100"]))
-    private let postsDataService = DataService<[WPPost]>(url: NetworkingManager.url(endpoint: "/posts", parameters: ["orderby": "date", "per_page": "100", "_embed": nil]))
+    private let pagesDataService = DataService<[WPPost]>(url: NetworkingManager.url(endpoint: "/pages", parameters: [("context", "view"), ("orderby", "menu_order"), ("order", "asc"), ("per_page", "100")]))
+    private let postsDataService = DataService<[WPPost]>(url: NetworkingManager.url(endpoint: "/posts", parameters: [("orderby", "date"), ("_embed", nil), ("per_page", "100")]))
     private var cancellables = Set<AnyCancellable>()
     
     init() {
@@ -41,14 +41,11 @@ class SidebarViewModel: ObservableObject {
             .combineLatest(postsDataService.dataPublisher)
             .eraseToAnyPublisher()
             .compactMap{ pages, posts in
-//                self.coreDataManager.fetchOrCreateEntities(ofType: Post.self, matchingData: pages) { entity, page in
-//                    //page.update(entity: entity)
-//                }
                 let blog = [SidebarItem(posts: posts)]
                 let pages = SidebarItem.sorted(pages: pages)
                 return blog + pages
             }
-            .print("debugging")
+            //.print("debugging")
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
