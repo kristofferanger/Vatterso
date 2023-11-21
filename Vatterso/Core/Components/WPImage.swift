@@ -55,28 +55,30 @@ struct WPImage: View {
     }
 }
 
-struct ClickableImage: ViewModifier {
+/// A NavigationLink that encapsules a WPImage
+/// where you go to zoomable and scrollable
+/// copy of that image when clicked
+struct ClickableImage: View {
     
-    var url: URL
-
-    func body(content: Content) -> some View {
-        
+    let url: URL
+    @State var enabled = false
+    
+    var body: some View {
+                
         NavigationLink {
             // detail view image
             ZoomableScrollView(enableTapToReset: true) {
-                content
+                WPImage(url: url)
             }
             .navigationBarTitleDisplayMode(.inline)
         } label: {
             // the image
-            content
+            WPImage(url: url) {
+                enabled = true
+            }
             .padding(.vertical, 10)
             .frame(maxWidth: 400)
-            
         }
-        .disabled(false)
-        
+        .disabled(!enabled)
     }
-    
-    
 }

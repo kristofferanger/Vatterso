@@ -97,7 +97,7 @@ struct WPPageContentView: View {
         }
     }
     
-    // view that shows a paragraph
+    // view builder that shows any paragraph
     @ViewBuilder
     private func paragraphView(paragraph: WPParagraph) -> some View {
         // paragraph is either a text, list, grid or an image
@@ -122,7 +122,7 @@ struct WPPageContentView: View {
         }
         else if let imageUrl = paragraph.imageUrl {
             // image paragraph
-            imageView(url: imageUrl)
+            ClickableImage(url: imageUrl)
         }
     }
     
@@ -150,25 +150,4 @@ struct WPPageContentView: View {
             }
         }
     }
-    
-    private func imageView(url: URL) -> some View {
-        NavigationLink {
-            // detail view image
-            ZoomableScrollView(enableTapToReset: true) {
-                WPImage(url: url)
-            }
-            .navigationBarTitleDisplayMode(.inline)
-        } label: {
-            // the image
-            WPImage(url: url) {
-                print("hep")
-            }
-            .padding(.vertical, 10)
-            .frame(maxWidth: 400)
-                
-        }
-        .disabled(false)
-    }
 }
-
-
