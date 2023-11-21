@@ -16,9 +16,9 @@ class SidebarViewModel: ObservableObject {
     
     @Published var items: [SidebarItem] = []
     @Published var loadingStatus: LoadingStatus = .unknown
-
-    private let pagesDataService = DataService<[WPPost]>(url: NetworkingManager.url(endpoint: "/pages", parameters: ["context": "view", "per_page": "100"]))
-    private let postsDataService = DataService<[WPPost]>(url: NetworkingManager.url(endpoint: "/posts", parameters: ["orderby": "date", "per_page": "100", "_embed": nil]))
+    
+    private let pagesDataService = DataService<[WPPost]>(url: NetworkingManager.url(endpoint: "/pages", parameters: [("context", "view"), ("orderby", "menu_order"), ("order", "asc"), ("per_page", "100")]))
+    private let postsDataService = DataService<[WPPost]>(url: NetworkingManager.url(endpoint: "/posts", parameters: [("orderby", "date"), ("_embed", nil), ("per_page", "100")]))
     private var cancellables = Set<AnyCancellable>()
     
     init() {

@@ -7,65 +7,61 @@
 
 import Foundation
 
-enum PageType {
-    case blog([WPPost]), page(WPPost)
+@objc enum PageType: Int {
+    case blog, page
+}
+
+struct SidebarItem: Identifiable {
+    // MARK: - Core Data Managed Object
+    var pageType: PageType
+    var posts: [WPPost]
+    var items: [SidebarItem]?
     
-    static let blogPageId = 0
-    
+    // calculated properties
     var page: WPPost? {
-        if case .page(let page) = self {
-            return page
-        }
-        else {
-            return nil
-        }
+        guard self.pageType == .page else { return nil }
+        return posts.first
     }
     
     var id: Int {
-        switch self {
-        case .blog(_):
-            return PageType.blogPageId
-        case .page(let post):
-            return post.id
+        if let page = self.page {
+            return page.id
+        }
+        else {
+            return PageType.blog.rawValue
         }
     }
-    
-    var isBlog: Bool {
-        return self.id == PageType.blogPageId
+     
+    var tabId: Int {
+        switch pageType {
+        case .blog:
+            return PageType.blog.rawValue
+        case .page:
+            guard let page = self.page, let parent = page.parent else { return PageType.page.rawValue }
+            // pages with parent == 0 is on top, so then use it's own id
+            let tabId = parent == 0 ? page.id : parent
+            return tabId
+        }
     }
     
     var title: String {
-        switch self {
-        case .blog(_):
+        if let page = self.page {
+            return page.title.text
+        }
+        else {
             return "Hem"
-        case .page(let post):
-            return post.title.text
         }
     }
-}
-
-
-struct SidebarItem: Identifiable {
-    
-    var pageType: PageType
-    var items: [SidebarItem]?
-    var tabId: Int
     
     init(posts: [WPPost]) {
-        self.pageType = .blog(posts)
-        self.tabId = PageType.blogPageId
+        self.pageType = .blog
+        self.posts = posts
     }
     
     init(page: WPPost, items: [SidebarItem]? = nil) {
-        self.pageType = .page(page)
+        self.pageType = .page
+        self.posts = [page]
         self.items = items
-        
-        if let parent = page.parent, parent == 0 {
-            self.tabId = page.id
-        }
-        else {
-            self.tabId = page.parent ?? NSNotFound
-        }
     }
     
     static func sorted(pages: [WPPost]) -> [SidebarItem] {
@@ -79,21 +75,9 @@ struct SidebarItem: Identifiable {
         }
     }
     
-    var id: Int {
-        return pageType.id
-    }
-    
-    var name: String {
-        return pageType.title
-    }
-    
-    var page: WPPost? {
-        return pageType.page
-    }
-    
     var icon: String? {
         // icons for pages
-        switch self.name.lowercased() {
+        switch self.title.lowercased() {
         case "wfff", "vnsf", "vsbsf":
             return "person.3"
         case "hem":
@@ -113,14 +97,12 @@ struct SidebarItem: Identifiable {
 }
 
 extension SidebarItem: Equatable {
-    
     static func == (lhs: SidebarItem, rhs: SidebarItem) -> Bool {
         lhs.id == rhs.id
     }
 }
 
 extension SidebarItem: Hashable {
-    
     func hash(into hasher: inout Hasher) {
         return hasher.combine(id)
     }

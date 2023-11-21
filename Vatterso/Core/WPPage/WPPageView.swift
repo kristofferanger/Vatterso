@@ -54,38 +54,24 @@ struct WPPageContentView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 40) {
-                ForEach(posts) { post in
+                ForEach(page.posts) { post in
                     postView(post: post)
                 }
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .navigationTitle(title)
-    }
-
-    // MARK: - private stuff
-    private var posts: [WPPost] {
-        switch page.pageType {
-        case .blog(let posts):
-            return posts
-        case .page(let page):
-            return [page]
-        }
+        .navigationTitle(page.title)
     }
     
     private var isBlog: Bool {
-        return page.pageType.isBlog
-    }
-    
-    private var title: String {
-        return page.pageType.title
+        return page.pageType == .blog
     }
     
     private func publishedString(post: WPPost) -> String {
         var published = "Publicerat den \(post.date.dateSting())"
         if let authorName = post.authorName {
-            published += "av \(authorName)"
+            published += " av \(authorName)"
         }
         return published
     }
@@ -111,33 +97,32 @@ struct WPPageContentView: View {
         }
     }
     
-    // view that shows a paragraph
+    // view builder that shows any paragraph
+    @ViewBuilder
     private func paragraphView(paragraph: WPParagraph) -> some View {
         // paragraph is either a text, list, grid or an image
-        ZStack {
-            if let text = markdownText(paragraph: paragraph)   {
-                // text paragraph
+        if let text = markdownText(paragraph: paragraph)   {
+            // text paragraph
+            Text(text)
+                .font(paragraph.font)
+                .foregroundColor(paragraph.color ?? Color.primary)
+        }
+        else if let text = paragraph.listText {
+            // list paragraph
+            HStack(alignment: .top) {
+                Text("•")
                 Text(text)
                     .font(paragraph.font)
                     .foregroundColor(paragraph.color ?? Color.primary)
             }
-            else if let text = paragraph.listText {
-                // list paragraph
-                HStack(alignment: .top) {
-                    Text("•")
-                    Text(text)
-                        .font(paragraph.font)
-                        .foregroundColor(paragraph.color ?? Color.primary)
-                }
-            }
-            else if let table = paragraph.table, let grid = table.rows {
-                // grid paragraph
-                gridView(grid: grid)
-            }
-            else if let imageUrl = paragraph.imageUrl {
-                // image paragraph
-                imageView(url: imageUrl)
-            }
+        }
+        else if let table = paragraph.table, let grid = table.rows {
+            // grid paragraph
+            gridView(grid: grid)
+        }
+        else if let imageUrl = paragraph.imageUrl {
+            // image paragraph
+            ClickableImage(url: imageUrl)
         }
     }
     
@@ -165,21 +150,4 @@ struct WPPageContentView: View {
             }
         }
     }
-    
-    private func imageView(url: URL) -> some View {
-        NavigationLink {
-            // detail view image
-            ZoomableScrollView(enableTapToReset: true) {
-                WPImage(url: url)
-            }
-            .navigationBarTitleDisplayMode(.inline)
-        } label: {
-            // the image
-            WPImage(url: url)
-                .padding(.vertical, 10)
-                .frame(maxWidth: 400)
-        }
-    }
 }
-
-
