@@ -13,6 +13,11 @@ extension String {
     static let space = " "
     static let comma = ", "
     static let period = ". "
+    
+    func onlyLettersAndNumbers() -> String {
+        return self.components(separatedBy: CharacterSet.alphanumerics.inverted)
+            .joined()
+    }
 }
 
 extension Date {

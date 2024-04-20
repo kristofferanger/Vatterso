@@ -39,10 +39,19 @@ struct WPPageView: View {
                 // hamburger button pressed
                 showingSidebar.toggle()
             }, label: {
-                Image(systemName: "line.3.horizontal")
+                menuButton
             }))
         }
         .navigationViewStyle(.stack)
+    }
+    
+    var menuButton: some View {
+        Image(systemName: "line.3.horizontal")
+            .padding(4)
+            .background{
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(.background)
+            }
     }
 }
 
@@ -61,19 +70,42 @@ struct WPPageContentView: View {
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .background {
+            topImageView
+        }
         .navigationTitle(page.title)
+        .toolbarBackground(.clear, for: .navigationBar)
     }
     
+    private var topImageView: some View {
+        GeometryReader { geometry in
+            VStack {
+                Image(topImageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top)
+                    .clipped()
+                    .overlay {
+                        LinearGradient(gradient: Gradient(colors: [.clear,  Color(UIColor.systemBackground)]), startPoint: .center, endPoint: .bottom)
+                    }
+                    .ignoresSafeArea(edges: [.leading, .top, .trailing])
+                Spacer()
+            }
+        }
+    }
+    
+    private let topImageName = ["top_image1", "top_image2", "top_image3"].randomElement()!
+
     private var isBlog: Bool {
         return page.pageType == .blog
     }
     
     private func publishedString(post: WPPost) -> String {
-        var published = "Publicerat den \(post.date.dateSting())"
+        var components = ["Publicerat den", post.date.dateSting()]
         if let authorName = post.authorName {
-            published += " av \(authorName)"
+            components += ["av", authorName]
         }
-        return published
+        return components.joined(separator: .space)
     }
     
     // view for showing a post (in a page)
