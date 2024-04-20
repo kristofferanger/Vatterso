@@ -1,0 +1,10 @@
+## Mac generated
+.DS_Store
+
+## Xcode generated
+*.xccheckout
+*.xcuserstate
+*.xcbkptlist
+
+## SPM
+Package.resolved
