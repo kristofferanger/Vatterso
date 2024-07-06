@@ -26,7 +26,7 @@ enum DBType {
 protocol DBItem: Identifiable & Codable {
 
     static var tableName: String { get }
-    static var colums: [(label: String, type: DBType)] { get }
+    static var columns: [(label: String, type: DBType)] { get }
 
     func valueFor(columnLabel: String) -> Any?
 }
@@ -34,11 +34,11 @@ protocol DBItem: Identifiable & Codable {
 fileprivate extension DBItem {
     
     static var columnLabels: [String] {
-        return self.colums.map{ $0.label.lowercased() }
+        return self.columns.map{ $0.label.lowercased() }
     }
     
     static var columnLabelsAndTypes: String {
-        let columns = self.colums.map {
+        let columns = self.columns.map {
             let label = $0.label.lowercased()
             let type = $0.type.string.uppercased()
             var components = [label, type]

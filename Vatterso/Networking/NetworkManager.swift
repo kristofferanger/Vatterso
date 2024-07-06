@@ -163,7 +163,7 @@ struct RecentDownload: DBItem {
         }
     }
     
-    static var colums: [(label: String, type: DBType)] {
+    static var columns: [(label: String, type: DBType)] {
         return [("id", .string), ("date", .float), ("data", .string)]
     }
     static var tableName: String {

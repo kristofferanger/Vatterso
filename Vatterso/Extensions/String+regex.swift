@@ -15,6 +15,10 @@ extension String {
         return self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
     }
     
+    var includesNumbers: Bool {
+        self.first(where: { $0.isNumber }) != nil
+    }
+    
     // simple method to remove all tags
     func htmlStripped() -> String {
         let pattern = "<[^>]+>"

@@ -17,20 +17,25 @@ struct MainTabBarView: View {
             // side bar struct, handling side menu and pages
             SidebarView(items: viewModel.items) { selection, showingSidebar in
                 // present selected side bar item
-                WPPageView(item: selection.wrappedValue, showingSidebar: showingSidebar)
+                WPPageView(item: selection, showingSidebar: showingSidebar, viewModel: viewModel)
             }
         } errorAlert: { error in
             let alert = Alert(title: Text("Oops"), message: Text(error.localizedDescription), dismissButton: .default(Text("Retry")) {
                 // try load items again on error dismiss
-                viewModel.reloadPages()
+                viewModel.loadPages()
             })
             return alert
         }
-        .ignoresSafeArea()
         .onAppear{
             // load items on appearance
             viewModel.loadPages()
         }
+        /*
+         // not sure if needed - need investigation
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            viewModel.loadPages()
+        }
+         */
     }
 }
 

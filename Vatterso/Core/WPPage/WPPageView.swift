@@ -17,10 +17,12 @@ struct WPPageView: View {
     
     // make the side bar appear
     @Binding var showingSidebar: Bool
+    private var viewModel: SidebarViewModel?
     
-    init(item: SidebarItem?, showingSidebar: Binding<Bool>? = nil) {
+    init(item: SidebarItem?, showingSidebar: Binding<Bool>? = nil, viewModel: SidebarViewModel? = nil) {
         self.item = item
         self._showingSidebar = showingSidebar ?? .constant(false)
+        self.viewModel = viewModel
     }
     
     // start page for tabs with navigation bar
@@ -41,6 +43,12 @@ struct WPPageView: View {
             }, label: {
                 menuButton
             }))
+        }
+        .refreshable {
+            // reload the current page
+            if let item {
+                viewModel?.reloadPage(id: item.id)
+            }
         }
         .navigationViewStyle(.stack)
     }
@@ -78,19 +86,19 @@ struct WPPageContentView: View {
     }
     
     private var topImageView: some View {
-        GeometryReader { geometry in
-            VStack {
+        VStack {
+            GeometryReader { proxy in
                 Image(topImageName)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top)
+                    .frame(width: proxy.size.width, height: proxy.safeAreaInsets.top)
                     .clipped()
                     .overlay {
                         LinearGradient(gradient: Gradient(colors: [.clear,  Color(UIColor.systemBackground)]), startPoint: .center, endPoint: .bottom)
                     }
                     .ignoresSafeArea(edges: [.leading, .top, .trailing])
-                Spacer()
             }
+            Spacer()
         }
     }
     
@@ -101,7 +109,12 @@ struct WPPageContentView: View {
     }
     
     private func publishedString(post: WPPost) -> String {
-        var components = ["Publicerat den", post.date.dateSting()]
+        let dateString = post.date.dateSting()
+        var components = ["Publicerat"]
+        if dateString.includesNumbers {
+            components.append("den")
+        }
+        components.append(dateString)
         if let authorName = post.authorName {
             components += ["av", authorName]
         }

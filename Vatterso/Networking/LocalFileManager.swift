@@ -22,10 +22,8 @@ class LocalFileManager {
     
     // MARK: Image methods
     func saveImage(image: UIImage, imageName: String, folderName: String) {
-        
         // create folder
         createFolderIfNeeded(folderName: folderName)
-        
         // get path for image
         guard
             let data = image.pngData(),
@@ -51,7 +49,6 @@ class LocalFileManager {
     }
     
     // MARK: - Private stuff
-    
     private func createFolderIfNeeded(folderName: String) {
         guard let url = getURLForFolder(folderName: folderName) else { return }
         

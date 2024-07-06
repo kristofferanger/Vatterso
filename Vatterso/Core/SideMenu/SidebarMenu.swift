@@ -32,7 +32,7 @@ struct SidebarMenu<Content: View>: View {
 
 struct SideMenuView: View {
     
-    @Binding var tabs: [SidebarItem]
+    var tabs: [SidebarItem]
     @Binding var selectedTab: SidebarItem?
     @Binding var showingSideMenu: Bool
     

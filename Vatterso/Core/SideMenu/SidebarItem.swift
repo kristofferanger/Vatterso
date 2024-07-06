@@ -79,7 +79,7 @@ struct SidebarItem: Identifiable {
         // icons for pages
         switch self.title.lowercased() {
         case "wfff", "vnsf", "vsbsf":
-            return "person.3"
+            return "person.2"
         case "hem":
             return "house"
         case "resa till vättersö":
